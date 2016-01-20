@@ -1,0 +1,107 @@
+use BIGGYM;
+
+-- PROGRESS
+insert into PROGRESS
+(
+ DEFINITIONid,
+ SET_01_REPS,
+ SET_01_WEIGHT,
+ SET_02_REPS,
+ SET_02_WEIGHT,
+ SET_03_REPS,
+ SET_03_WEIGHT
+)
+values
+(
+ 1,
+ 10,
+ 20,
+ 10,
+ 20,
+ 11,
+ 20
+);
+
+insert into PROGRESS
+(
+ DEFINITIONid,
+ SET_01_REPS,
+ SET_01_WEIGHT,
+ SET_02_REPS,
+ SET_02_WEIGHT,
+ SET_03_REPS,
+ SET_03_WEIGHT
+)
+values
+(
+ 1,
+ 10,
+ 25,
+ 10,
+ 25,
+ 11,
+ 25
+);
+
+insert into PROGRESS
+(
+ DEFINITIONid,
+ SET_01_REPS,
+ SET_01_WEIGHT,
+ SET_02_REPS,
+ SET_02_WEIGHT,
+ SET_03_REPS,
+ SET_03_WEIGHT
+)
+values
+(
+ 1,
+ 10,
+ 50,
+ 10,
+ 50,
+ 11,
+ 60
+);
+
+insert into PROGRESS
+(
+ DEFINITIONid,
+ SET_01_REPS,
+ SET_01_WEIGHT,
+ SET_02_REPS,
+ SET_02_WEIGHT,
+ SET_03_REPS,
+ SET_03_WEIGHT
+)
+values
+(
+ 2,
+ 10,
+ 20,
+ 10,
+ 20,
+ 11,
+ 20
+);
+
+insert into PROGRESS
+(
+ DEFINITIONid,
+ SET_01_REPS,
+ SET_01_WEIGHT,
+ SET_02_REPS,
+ SET_02_WEIGHT,
+ SET_03_REPS,
+ SET_03_WEIGHT
+)
+values
+(
+ 3,
+ 10,
+ 30,
+ 10,
+ 40,
+ 11,
+ 50
+);
