@@ -7,7 +7,7 @@ create table if not exists PERSON
   DATE_REGISTERED timestamp default current_timestamp not null,
   FIRST_NAME varchar(32) not null,
   LAST_NAME varchar(32) not null,
-  BIRTH_DATE datetime not null,
+  BIRTH_DATE date not null,
   primary key (ID)
  );
 
@@ -73,5 +73,3 @@ create table if not exists PROGRESS
   SET_06_WEIGHT FLOAT default 0 not null,
   primary key (ID)
  );
-
-show tables;

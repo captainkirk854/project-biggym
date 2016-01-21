@@ -4,6 +4,7 @@ use BIGGYM;
 insert into PROGRESS
 (
  DEFINITIONid,
+ DATE_REGISTERED,
  SET_01_REPS,
  SET_01_WEIGHT,
  SET_02_REPS,
@@ -14,6 +15,7 @@ insert into PROGRESS
 values
 (
  1,
+ '2016-01-25',
  10,
  20,
  10,
@@ -25,6 +27,7 @@ values
 insert into PROGRESS
 (
  DEFINITIONid,
+ DATE_REGISTERED,
  SET_01_REPS,
  SET_01_WEIGHT,
  SET_02_REPS,
@@ -35,6 +38,7 @@ insert into PROGRESS
 values
 (
  1,
+ '2016-02-01',
  10,
  25,
  10,
@@ -46,6 +50,7 @@ values
 insert into PROGRESS
 (
  DEFINITIONid,
+ DATE_REGISTERED,
  SET_01_REPS,
  SET_01_WEIGHT,
  SET_02_REPS,
@@ -56,6 +61,7 @@ insert into PROGRESS
 values
 (
  1,
+ '2016-02-06',
  10,
  50,
  10,
@@ -64,9 +70,12 @@ values
  60
 );
 
+
+
 insert into PROGRESS
 (
  DEFINITIONid,
+ DATE_REGISTERED,
  SET_01_REPS,
  SET_01_WEIGHT,
  SET_02_REPS,
@@ -77,17 +86,19 @@ insert into PROGRESS
 values
 (
  2,
+ '2016-01-26',
  10,
- 20,
+ 140,
  10,
- 20,
+ 180,
  11,
- 20
+ 220
 );
 
 insert into PROGRESS
 (
  DEFINITIONid,
+ DATE_REGISTERED,
  SET_01_REPS,
  SET_01_WEIGHT,
  SET_02_REPS,
@@ -98,6 +109,7 @@ insert into PROGRESS
 values
 (
  3,
+ '2016-01-25',
  10,
  30,
  10,

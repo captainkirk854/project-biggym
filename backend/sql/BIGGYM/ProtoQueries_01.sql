@@ -39,7 +39,9 @@ select
       concat(per.FIRST_NAME, ' ', per.LAST_NAME, ' (aka ', prf.NAME, ')') PERSON,
       round((datediff(curdate(), per.BIRTH_DATE) / 365),0) AGE,
       plan.NAME PLAN_NAME,
+      plan.ID PLAN_ID,
       plan.DATE_REGISTERED DATE_PLAN_WAS_REGISTERED,
+      def.ID DEFINITION_ID,
       exc.BODY_PART,
       exc.NAME
   from
@@ -74,7 +76,24 @@ select
       concat(prg.SET_03_WEIGHT, 'kg', ' x', prg.SET_03_REPS) SET03,
       (prg.SET_01_WEIGHT * prg.SET_01_REPS) +
       (prg.SET_02_WEIGHT * prg.SET_02_REPS) +
-      (prg.SET_03_WEIGHT * prg.SET_03_REPS) TOTAL_KG 
+      (prg.SET_03_WEIGHT * prg.SET_03_REPS) TOTAL_KG,
+      (prg.SET_01_REPS) +
+      (prg.SET_02_REPS) +
+      (prg.SET_03_REPS) TOTAL_REPS,
+      round(
+      (
+      (prg.SET_01_WEIGHT * prg.SET_01_REPS) +
+      (prg.SET_02_WEIGHT * prg.SET_02_REPS) +
+      (prg.SET_03_WEIGHT * prg.SET_03_REPS) 
+      )
+      / 
+      (
+      (prg.SET_01_REPS) +
+      (prg.SET_02_REPS) +
+      (prg.SET_03_REPS) 
+      ) 
+      ,1) AVG_WEIGHT_PER_REP
+
   from
       PERSON per,
       PROFILE prf,
@@ -93,8 +112,7 @@ select
    and
      def.ID = prg.DEFINITIONid
  order by
-      per.BIRTH_DATE asc,
+      PERSON asc,
       exc.BODY_PART asc,
       prg.DATE_REGISTERED asc
  ;
-

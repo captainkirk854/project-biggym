@@ -13,11 +13,11 @@ values
   select ID 
    from PERSON 
   where 
-        FIRST_NAME = 'JIM' 
+        FIRST_NAME = 'Jim' 
     and 
         LAST_NAME = 'Nasium' 
     and 
-       BIRTH_DATE = '3000-01-01 00:00:00'
+       BIRTH_DATE = '3000-01-01'
  )
 );
 
