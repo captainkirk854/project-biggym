@@ -1,6 +1,6 @@
 
 # Story 001
-** Storage of: Pre-defined List of Body Parts and their Exercises **
+**Storage of: Pre-defined List of Body Parts and their Exercises**
 
 ##Implementation Overview
 ###Backend
@@ -8,7 +8,7 @@
                     and added to on request
 
 # Story 002
-** Storage of: Pertinent User Information **
+**Storage of: Pertinent User Information**
 - Forename
 - Surname
 - DOB
@@ -25,7 +25,7 @@
 
 
 # Story 003
-** Storage of: Training Plan Definition (consists of 0 to n exercises arranged on a per-day basis)
+**Storage of: Training Plan Definition (consists of 0 to n exercises arranged on a per-day basis)**
 
 ##Implementation Overview
 ###Backend
