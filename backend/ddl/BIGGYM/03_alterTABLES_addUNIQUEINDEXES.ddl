@@ -33,7 +33,9 @@ alter table TRAINING_PLAN_DEFINITION
  add unique index IDXU_TRAINING_PLAN_DEFINITION_01
  (
   PLANid asc, 
-  EXERCISEid asc
+  PLAN_DAY asc,
+  EXERCISEid asc,
+  EXERCISE_ORDINALITY asc
  );
 
 /*

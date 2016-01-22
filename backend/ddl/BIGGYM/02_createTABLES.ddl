@@ -11,13 +11,12 @@ create table if not exists PERSON
   primary key (ID)
  );
 
-
 drop table if exists PROFILE;
 create table if not exists PROFILE
  (
   ID smallint  not null auto_increment,
   DATE_REGISTERED timestamp default current_timestamp not null,
-  NAME varchar(32) not null DEFAULT 'UNKNOWN CHAMPION',
+  NAME varchar(32) not null DEFAULT 'UNDEFINED CHAMPION',
   PERSONid smallint not null,
   primary key (ID)
  );
@@ -38,7 +37,7 @@ create table if not exists TRAINING_PLAN
   ID smallint not null auto_increment,
   DATE_REGISTERED timestamp default current_timestamp not null,
   NAME varchar(128) not null,
-  VISIBILITY ENUM('YES','NO') default 'YES' not null,
+  PRIVATE enum('YES','NO') default 'NO' not null,
   PROFILEid smallint not null,
   primary key (ID)
  );
@@ -49,7 +48,9 @@ create table if not exists TRAINING_PLAN_DEFINITION
   ID smallint not null auto_increment,
   DATE_REGISTERED timestamp default current_timestamp not null,
   PLANid smallint not null,
+  PLAN_DAY enum('1','2','3','4','5','6','7') null,
   EXERCISEid smallint not null,
+  EXERCISE_ORDINALITY tinyint null,
   primary key (ID)
  );
 

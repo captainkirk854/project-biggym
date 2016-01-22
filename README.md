@@ -1,6 +1,6 @@
-# project-BigGym
+# Project-BigGym
 Attempt at a personalised gym tracking system
 
-# configuration
+## Configuration
 Backend database: MYSQL
 
