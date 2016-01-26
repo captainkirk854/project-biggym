@@ -37,3 +37,8 @@
 *Category: Utilities*
 *Title: Training Plan Clone Tool*
 *Status: Not Started*
+
+# Task 008
+*Category: Framework Trigger*
+*Title: Trigger Logging Mechanism*
+*Status: Not Started*
