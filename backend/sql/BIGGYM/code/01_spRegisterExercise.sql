@@ -1,7 +1,13 @@
 /*
 Name       : spRegisterExercise
 Object Type: STORED PROCEDURE
-Dependency : spErrorHandler (STORED PROCEDURE), EXERCISE(TABLE), 
+Dependency :
+            TABLE:
+                - EXERCISE
+            
+            STORED PROCEDURE :
+                - spDebugLogger 
+                - spErrorHandler
 */
 
 use BIGGYM;
@@ -20,9 +26,11 @@ begin
     -- Exception Handling -- 
     -- -------------------------------------------------------------------------  
     declare CONTINUE handler for SQLEXCEPTION
-    begin
-      call spErrorHandler (ReturnCode, ErrorCode, ErrorMsg);
-    end;
+        begin
+          set @objectName = 'EXERCISE';
+          call spErrorHandler (ReturnCode, ErrorCode, ErrorMsg);
+          call spDebugLogger (database(), @objectName, ReturnCode, ErrorCode, ErrorMsg);
+        end;
 
     -- Variable Initialisation ..
     set ReturnCode = 0;
@@ -43,24 +51,22 @@ begin
             (
              vExerciseName,
              vBodyPartName
-            )
-        ;
+            );
 
     -- Get ID ..
     set ObjectId = NULL;
 
     select 
         ID
-    into
+      into
         ObjectId
-    from 
+      from 
         EXERCISE 
-    where 
+     where 
         NAME = vExerciseName 
-    and 
+       and 
         BODY_PART = vBodyPartName 
-    limit 1
-      ;
+   limit 1;
       
     -- If ID found, reset ReturnCode to 0 ..
     if (ObjectId is NOT NULL and ReturnCode != 0) then

@@ -1,7 +1,17 @@
 /*
 Name       : RegisterTrainingPlanDefinition
 Object Type: STORED PROCEDURE
-Dependency : TRAINING_PLAN(TABLE), spRegisterTrainingPlan (STORED PROCEDURE)
+Dependency : 
+            TABLE:
+                - TRAINING_PLAN_DEFINITION
+                - TRAINING_PLAN
+                - PROFILE
+                - PERSON
+            
+            STORED PROCEDURE :
+                - spDebugLogger 
+                - spErrorHandler
+                - spRegisterTrainingPlan
 */
 
 use BIGGYM;
@@ -29,7 +39,9 @@ begin
     -- -------------------------------------------------------------------------
      declare CONTINUE handler for SQLEXCEPTION
         begin
+          set @objectName = 'TRAINING_PLAN_DEFINITION';
           call spErrorHandler (ReturnCode, ErrorCode, ErrorMsg);
+          call spDebugLogger (database(), @objectName, ReturnCode, ErrorCode, ErrorMsg);
         end;
  
     -- Variable Initialisation ..
@@ -39,6 +51,7 @@ begin
     -- -------------------------------------------------------------------------
     -- Error Handling --
     -- -------------------------------------------------------------------------
+
     -- Attempt pre-emptive exercise-bodypart registration ..
     call spRegisterExercise (vExerciseName, 
                              vBodyPartName, 
@@ -46,9 +59,6 @@ begin
                              returnCode, 
                              errorCode, 
                              errorMsg);
-    if(errorCode = 1062) then
-        select concat(vExerciseName, ' already associated with ', vBodyPartName);
-    end if;
 
     -- Attempt pre-emptive profile registration ..
     call spRegisterTrainingPlan (vTrainingPlanName, 
@@ -60,9 +70,6 @@ begin
                                  returnCode, 
                                  errorCode, 
                                  errorMsg);
-    if(errorCode = 1062) then
-        select concat(vTrainingPlanName, ' already associated with ', vProfileName, ' already registered to ', vFirstName, ' ', vLastName, ' born on: ', vBirthdate);
-    end if;
  
     -- Attempt TrainingPlanDefinition registration ..
     if (vPlanId is NOT NULL and vExerciseId is NOT NULL) then
@@ -76,8 +83,7 @@ begin
                 (
                  vPlanId,
                  vExerciseId
-                )
-            ;
+                );
     end if;
     
     -- Get ID ..
@@ -85,16 +91,15 @@ begin
     
     select 
         ID
-    into
+      into
         ObjectId
-    from 
+      from 
         TRAINING_PLAN_DEFINITION 
-    where 
+     where 
         PLANId = vPlanId 
-    and 
+       and 
         EXERCISEid = vExerciseId 
-    limit 1
-      ;   
+   limit 1;   
     
     -- If ID found, reset ReturnCode to 0 ..
     if (ObjectId is NOT NULL and ReturnCode != 0) then

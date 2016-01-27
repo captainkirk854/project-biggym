@@ -25,6 +25,6 @@ select
     plan.ID = def.PLANid
    and
     def.EXERCISEid = exc.ID
-	 ;
+     ;
      
 select * from vwPlanDefinition limit 10;

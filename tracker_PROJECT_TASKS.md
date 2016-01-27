@@ -14,9 +14,9 @@
 *Status: Not Started*
 
 # Task 003
-*Category: Framework Procedure*
+*Category: Framework Procedures and Functions*
 *Title:*
-*Status: Not Started*
+*Status: In Progress*
 
 # Task 004
 *Category: UX View*
@@ -33,6 +33,10 @@
 *Title: User Data Import Tool*
 *Status: Not Started*
 
+*Category: Utilities*
+*Title: User Data Export Tool*
+*Status: Not Started*
+
 # Task 007
 *Category: Utilities*
 *Title: Training Plan Clone Tool*
@@ -41,4 +45,4 @@
 # Task 008
 *Category: Framework Trigger*
 *Title: Trigger Logging Mechanism*
-*Status: Not Started*
+*Status: In progress*

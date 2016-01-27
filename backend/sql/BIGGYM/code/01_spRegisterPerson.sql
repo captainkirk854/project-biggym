@@ -1,7 +1,13 @@
 /*
 Name       : spRegisterPerson
 Object Type: STORED PROCEDURE
-Dependency : spErrorHandler (STORED PROCEDURE), PERSON(TABLE)
+Dependency : 
+            TABLE:
+                - PERSON
+            
+            STORED PROCEDURE :
+                - spDebugLogger 
+                - spErrorHandler
 */
 
 use BIGGYM;
@@ -21,9 +27,11 @@ begin
     -- Exception Handling -- 
     -- -------------------------------------------------------------------------
     declare CONTINUE handler for SQLEXCEPTION
-    begin
-        call spErrorHandler (ReturnCode, ErrorCode, ErrorMsg);
-    end;
+        begin
+          set @objectName = 'PERSON';
+          call spErrorHandler (ReturnCode, ErrorCode, ErrorMsg);
+          call spDebugLogger (database(), @objectName, ReturnCode, ErrorCode, ErrorMsg);
+        end;
 
     -- Variable Initialisation ..
     set ReturnCode = 0;
@@ -32,7 +40,6 @@ begin
     -- -------------------------------------------------------------------------
     -- Exception Handling --
     -- -------------------------------------------------------------------------
-
  
     -- Attempt person registration ..
     insert into 
@@ -54,18 +61,17 @@ begin
     
     select 
         ID
-    into
+      into
         ObjectId
-    from 
+      from 
         PERSON 
-    where 
+     where 
         FIRST_NAME = vFirstName 
-    and 
+       and 
         LAST_NAME = vLastName 
-    and 
+       and 
         BIRTH_DATE = vBirthdate 
-    limit 1
-      ;
+   limit 1;
       
     -- If ID found, reset ReturnCode to 0 ..
     if (ObjectId is NOT NULL and ReturnCode != 0) then

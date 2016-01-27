@@ -1,7 +1,15 @@
 /*
 Name       : spRegisterProfile
 Object Type: STORED PROCEDURE
-Dependency : PROFILE(TABLE), PERSON(TABLE), spRegisterPerson (STORED PROCEDURE)
+Dependency : 
+            TABLE:
+                - PROFILE
+                - PERSON
+            
+            STORED PROCEDURE :
+                - spDebugLogger 
+                - spErrorHandler
+                - spRegisterPerson
 */
 
 use BIGGYM;
@@ -24,9 +32,11 @@ begin
     -- Error Handling -- 
     -- -------------------------------------------------------------------------
     declare CONTINUE handler for SQLEXCEPTION
-    begin
-        call spErrorHandler (ReturnCode, ErrorCode, ErrorMsg);
-    end;
+        begin
+          set @objectName = 'PROFILE';
+          call spErrorHandler (ReturnCode, ErrorCode, ErrorMsg);
+          call spDebugLogger (database(), @objectName, ReturnCode, ErrorCode, ErrorMsg);
+        end;
 
     -- Variable Initialisation ..
     set ReturnCode = 0;
@@ -36,7 +46,6 @@ begin
     -- Error Handling --
     -- -------------------------------------------------------------------------
 
-
     -- Attempt pre-emptive person registration ..
     call spRegisterPerson (vFirstName, 
                            vLastName, 
@@ -45,9 +54,6 @@ begin
                            returnCode, 
                            errorCode, 
                            errorMsg);
-    if(errorCode = 1062) then
-        select concat(vFirstName, ' ', vLastName, ' born on: ', Birthdate,' already registered');
-    end if;
    
     -- Attempt Profile registration ..
     if (vPersonId is NOT NULL) then
@@ -61,8 +67,7 @@ begin
             (
              vProfileName,
              vPersonId
-            )
-            ;
+            );
     end if;
     
     -- Get ID ..
@@ -70,16 +75,15 @@ begin
     
     select 
         ID
-    into
+      into
         ObjectId
-    from 
+      from 
         PROFILE 
-    where 
+     where 
         NAME = vProfileName 
-    and 
+       and 
         PERSONid = vPersonId 
-    limit 1
-      ;   
+   limit 1;   
     
     -- If ID found, reset ReturnCode to 0 ..
     if (ObjectId is NOT NULL and ReturnCode != 0) then
