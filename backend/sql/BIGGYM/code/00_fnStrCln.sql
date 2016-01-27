@@ -35,9 +35,10 @@ end $$
 delimiter ;
 
 /*
+Sample Usage:
+
 select strcln('This works !!!!&&&$$!');
 select strcln('This is allowable and simple as 1 2 3');
 select strcln('These chaps "$"$"()"$ might disappear');
 select strcln('''');
 */ 
-

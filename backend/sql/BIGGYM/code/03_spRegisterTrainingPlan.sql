@@ -97,10 +97,11 @@ end$$
 delimiter ;
 
 
--- Sample Usage --
+/*
+Sample Usage:
 call spRegisterTrainingPlan ('Get Bigger Workout', 'Faceman', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @errorMsg);
 select @id, @returnCode, @errorCode, @errorMsg;
 call spRegisterTrainingPlan ('Get Bigger Workout', 'Mr.T', 'Lawrence', 'Tureaud', '1945-03-01', @id, @returnCode, @errorCode, @errorMsg);
 select @id, @returnCode, @errorCode, @errorMsg;
 select * from TRAINING_PLAN order by DATE_REGISTERED asc;
--- Sample Usage --
+*/

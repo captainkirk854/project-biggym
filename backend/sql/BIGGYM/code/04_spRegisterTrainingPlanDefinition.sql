@@ -110,10 +110,11 @@ end$$
 delimiter ;
 
 
--- Sample Usage --
+/*
+Sample Usage:
 call RegisterTrainingPlanDefinition ('Curls','Arms', 'Get Bigger Workout', 'Faceman', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @errorMsg);
 select @id, @returnCode, @errorCode, @errorMsg;
 call RegisterTrainingPlanDefinition ('Curls','Arms', 'Get Bigger Workout', 'Mr.T', 'Lawrence', 'Tureaud', '1945-03-01', @id, @returnCode, @errorCode, @errorMsg);
 select @id, @returnCode, @errorCode, @errorMsg;
 select * from TRAINING_PLAN_DEFINITION order by DATE_REGISTERED asc;
--- Sample Usage --
+*/

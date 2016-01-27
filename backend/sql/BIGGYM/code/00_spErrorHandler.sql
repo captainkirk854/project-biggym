@@ -32,8 +32,9 @@ begin
 end$$
 delimiter ;
 
+/*
+Sample Usage:
 
--- Sample Usage --
 call spErrorHandler (@returnCode, @errorCode, @errorMsg);
 select @returnCode, @errorCode, @errorMsg;
--- Sample Usage --
+*/

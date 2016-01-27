@@ -77,8 +77,10 @@ end$$
 delimiter ;
 
 
--- Sample Usage --
+/*
+Sample Usage:
+
 call spRegisterExercise ('Pullups', 'Back', @id, @returnCode, @errorCode, @errorMsg);
 select  @id, @returnCode, @errorCode, @errorMsg;
 select * from EXERCISE order by DATE_REGISTERED asc;
--- Sample Usage --
+*/

@@ -37,13 +37,17 @@ begin
   else
     execute stmt;
   end if;
+
+  -- Deallocate ..
   deallocate prepare stmt;
   
 end;$$
 delimiter ;
 
 
--- Sample Usage --
+/*
+Sample Usage:
+
 set @sql='select 1,2';
 call spExecuteSQL (@sql, NULL, NULL, NULL, NULL);
 
@@ -60,5 +64,4 @@ call spExecuteSQL (@sql, 3, 4, NULL, NULL);
 set @sql='select sqrt(pow(?,2) + pow(?,2)) into @hypotenuse';
 call spExecuteSQL (@sql, 3, 4, NULL, NULL);
 select @hypotenuse;
--- Sample Usage --
-
+*/

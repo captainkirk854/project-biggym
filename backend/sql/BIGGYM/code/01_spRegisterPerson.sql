@@ -82,8 +82,9 @@ end$$
 delimiter ;
 
 
--- Sample Usage --
+/*
+Sample Usage:
 call spRegisterPerson ('Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @errorMsg);
 select @id, @returnCode, @errorCode, @errorMsg;
 select * from PERSON order by DATE_REGISTERED asc;
--- Sample Usage --
+*/

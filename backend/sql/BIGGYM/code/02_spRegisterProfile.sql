@@ -94,7 +94,9 @@ end$$
 delimiter ;
 
 
--- Sample Usage --
+/*
+Sample Usage:
+
 call spRegisterProfile ('Faceman', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @errorMsg);
 select @id, @returnCode, @errorCode, @errorMsg;
 call spRegisterProfile ('StarBuck', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @errorMsg);
@@ -102,4 +104,4 @@ select @id, @returnCode, @errorCode, @errorMsg;
 call spRegisterProfile ('Starbuck', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @errorMsg);
 select @id, @returnCode, @errorCode, @errorMsg;
 select * from PROFILE order by DATE_REGISTERED asc;
--- Sample Usage --
+*/

@@ -1,7 +1,15 @@
 /*
 Name       : spDebugLogger
 Object Type: STORED PROCEDURE
-Dependency : strcln (FUNCTION), spExecuteSQL (STORED PROCEDURE), DEBUG_LOG(TABLE)
+Dependency :
+            TABLE:
+                - DEBUG_LOG
+
+            FUNCTION :
+                - strcln
+
+            STORED PROCEDURE :
+                - spExecuteSQL
 */
 
 use BIGGYM;
@@ -44,7 +52,9 @@ end$$
 delimiter ;
 
 
--- Sample Usage --
+/*
+Sample Usage:
+
 set @objectName='MYTABLE';
 set @returnCode=-1;
 set @errorCode=-999;
@@ -52,4 +62,4 @@ set @errorMsg='We have got some problems';
 call spDebugLogger (database(), @objectName, @returnCode, @errorCode, @errorMsg);
 
 call spDebugLogger (database(), 'ANOTHER_TABLE', 1223, 133, 'OH DEAR .. OH DEAR OH DEAR');
--- Sample Usage --
+*/
