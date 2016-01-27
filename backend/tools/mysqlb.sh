@@ -20,11 +20,11 @@ runCommand()
  CMD=$1
 #
 # Initialise ...
- stringToSupress="Using a password"
+ stringToSuppress="Using a password"
  noErrors=1
 #
 # Run ..
- eval $CMD 2>&1 | grep -v "$stringToSupress"
+ eval $CMD 2>&1 | grep -v "$stringToSuppress"
  rc=$?
 
  if [ $rc -ne $noErrors ];then
