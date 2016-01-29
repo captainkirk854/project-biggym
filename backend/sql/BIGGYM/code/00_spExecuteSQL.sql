@@ -51,7 +51,7 @@ Sample Usage:
 set @sql='select 1,2';
 call spExecuteSQL (@sql, NULL, NULL, NULL, NULL);
 
-set @sql='select "A FLY" into @insect';
+set @sql='select "FLY" into @insect';
 call spExecuteSQL (@sql, NULL, NULL, NULL, NULL);
 select concat('There is a ', @insect, ' in my soup');
 

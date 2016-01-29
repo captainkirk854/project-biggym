@@ -12,6 +12,7 @@ Dependency :
                 - spDebugLogger 
                 - spErrorHandler
                 - spRegisterTrainingPlan
+                - spGetObjectId
 */
 
 use BIGGYM;
@@ -31,6 +32,8 @@ create procedure RegisterTrainingPlanDefinition(in vExerciseName varchar(128),
                                                out ErrorMsg varchar(512))
 begin
 
+    -- Declare ..
+    declare ObjectName varchar(128) default 'TRAINING_PLAN_DEFINITION';
     declare vExerciseId smallint default NULL;
     declare vPlanId smallint default NULL;
     
@@ -39,9 +42,8 @@ begin
     -- -------------------------------------------------------------------------
      declare CONTINUE handler for SQLEXCEPTION
         begin
-          set @objectName = 'TRAINING_PLAN_DEFINITION';
           call spErrorHandler (ReturnCode, ErrorCode, ErrorMsg);
-          call spDebugLogger (database(), @objectName, ReturnCode, ErrorCode, ErrorMsg);
+          call spDebugLogger (database(), ObjectName, ReturnCode, ErrorCode, ErrorMsg);
         end;
  
     -- Variable Initialisation ..
@@ -86,35 +88,22 @@ begin
                 );
     end if;
     
-    -- Get ID ..
-    set ObjectId = NULL;
+    -- Get its ID ..
+    set @getIdWhereClause = concat('PLANId = ', vPlanId, ' and EXERCISEid = ', vExerciseId);
+    call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
     
-    select 
-        ID
-      into
-        ObjectId
-      from 
-        TRAINING_PLAN_DEFINITION 
-     where 
-        PLANId = vPlanId 
-       and 
-        EXERCISEid = vExerciseId 
-   limit 1;   
-    
-    -- If ID found, reset ReturnCode to 0 ..
-    if (ObjectId is NOT NULL and ReturnCode != 0) then
-        set ReturnCode = 0;
-    end if;   
-
 end$$
 delimiter ;
 
 
 /*
 Sample Usage:
+
 call RegisterTrainingPlanDefinition ('Curls','Arms', 'Get Bigger Workout', 'Faceman', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @errorMsg);
 select @id, @returnCode, @errorCode, @errorMsg;
+
 call RegisterTrainingPlanDefinition ('Curls','Arms', 'Get Bigger Workout', 'Mr.T', 'Lawrence', 'Tureaud', '1945-03-01', @id, @returnCode, @errorCode, @errorMsg);
 select @id, @returnCode, @errorCode, @errorMsg;
+
 select * from TRAINING_PLAN_DEFINITION order by DATE_REGISTERED asc;
 */

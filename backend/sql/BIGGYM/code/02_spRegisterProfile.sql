@@ -10,6 +10,7 @@ Dependency :
                 - spDebugLogger 
                 - spErrorHandler
                 - spRegisterPerson
+                - spGetObjectId
 */
 
 use BIGGYM;
@@ -26,6 +27,8 @@ create procedure spRegisterProfile(in vProfileName varchar(32),
                                   out ErrorMsg varchar(512))
 begin
 
+    -- Declare ..
+    declare ObjectName varchar(128) default 'PROFILE';
     declare vPersonId smallint default NULL;
  
     -- -------------------------------------------------------------------------
@@ -33,9 +36,8 @@ begin
     -- -------------------------------------------------------------------------
     declare CONTINUE handler for SQLEXCEPTION
         begin
-          set @objectName = 'PROFILE';
           call spErrorHandler (ReturnCode, ErrorCode, ErrorMsg);
-          call spDebugLogger (database(), @objectName, ReturnCode, ErrorCode, ErrorMsg);
+          call spDebugLogger (database(), ObjectName, ReturnCode, ErrorCode, ErrorMsg);
         end;
 
     -- Variable Initialisation ..
@@ -69,27 +71,11 @@ begin
              vPersonId
             );
     end if;
-    
-    -- Get ID ..
-    set ObjectId = NULL;
-    
-    select 
-        ID
-      into
-        ObjectId
-      from 
-        PROFILE 
-     where 
-        NAME = vProfileName 
-       and 
-        PERSONid = vPersonId 
-   limit 1;   
-    
-    -- If ID found, reset ReturnCode to 0 ..
-    if (ObjectId is NOT NULL and ReturnCode != 0) then
-        set ReturnCode = 0;
-    end if;    
- 
+     
+    -- Get its ID ..
+    set @getIdWhereClause = concat('NAME = ''', vProfileName,  ''' and PERSONid = ', vPersonId);
+    call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode); 
+
 end$$
 delimiter ;
 

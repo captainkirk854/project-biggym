@@ -8,6 +8,7 @@ Dependency :
             STORED PROCEDURE :
                 - spDebugLogger 
                 - spErrorHandler
+                - spGetObjectId
 */
 
 use BIGGYM;
@@ -21,15 +22,17 @@ create procedure spRegisterExercise(in vExerciseName varchar(128),
                                    out ErrorCode int,
                                    out ErrorMsg varchar(512))
 begin
- 
+
+    -- Declare ..
+    declare ObjectName varchar(128) default 'EXERCISE';
+    
     -- -------------------------------------------------------------------------
     -- Exception Handling -- 
     -- -------------------------------------------------------------------------  
     declare CONTINUE handler for SQLEXCEPTION
         begin
-          set @objectName = 'EXERCISE';
           call spErrorHandler (ReturnCode, ErrorCode, ErrorMsg);
-          call spDebugLogger (database(), @objectName, ReturnCode, ErrorCode, ErrorMsg);
+          call spDebugLogger (database(), ObjectName, ReturnCode, ErrorCode, ErrorMsg);
         end;
 
     -- Variable Initialisation ..
@@ -53,25 +56,9 @@ begin
              vBodyPartName
             );
 
-    -- Get ID ..
-    set ObjectId = NULL;
-
-    select 
-        ID
-      into
-        ObjectId
-      from 
-        EXERCISE 
-     where 
-        NAME = vExerciseName 
-       and 
-        BODY_PART = vBodyPartName 
-   limit 1;
-      
-    -- If ID found, reset ReturnCode to 0 ..
-    if (ObjectId is NOT NULL and ReturnCode != 0) then
-        set ReturnCode = 0;
-    end if; 
+    -- Get its ID ..
+    set @getIdWhereClause = concat('NAME = ''', vExerciseName,  ''' and BODY_PART = ''', vBodyPartName, '''');
+    call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
  
 end$$
 delimiter ;

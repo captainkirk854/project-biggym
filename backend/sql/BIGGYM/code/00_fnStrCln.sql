@@ -9,7 +9,7 @@ returns varchar(1024)
 begin
 
   -- Initialise .. 
-  declare regExpClasses varchar(512) default '[ [:alnum:] [:digit:] [:blank:] [.~.] [.(.] [.).] [.[.] [.].] [._.] [.:.] [.-.] ]';
+  declare regExpClasses varchar(512) default '[ [:alnum:] [:digit:] [:blank:] [.=.] [...] [.~.] [.(.] [.).] [.[.] [.].] [._.] [.:.] [.-.] ]';
   declare pos, stringLength smallint default 1; 
   declare returnString varchar(1024) default ''; 
   declare c1 varchar(1); -- note if this is defined as char(1), then space becomes '' (!!?)

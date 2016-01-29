@@ -25,23 +25,24 @@ begin
 
     declare debugLoggingTable varchar(128) default 'DEBUG_LOG';
 
+    -- Use the existence of a logging table to trigger logging to that table ..
     if (select 1 from INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'BASE TABLE' and TABLE_SCHEMA = DebugLoggingDatabase and TABLE_NAME = debugLoggingTable) then
     
         set @dml = concat('insert into ', 
                                         DebugLoggingDatabase, '.',  debugLoggingTable, 
-                              ' (',
-                                    'OBJECT_NAME,',
-                                    'RETURN_CODE,',
-                                    'ERROR_CODE,',
-                                    'ERROR_MESSAGE'
-                              ' )',
-                          ' values ', 
-                              ' (', 
-                                    '''',strcln(ObjectName),'''', ',',
-                                         ReturnCode,      ',',
-                                         ErrorCode,       ',', 
-                                    '''',strcln(ErrorMsg),'''', 
-                              ' )'
+                                      ' (',
+                                            'OBJECT_NAME,',
+                                            'RETURN_CODE,',
+                                            'ERROR_CODE,',
+                                            'ERROR_MESSAGE'
+                                      ' )',
+                                  ' values ', 
+                                      ' (', 
+                                            '''',strcln(ObjectName),'''', ',',
+                                                 ReturnCode,      ',',
+                                                 ErrorCode,       ',', 
+                                            '''',strcln(ErrorMsg),'''', 
+                                      ' )'
                          );
                       
         call spExecuteSQL (@dml, NULL, NULL, NULL, NULL);

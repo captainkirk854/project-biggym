@@ -18,8 +18,7 @@ begin
  set ErrorCode = 0;
  set ErrorMsg = '-';
  
-
- -- Get diagnostics ..
+ -- Get sql error diagnostics ..
  get DIAGNOSTICS CONDITION 1 @Sqlstate = RETURNED_SQLSTATE, @Errno = MYSQL_ERRNO, @Text = MESSAGE_TEXT;
 
  -- Assign for output ..
