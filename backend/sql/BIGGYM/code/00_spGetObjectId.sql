@@ -25,7 +25,10 @@ create procedure spGetObjectId(in ObjectName varchar(128),
 begin
 
     -- Declare ..
+    declare SprocName varchar(128) default 'GetObjectId';
+    declare SprocComment varchar(512) default '';
     declare ErrorCode int;
+    declare ErrorState int;
     declare ErrorMsg varchar(512);
 
     -- -------------------------------------------------------------------------
@@ -33,13 +36,15 @@ begin
     -- -------------------------------------------------------------------------
      declare CONTINUE handler for SQLEXCEPTION
         begin
-          call spErrorHandler (ReturnCode, ErrorCode, ErrorMsg);
-          call spDebugLogger (database(), ObjectName, ReturnCode, ErrorCode, ErrorMsg);
+          set SprocComment = concat('SEVERITY 1 EXCEPTION');
+          call spErrorHandler (ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+          call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         end;
         
     -- Variable Initialisation ..
     set ReturnCode = 0;
     set ErrorCode = 0;
+    set ErrorState = 0;
     set ErrorMsg = '-';
     -- -------------------------------------------------------------------------
     -- Exception Handling -- 
@@ -64,6 +69,12 @@ delimiter ;
 
 /*
 Sample Usage:
+set @objectName='TRAINING_PLAN';
+set @getIdWhereClause = "NAME = ''Get Bigger'' and PROFILEid = 1";
+set @objectId = NULL;
+set @returnCode = NULL;
+call spGetObjectId (@objectName, @getIdWhereClause, @objectId,  @returnCode);
+select @objectId,  @returnCode;
 
 set @objectName='TRAINING_PLAN';
 set @getIdWhereClause = concat('NAME = ''', vTrainingPlanName,  ''' and PROFILEid = ', vProfileId);
