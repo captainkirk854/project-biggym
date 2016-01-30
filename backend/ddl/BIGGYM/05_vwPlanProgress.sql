@@ -10,7 +10,7 @@ create or replace view vwPlanProgress as
 select
      prg.ID PROGRESSId,
      vwPD.*,
-     prg.DATE_REGISTERED REGISTRATION_PROGRESS,
+     prg.DATE_REGISTERED PROGRESS_REGISTRATION,
      round(datediff(curdate(), prg.DATE_REGISTERED), 1) PROGRESS_AGE,
      prg.SET_01_REPS,
      prg.SET_01_WEIGHT,

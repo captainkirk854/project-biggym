@@ -15,7 +15,7 @@ select
       per.BIRTH_DATE DOB,
       round((datediff(curdate(), per.BIRTH_DATE) / 365), 1) AGE,
       prf.NAME PROFILE_NAME,
-      prf.DATE_REGISTERED REGISTRATION_PROFILE,
+      prf.DATE_REGISTERED PROFILE_REGISTRATION,
       round(datediff(curdate(), prf.DATE_REGISTERED), 1) PROFILE_AGE
   from 
       PERSON per, 

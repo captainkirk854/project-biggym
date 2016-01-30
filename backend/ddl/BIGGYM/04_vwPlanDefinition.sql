@@ -11,7 +11,7 @@ select
     def.PLANid,
     def.ID DEFINITIONid,
     def.EXERCISEid,
-    def.DATE_REGISTERED REGISTRATION_DEFINITION,
+    def.DATE_REGISTERED DEFINITION_REGISTRATION,
     round(datediff(curdate(), def.DATE_REGISTERED), 1) DEFINITION_AGE,
     def.PLAN_DAY,
     def.EXERCISE_ORDINALITY,
