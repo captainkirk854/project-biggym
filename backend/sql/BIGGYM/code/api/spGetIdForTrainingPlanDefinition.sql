@@ -14,18 +14,18 @@ use BIGGYM;
 drop procedure if exists spGetIdForTrainingPlanDefinition;
 delimiter $$
 create procedure spGetIdForTrainingPlanDefinition(in vPlanId smallint,
-				                                  in vExerciseId smallint,
-	                 		                     out ObjectId smallint,
-					                             out ReturnCode int)
+                                                  in vExerciseId smallint,
+                                                 out ObjectId smallint,
+                                                 out ReturnCode int)
 
 begin
 
     -- Declare ..
-	declare ObjectName varchar(128) default 'TRAINING_PLAN_DEFINITION';
+    declare ObjectName varchar(128) default 'TRAINING_PLAN_DEFINITION';
     
-	-- Get Plan Definition Id ..
-	set @getIdWhereClause = concat('PLANId = ', vPlanId, ' and EXERCISEid = ', vExerciseId);
-	call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
+    -- Get Plan Definition Id ..
+    set @getIdWhereClause = concat('PLANId = ', vPlanId, ' and EXERCISEid = ', vExerciseId);
+    call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
 
 end$$
 delimiter ;

@@ -14,9 +14,9 @@ use BIGGYM;
 drop procedure if exists spGetIdForTrainingPlan;
 delimiter $$
 create procedure spGetIdForTrainingPlan(in vTrainingPlanName varchar(128),
-				                        in vProfileId smallint,
-				                       out ObjectId smallint,
-									   out ReturnCode int)
+                                        in vProfileId smallint,
+                                       out ObjectId smallint,
+                                       out ReturnCode int)
 begin
 
     -- Declare ..

@@ -14,10 +14,10 @@ use BIGGYM;
 drop procedure if exists spGetIdForPerson;
 delimiter $$
 create procedure spGetIdForPerson(in vFirstName varchar(128),
-     			                  in vLastName varchar(128),
-			                      in vBirthdate date,
-			                     out ObjectId smallint,
-			                     out ReturnCode int)
+                                  in vLastName varchar(128),
+                                  in vBirthdate date,
+                                 out ObjectId smallint,
+                                 out ReturnCode int)
 begin
 
     -- Declare ..

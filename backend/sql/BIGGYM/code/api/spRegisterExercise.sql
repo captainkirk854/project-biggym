@@ -66,7 +66,7 @@ begin
                  vExerciseName,
                  vBodyPartName
                 );
-		call spGetIdForExercise (vExerciseName, vBodyPartName, ObjectId, ReturnCode);
+        call spGetIdForExercise (vExerciseName, vBodyPartName, ObjectId, ReturnCode);
     else
         set SprocComment = concat('ObjectId for [', SignificantFields, '] already exists');
     end if;
