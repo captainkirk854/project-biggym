@@ -1,3 +1,7 @@
+use BIGGYM;
+
+
+-- Exercise ..
 call spRegisterExercise ('Bench Press', 'Chest', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterExercise ('Dips', 'Chest', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterExercise ('Squats', 'Legs', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
@@ -10,6 +14,7 @@ call spRegisterExercise ('Pullup', 'Back', @id, @returnCode, @errorCode, @stateC
 call spRegisterExercise ('Lateral Raises', 'Shoulders', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
+-- Person ..
 call spRegisterPerson ('Jim', 'Nasium', '3000-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterPerson ('Luke', 'Skywalker', '1951-09-25', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterPerson ('William', 'Shatner', '1931-03-22', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
@@ -22,6 +27,7 @@ call spRegisterPerson ('Sylvester', 'Stallone', '1946-07-06', @id, @returnCode, 
 call spRegisterPerson ('Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
+-- Profile ..
 call spRegisterProfile ('Big Jim', 'Jim', 'Nasium', '3000-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterProfile ('Lucky Luke', 'Luke', 'Skywalker', '1951-09-25', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterProfile ('Captain Kirk', 'William', 'Shatner', '1931-03-22', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
@@ -36,6 +42,7 @@ call spRegisterProfile ('Faceman', 'Dirk', 'Benedict', '1945-03-01', @id, @retur
 call spRegisterProfile ('StarBuck', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
+-- Training Plan ..
 call spRegisterTrainingPlan ('My winter training for big, big gains - trust me', 'Numero Uno', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterTrainingPlan ('Ultimate, Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterTrainingPlan ('Big Jims Big Gym mass gaining', 'Big Jim', 'Jim', 'Nasium', '3000-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
@@ -44,6 +51,8 @@ call spRegisterTrainingPlan ('Heavy Lifting - Maximum Contraction', 'Muscular Mi
 call spRegisterTrainingPlan ('Get Bigger Scam Workout', 'Faceman', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterTrainingPlan ('I aint gettin on no plane sucka workout', 'Mr.T', 'Lawrence', 'Tureaud', '1952-05-21', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
+
+-- Training Plan Definition ..
 call spRegisterTrainingPlanDefinition ('Bench Press', 'Chest', 'Ultimate, Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterTrainingPlanDefinition ('Squats', 'Legs', 'Ultimate, Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterTrainingPlanDefinition ('Deadlift', 'All', 'Heavy Lifting - Maximum Contraction', 'Muscular Mike', 'Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);

@@ -34,7 +34,6 @@ alter table TRAINING_PLAN_DEFINITION
  (
   PLANid asc, 
   PLAN_DAY asc,
-  EXERCISEid asc,
   EXERCISE_ORDINALITY asc
  );
 

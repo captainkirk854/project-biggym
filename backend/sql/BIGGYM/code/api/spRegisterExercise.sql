@@ -8,7 +8,7 @@ Dependency :
             STORED PROCEDURE :
                 - spDebugLogger 
                 - spErrorHandler
-                - spGetObjectId
+                - spGetIdForExercise
 */
 
 use BIGGYM;
@@ -51,8 +51,7 @@ begin
  
     -- Attempt exercise registration ..
     set SprocComment = concat('Searching for ObjectId [', SignificantFields, ']');
-    set @getIdWhereClause = concat('NAME = ''', vExerciseName,  ''' and BODY_PART = ''', vBodyPartName, '''');
-    call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
+    call spGetIdForExercise (vExerciseName, vBodyPartName, ObjectId, ReturnCode);
     
     if (ObjectId is NULL) then
         set SprocComment = concat('ObjectId for [', SignificantFields, '] not found - Transaction required: INSERT');
@@ -67,7 +66,7 @@ begin
                  vExerciseName,
                  vBodyPartName
                 );
-        call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
+		call spGetIdForExercise (vExerciseName, vBodyPartName, ObjectId, ReturnCode);
     else
         set SprocComment = concat('ObjectId for [', SignificantFields, '] already exists');
     end if;

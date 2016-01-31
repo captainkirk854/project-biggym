@@ -12,7 +12,7 @@ Dependency :
                 - spDebugLogger 
                 - spErrorHandler
                 - spRegisterTrainingPlan
-                - spGetObjectId
+                - spGetIdForTrainingPlanDefinition
 */
 
 use BIGGYM;
@@ -85,8 +85,7 @@ begin
     if (vPlanId is NOT NULL and vExerciseId is NOT NULL) then
     
         set SprocComment = concat('Searching for ObjectId [', SignificantFields, ']');
-        set @getIdWhereClause = concat('PLANId = ', vPlanId, ' and EXERCISEid = ', vExerciseId);
-        call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
+        call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseId, ObjectId, ReturnCode);
     
         if (ObjectId is NULL) then
             set SprocComment = concat('ObjectId for [', SignificantFields, '] not found - Transaction required: INSERT');    
@@ -101,7 +100,7 @@ begin
                      vPlanId,
                      vExerciseId
                     );
-            call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
+            call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseId, ObjectId, ReturnCode);
         else
             set SprocComment = concat('ObjectId for [', SignificantFields, '] already exists');
         end if;

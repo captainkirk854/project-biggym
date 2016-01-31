@@ -8,7 +8,7 @@ Dependency :
             STORED PROCEDURE :
                 - spDebugLogger 
                 - spErrorHandler
-                - spGetObjectId
+                - spGetIdForPerson
 */
 
 use BIGGYM;
@@ -52,8 +52,7 @@ begin
  
     -- Attempt person registration ..
     set SprocComment = concat('Searching for ObjectId [', SignificantFields, ']');
-    set @getIdWhereClause = concat('FIRST_NAME = ''', vFirstName, ''' and LAST_NAME = ''', vLastName,  ''' and BIRTH_DATE = ''', vBirthdate, '''');
-    call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
+    call spGetIdForPerson (vFirstName, vLastName, vBirthdate, ObjectId, ReturnCode);
 
     if (ObjectId is NULL) then
         set SprocComment = concat('ObjectId for [', SignificantFields, '] not found - Transaction required: INSERT');
@@ -70,7 +69,7 @@ begin
                  vLastName,
                  vBirthDate
                 );
-        call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
+        call spGetIdForPerson (vFirstName, vLastName, vBirthdate, ObjectId, ReturnCode);
     else
         set SprocComment = concat('ObjectId for [', SignificantFields, '] already exists');
     end if;

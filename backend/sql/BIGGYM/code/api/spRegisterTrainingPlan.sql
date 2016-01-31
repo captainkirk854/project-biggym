@@ -1,5 +1,5 @@
 /*
-Name       : RegisterTrainingPlan
+Name       : spRegisterTrainingPlan
 Object Type: STORED PROCEDURE
 Dependency : 
             TABLE:
@@ -11,7 +11,7 @@ Dependency :
                 - spDebugLogger 
                 - spErrorHandler
                 - spRegisterProfile
-                - spGetObjectId
+                - spGetIdForTrainingPlan
 */
 
 use BIGGYM;
@@ -71,9 +71,8 @@ begin
     if (vProfileId is NOT NULL) then
 
         set SprocComment = concat('Searching for ObjectId [', SignificantFields, ']');
-        set @getIdWhereClause = concat('NAME = ''', vTrainingPlanName,  ''' and PROFILEid = ', vProfileId);
-        call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode); 
-    
+        call spGetIdForTrainingPlan (vTrainingPlanName, vProfileId, ObjectId, ReturnCode);
+
         if (ObjectId is NULL) then
             set SprocComment = concat('ObjectId for [', SignificantFields, '] not found - Transaction required: INSERT');
             insert into 
@@ -87,7 +86,7 @@ begin
                      vTrainingPlanName,
                      vProfileId
                     );
-            call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
+            call spGetIdForTrainingPlan (vTrainingPlanName, vProfileId, ObjectId, ReturnCode);
         else
             set SprocComment = concat('ObjectId for [', SignificantFields, '] already exists');
         end if;

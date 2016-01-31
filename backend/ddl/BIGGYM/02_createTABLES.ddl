@@ -49,8 +49,8 @@ create table if not exists TRAINING_PLAN_DEFINITION
   DATE_REGISTERED datetime(3) default current_timestamp(3) not null,
   PLANid smallint not null,
   PLAN_DAY enum('1','2','3','4','5','6','7') null,
-  EXERCISEid smallint not null,
   EXERCISE_ORDINALITY tinyint null,
+  EXERCISEid smallint not null,
   primary key (ID)
  );
 

@@ -10,7 +10,7 @@ Dependency :
                 - spDebugLogger 
                 - spErrorHandler
                 - spRegisterPerson
-                - spGetObjectId
+                - spGetIdForProfile
 */
 
 use BIGGYM;
@@ -68,8 +68,7 @@ begin
     if (vPersonId is NOT NULL) then
     
         set SprocComment = concat('Searching for ObjectId [', SignificantFields, ']');
-        set @getIdWhereClause = concat('NAME = ''', vProfileName,  ''' and PERSONid = ', vPersonId);
-        call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
+        call spGetIdForProfile (vProfileName, vPersonId, ObjectId, ReturnCode);
         
         if (ObjectId is NULL) then
             set SprocComment = concat('ObjectId for [', SignificantFields, '] not found - Transaction required: INSERT');
@@ -84,7 +83,7 @@ begin
                      vProfileName,
                      vPersonId
                     );
-            call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
+            call spGetIdForProfile (vProfileName, vPersonId, ObjectId, ReturnCode);
         else
             set SprocComment = concat('ObjectId for [', SignificantFields, '] already exists');
         end if;
