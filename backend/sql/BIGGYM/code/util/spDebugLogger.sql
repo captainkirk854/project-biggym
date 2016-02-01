@@ -26,13 +26,14 @@ create procedure spDebugLogger(in DebugLoggingDatabase varchar(128),
                                in SqlErrorMsg varchar(512))
 begin
 
-    declare debugLoggingTable varchar(128) default 'DEBUG_LOG';
+    declare DebugLoggingTable varchar(128) default 'DEBUG_LOG';
+    declare nullIndicator char(1) default '-';
 
     -- Use the existence of a logging table to trigger logging to that table ..
-    if (select 1 from INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'BASE TABLE' and TABLE_SCHEMA = DebugLoggingDatabase and TABLE_NAME = debugLoggingTable) then
+    if (select 1 from INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'BASE TABLE' and TABLE_SCHEMA = DebugLoggingDatabase and TABLE_NAME = DebugLoggingTable) then
 
         set @dml = concat('insert into ', 
-                                        DebugLoggingDatabase, '.',  debugLoggingTable, 
+                                        DebugLoggingDatabase, '.',  DebugLoggingTable, 
                                       ' (',
                                             'OBJECT_NAME,',
                                             'SPROC_NAME,',
@@ -44,13 +45,13 @@ begin
                                       ' )',
                               ' values ', 
                                       ' (', 
-                                            '''',strcln(ObjectName),'''', ',',
-                                            '''',strcln(SprocName),'''', ',',
-                                            '''',strcln(SprocComment),'''', ',',
+                                            '''',strcln(ifNull(ObjectName, nullIndicator)),'''', ',',
+                                            '''',strcln(ifNull(SprocName, nullIndicator)),'''', ',',
+                                            '''',strcln(ifNull(SprocComment, nullIndicator)),'''', ',',
                                                  SprocReturnCode,      ',',
                                                  SqlErrorCode,       ',',
                                                  SqlStateCode,       ',',
-                                            '''',strcln(SqlErrorMsg),'''', 
+                                            '''',strcln(ifNull(SqlErrorMsg, nullIndicator)),'''', 
                                       ' )'
                          );
                       

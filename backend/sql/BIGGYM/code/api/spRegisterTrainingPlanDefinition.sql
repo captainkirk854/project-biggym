@@ -38,8 +38,11 @@ begin
     declare SprocName varchar(128) default 'spRegisterTrainingPlanDefinition';
     declare SprocComment varchar(512) default '';
     declare SignificantFields varchar(256) default concat(vFirstName, ': ', vLastName, ': ', vBirthDate, ': ', vProfileName, ': ', vTrainingPlanName, ': ', vExerciseName, ': ', vBodyPartName);
+
     declare vExerciseId smallint default NULL;
     declare vPlanId smallint default NULL;
+    declare vPlanDay smallint default NULL;
+    declare vExerciseOrdinality smallint default NULL;
     
     -- -------------------------------------------------------------------------
     -- Error Handling -- 
@@ -85,8 +88,8 @@ begin
     if (vPlanId is NOT NULL and vExerciseId is NOT NULL) then
     
         set SprocComment = concat('Searching for ObjectId [', SignificantFields, ']');
-        call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseId, ObjectId, ReturnCode);
-    
+        call spGetIdForTrainingPlanDefinition (vPlanId, vPlanDay, vExerciseOrdinality, vExerciseId, ObjectId, ReturnCode); 
+
         if (ObjectId is NULL) then
             set SprocComment = concat('ObjectId for [', SignificantFields, '] not found - Transaction required: INSERT');    
             insert into 
@@ -100,7 +103,7 @@ begin
                      vPlanId,
                      vExerciseId
                     );
-            call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseId, ObjectId, ReturnCode);
+               call spGetIdForTrainingPlanDefinition (vPlanId, vPlanDay, vExerciseOrdinality, vExerciseId, ObjectId, ReturnCode);
         else
             set SprocComment = concat('ObjectId for [', SignificantFields, '] already exists');
         end if;

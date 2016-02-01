@@ -15,21 +15,25 @@ begin
   declare c1 varchar(1); -- note if this is defined as char(1), then space becomes '' (!!?)
   
   -- Process ..
-  set stringLength = char_length(inputString); 
-  repeat 
-    begin 
-      set c1 = mid(inputString, pos, 1 );
-      
-      -- Use regular expression character classes to filter allowable characters ..
-      if (c1 regexp regExpClasses) then
-        set returnString=concat(returnString, c1); 
-      end if; 
-      set pos = pos + 1;
-    end; 
-  until pos > stringLength end repeat;
-  
-  -- Return modified string ..
-  return returnString; 
+  if (inputString is NOT NULL) then
+        set stringLength = char_length(inputString); 
+        repeat 
+        begin 
+          set c1 = mid(inputString, pos, 1 );
+          
+          -- Use regular expression character classes to filter allowable characters ..
+          if (c1 regexp regExpClasses) then
+            set returnString=concat(returnString, c1); 
+          end if; 
+          set pos = pos + 1;
+        end; 
+        until pos > stringLength end repeat;
+
+        -- Return modified string ..
+        return returnString;
+   else
+        return inputString;
+   end if;
 end $$
  
 delimiter ;
@@ -41,4 +45,5 @@ select strcln('This works !!!!&&&$$!');
 select strcln('This is allowable and simple as 1 2 3');
 select strcln('These chaps "$"$"()"$ might disappear');
 select strcln('''');
+select strcln(NULL);
 */ 

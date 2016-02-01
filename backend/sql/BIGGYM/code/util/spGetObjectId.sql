@@ -36,7 +36,7 @@ begin
     -- -------------------------------------------------------------------------
      declare CONTINUE handler for SQLEXCEPTION
         begin
-          set SprocComment = concat('SEVERITY 1 EXCEPTION');
+          set SprocComment = concat('SEVERITY 1 EXCEPTION', ' => SQL [', ifNull(@sql, 'NULL'), ']');
           call spErrorHandler (ReturnCode, ErrorCode, ErrorState, ErrorMsg);
           call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         end;
