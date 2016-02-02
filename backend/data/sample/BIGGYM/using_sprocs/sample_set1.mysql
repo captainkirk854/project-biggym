@@ -2,29 +2,29 @@ use BIGGYM;
 
 
 -- Exercise ..
-call spRegisterExercise ('Bench Press', 'Chest', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterExercise ('Dips', 'Chest', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterExercise ('Squats', 'Legs', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterExercise ('Deadlift', 'All', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterExercise ('Bicep Barbell Curls', 'Arms', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterExercise ('Tricep Press', 'Arms', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterExercise ('Dips', 'Arms', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterExercise ('PullDown', 'Back', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterExercise ('Pullup', 'Back', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterExercise ('Lateral Raises', 'Shoulders', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise ('Bench Press', 'Chest', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise ('Dips', 'Chest', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise ('Squats', 'Legs', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise ('Deadlift', 'All', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise ('Bicep Barbell Curls', 'Arms', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise ('Tricep Press', 'Arms', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise ('Dips', 'Arms', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise ('PullDown', 'Back', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise ('Pullup', 'Back', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise ('Lateral Raises', 'Shoulders', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
 -- Person ..
-call spRegisterPerson ('Jim', 'Nasium', '3000-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterPerson ('Luke', 'Skywalker', '1951-09-25', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterPerson ('William', 'Shatner', '1931-03-22', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterPerson ('John', 'Little', '1420-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterPerson ('Michael', 'Ironside', '1950-02-12', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterPerson ('Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterPerson ('Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterPerson ('Jean-Claude', 'Van Damme', '1960-10-18', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterPerson ('Sylvester', 'Stallone', '1946-07-06', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterPerson ('Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson ('Jim', 'Nasium', '3000-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson ('Luke', 'Skywalker', '1951-09-25', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson ('William', 'Shatner', '1931-03-22', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson ('John', 'Little', '1420-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson ('Michael', 'Ironside', '1950-02-12', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson ('Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson ('Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson ('Jean-Claude', 'Van Damme', '1960-10-18', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson ('Sylvester', 'Stallone', '1946-07-06', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson ('Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
 -- Profile ..
@@ -56,3 +56,22 @@ call spRegisterTrainingPlan ('I aint gettin on no plane sucka workout', 'Mr.T', 
 call spRegisterTrainingPlanDefinition ('Bench Press', 'Chest', 'Ultimate, Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterTrainingPlanDefinition ('Squats', 'Legs', 'Ultimate, Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterTrainingPlanDefinition ('Deadlift', 'All', 'Heavy Lifting - Maximum Contraction', 'Muscular Mike', 'Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+
+
+-- Object Updates ...
+-- Exercise ..
+call spUpdateExercise ('Pullups', 'Back', @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdateExercise ('Pullups-Speziale', 'Back', @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+-- Person ..
+call spUpdatePerson ('Dirkus', 'Benedictus', '1945-03-01', 10, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+-- Profile ..
+call spUpdateProfile ('cara di hombre', 10, 11, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+-- Training Plan ..
+call spUpdateTrainingPlan ('Get Bigger Scam Workout', 11, 6, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+-- Training Plan Definition ..
+call spUpdateTrainingPlanDefinition (2, 1, 2, 5, 2, 1, @returnCode, @errorCode, @stateCode, @errorMsg);

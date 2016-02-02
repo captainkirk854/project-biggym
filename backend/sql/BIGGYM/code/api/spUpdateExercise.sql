@@ -29,8 +29,8 @@ begin
     declare SprocName varchar(128) default 'spUpdateExercise';
     
     declare SignificantFields varchar(256) default concat('NAME = <', vUpdatable_ExerciseName, '> ', 'BODY PART = <', vUpdatable_BodyPartName, '>');
-    declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'));
-    declare SprocComment varchar(512) default concat('UPDATE OBJECT FIELD LIST [', SignificantFields, '] ', WhereCondition);
+    declare WhereCondition varchar(256) default concat('where ID = ', ifNull(ObjectId, 'NULL'));
+    declare SprocComment varchar(512) default concat('update object field list [', SignificantFields, '] ', WhereCondition);
     
     declare localObjectId mediumint unsigned;
     declare tStatus varchar(64) default '-';
@@ -60,7 +60,7 @@ begin
         set tStatus = 'IGNORED - NO CHANGE FROM CURRENT';
         
     elseif (ObjectId is NOT NULL) then
-	
+    
         -- Update ..
         update EXERCISE
            set 
@@ -82,6 +82,7 @@ begin
     end if;
     
     -- Log ..
+    set SprocComment = concat(SprocComment, ': OBJECT ID ', ifNull(localObjectId, 'NULL'));
     set SprocComment = concat(SprocComment, ':  ', tStatus);
     call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
 

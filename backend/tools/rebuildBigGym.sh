@@ -72,7 +72,7 @@ mysqlb.sh $userName $userPass \*.sql
 #--------------------------
 echo "Building: Sample Data .."
 cd $cfgProjectRoot/data/sample/BIGGYM/using_sprocs > /dev/null 2>&1
-mysqlb.sh $userName $userPass sample_set1
+mysqlb.sh $userName $userPass sample_set1.mysql
 
 
 #-----------------------------------

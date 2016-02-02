@@ -34,8 +34,8 @@ begin
     declare ObjectName varchar(128) default 'TRAINING_PLAN_DEFINITION';
     declare SprocName varchar(128) default 'spUpdateTrainingPlanDefinition';
     declare SignificantFields varchar(256) default concat('EXERCISE_WEEK = <', ifNull(vUpdatable_ExerciseWeek, 'NULL'), '> ', 'EXERCISE_DAY = <', ifNull(vUpdatable_ExerciseDay, 'NULL'), '> ', 'EXERCISE_ORDINALITY = <', ifNull(vUpdatable_ExerciseOrdinality, 'NULL'), '> ',  'EXERCISEid = <', vUpdatable_ExerciseId, '>');
-	declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'), ' AND PLANid = ', vPlanId);
-    declare SprocComment varchar(512) default concat('UPDATE OBJECT FIELD LIST [', SignificantFields, '] ', WhereCondition);     
+    declare WhereCondition varchar(256) default concat('where ID = ', ifNull(ObjectId, 'NULL'), ' AND PLANid = ', vPlanId);
+    declare SprocComment varchar(512) default concat('update object field list [', SignificantFields, '] ', WhereCondition);  
     
     declare localObjectId mediumint unsigned;
     declare tStatus varchar(64) default '-';
@@ -70,13 +70,14 @@ begin
         update TRAINING_PLAN_DEFINITION
            set 
                DATE_REGISTERED = current_timestamp(3),
+               EXERCISE_WEEK = vUpdatable_ExerciseWeek,
                EXERCISE_DAY = vUpdatable_ExerciseDay,
                EXERCISE_ORDINALITY = vUpdatable_ExerciseOrdinality,
                EXERCISEid = vUpdatable_ExerciseId
          where
                ID = ObjectId
-		   and
-	       PLANid = vPlanId;
+           and
+               PLANid = vPlanId;
     
         -- Verify ..
         call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, vUpdatable_ExerciseId, localObjectId, ReturnCode);
@@ -90,6 +91,7 @@ begin
     end if;
     
     -- Log ..
+    set SprocComment = concat(SprocComment, ': OBJECT ID ', ifNull(localObjectId, 'NULL'));
     set SprocComment = concat(SprocComment, ':  ', tStatus);
     call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
 
@@ -111,6 +113,7 @@ select @planDefinitionId, @returnCode;
 
 set @planDefinitionId = 3;
 set @planId=5;
+set @exerciseWeek=NULL;
 set @exerciseDay=1;
 set @ExerciseOrder=NULL;
 set @ExerciseId=4;
@@ -119,6 +122,7 @@ select @planDefinitionId, @returnCode;
 
 set @planDefinitionId = 3;
 set @planId=5;
+set @exerciseWeek=NULL;
 set @exerciseDay=1;
 set @ExerciseOrder=1;
 set @ExerciseId=4;
@@ -127,6 +131,7 @@ select @planDefinitionId, @returnCode;
 
 set @planDefinitionId = 3;
 set @planId=5;
+set @exerciseWeek=NULL;
 set @exerciseDay=1;
 set @ExerciseOrder=1;
 set @ExerciseId=5;
@@ -136,6 +141,7 @@ select @planDefinitionId, @returnCode;
 
 set @planDefinitionId = 2;
 set @planId=2;
+set @exerciseWeek=NULL;
 set @exerciseDay=1;
 set @ExerciseOrder=1;
 set @ExerciseId=1;
@@ -144,6 +150,7 @@ select @planDefinitionId, @returnCode;
 
 set @planDefinitionId = 2;
 set @planId=2;
+set @exerciseWeek=NULL;
 set @exerciseDay=1;
 set @ExerciseOrder=1;
 set @ExerciseId=3;
@@ -152,6 +159,7 @@ select @planDefinitionId, @returnCode;
 
 set @planDefinitionId = 1;
 set @planId=2;
+set @exerciseWeek=NULL;
 set @exerciseDay=1;
 set @ExerciseOrder=1;
 set @ExerciseId=3;
@@ -160,9 +168,10 @@ select @planDefinitionId, @returnCode;
 
 set @planDefinitionId = 1;
 set @planId=2;
+set @exerciseWeek=2;
 set @exerciseDay=1;
 set @ExerciseOrder=2;
-set @ExerciseId=4;
+set @ExerciseId=5;
 call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
 select @planDefinitionId, @returnCode;
 */

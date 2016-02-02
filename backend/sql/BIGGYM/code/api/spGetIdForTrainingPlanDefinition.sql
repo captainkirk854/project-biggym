@@ -27,7 +27,7 @@ begin
     
     -- Get Plan Definition Id ..
     set @getIdWhereClause = concat(      ' PLANId = ', vPlanId,
-                                    ' and (EXERCISE_WEEK = ', ifNull(vExerciseDay, 'NULL or EXERCISE_WEEK is NULL'), ')',
+                                    ' and (EXERCISE_WEEK = ', ifNull(vExerciseWeek, 'NULL or EXERCISE_WEEK is NULL'), ')',
                                     ' and (EXERCISE_DAY = ', ifNull(vExerciseDay, 'NULL or EXERCISE_DAY is NULL'), ')',
                                     ' and (EXERCISE_ORDINALITY = ', ifNull(vExerciseOrdinality, 'NULL or EXERCISE_ORDINALITY is NULL'), ')',
                                     ' and EXERCISEid = ', vExerciseId

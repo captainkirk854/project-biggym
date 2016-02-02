@@ -29,9 +29,9 @@ begin
     declare ObjectName varchar(128) default 'PERSON';
     declare SprocName varchar(128) default 'spUpdatePerson';
     
-	declare SignificantFields varchar(256) default concat('FIRST_NAME = <', vUpdatable_FirstName, '> ', 'LAST_NAME = <', vUpdatable_LastName, '> ', 'BIRTH_DATE = <', vUpdatable_BirthDate, '>');
-	declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'));
-    declare SprocComment varchar(512) default concat('UPDATE OBJECT FIELD LIST [', SignificantFields, '] ', WhereCondition);
+    declare SignificantFields varchar(256) default concat('FIRST_NAME = <', vUpdatable_FirstName, '> ', 'LAST_NAME = <', vUpdatable_LastName, '> ', 'BIRTH_DATE = <', vUpdatable_BirthDate, '>');
+    declare WhereCondition varchar(256) default concat('where ID = ', ifNull(ObjectId, 'NULL'));
+    declare SprocComment varchar(512) default concat('update object field list [', SignificantFields, '] ', WhereCondition);
     
     declare localObjectId mediumint unsigned;
     declare tStatus varchar(64) default '-';
@@ -84,6 +84,7 @@ begin
     end if;
     
     -- Log ..
+    set SprocComment = concat(SprocComment, ': OBJECT ID ', ifNull(localObjectId, 'NULL'));
     set SprocComment = concat(SprocComment, ':  ', tStatus);
     call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);    
 

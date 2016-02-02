@@ -30,9 +30,9 @@ begin
     declare ObjectName varchar(128) default 'TRAINING_PLAN';
     declare SprocName varchar(128) default 'spUpdateTrainingPlan';
     
- 	declare SignificantFields varchar(256) default concat('NAME = <', vUpdatable_TrainingPlanName, '>');
-	declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'), ' AND PROFILEid = ', vProfileId);
-    declare SprocComment varchar(512) default concat('UPDATE OBJECT FIELD LIST [', SignificantFields, '] ', WhereCondition);       
+    declare SignificantFields varchar(256) default concat('NAME = <', vUpdatable_TrainingPlanName, '>');
+    declare WhereCondition varchar(256) default concat('where ID = ', ifNull(ObjectId, 'NULL'), ' and PROFILEid = ', vProfileId);
+    declare SprocComment varchar(512) default concat('update object field list [', SignificantFields, '] ', WhereCondition);       
     
     declare localObjectId mediumint unsigned;
     declare tStatus varchar(64) default '-';
@@ -70,8 +70,8 @@ begin
                NAME = vUpdatable_TrainingPlanName
          where
                ID = ObjectId
-		   and
-			   PROFILEid = vProfileId;
+           and
+               PROFILEid = vProfileId;
     
         -- Verify ..
         call spGetIdForTrainingPlan (vUpdatable_TrainingPlanName, vProfileId, localObjectId, ReturnCode);
@@ -85,6 +85,7 @@ begin
     end if;
     
     -- Log ..
+    set SprocComment = concat(SprocComment, ': OBJECT ID ', ifNull(localObjectId, 'NULL'));
     set SprocComment = concat(SprocComment, ':  ', tStatus);
     call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
     
