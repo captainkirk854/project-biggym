@@ -15,8 +15,8 @@ use BIGGYM;
 
 drop procedure if exists spUpdateExercise;
 delimiter $$
-create procedure spUpdateExercise(in vExerciseName varchar(128),
-                                  in vBodyPartName varchar(128),
+create procedure spUpdateExercise(in vUpdatable_ExerciseName varchar(128),
+                                  in vUpdatable_BodyPartName varchar(128),
                                   in ObjectId smallint,  
                                  out ReturnCode int,
                                  out ErrorCode int,
@@ -27,10 +27,10 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'EXERCISE';
     declare SprocName varchar(128) default 'spUpdateExercise';
-    declare SprocComment varchar(512) default '';
-    declare SignificantFields varchar(256) default concat('NAME = <', vExerciseName, '> : ',
-                                                          'BODY PART = <', vBodyPartName, '> : ',
-                                                          'ID = <', ObjectId, '>');
+    
+    declare SignificantFields varchar(256) default concat('NAME = <', vUpdatable_ExerciseName, '> ', 'BODY PART = <', vUpdatable_BodyPartName, '>');
+	declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'));
+    declare SprocComment varchar(512) default concat('UPDATE OBJECT FIELD LIST [', SignificantFields, '] ', WhereCondition);
     
     declare localObjectId smallint;
     declare tStatus varchar(64) default '-';
@@ -55,24 +55,23 @@ begin
     -- -------------------------------------------------------------------------
 
     -- Attempt exercise update ..
-    call spGetIdForExercise (vExerciseName, vBodyPartName, localObjectId, ReturnCode);
+    call spGetIdForExercise (vUpdatable_ExerciseName, vUpdatable_BodyPartName, localObjectId, ReturnCode);
     if (ObjectId = localObjectId) then
-        set tStatus = 'IGNORED - UPDATE RESULTS IN NO CHANGE';
+        set tStatus = 'IGNORED - NO CHANGE FROM CURRENT';
         
     elseif (ObjectId is NOT NULL) then
-        set SprocComment = concat('Update to [', SignificantFields, '] where ID = ', ObjectId, ' Transaction: UPDATE');
-        
+	
         -- Update ..
         update EXERCISE
            set 
                DATE_REGISTERED = current_timestamp(3),
-               NAME = vExerciseName,
-               BODY_PART = vBodyPartName
+               NAME = vUpdatable_ExerciseName,
+               BODY_PART = vUpdatable_BodyPartName
          where
                ID = ObjectId;
     
         -- Verify ..
-        call spGetIdForExercise (vExerciseName, vBodyPartName, localObjectId, ReturnCode);
+        call spGetIdForExercise (vUpdatable_ExerciseName, vUpdatable_BodyPartName, localObjectId, ReturnCode);
         if (ObjectId = localObjectId) then
           set tStatus = 'SUCCESS';
         else
@@ -83,7 +82,7 @@ begin
     end if;
     
     -- Log ..
-    set SprocComment = concat('Update OBJECT to [', SignificantFields, '] where ID = ', ifNull(ObjectId, 'NULL'), ':  ', tStatus);
+    set SprocComment = concat(SprocComment, ':  ', tStatus);
     call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
 
 end$$

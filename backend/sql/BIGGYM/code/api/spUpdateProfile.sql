@@ -16,7 +16,7 @@ use BIGGYM;
 
 drop procedure if exists spUpdateProfile;
 delimiter $$
-create procedure spUpdateProfile(in vProfileName varchar(32),
+create procedure spUpdateProfile(in vUpdatable_ProfileName varchar(32),
                                  in vPersonId smallint,
                                  in ObjectId smallint,
                                 out ReturnCode int,
@@ -28,10 +28,10 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'PROFILE';
     declare SprocName varchar(128) default 'spUpdateProfile';
-    declare SprocComment varchar(512) default '';
-    declare SignificantFields varchar(256) default concat('PERSONid = <', vPersonId, '> : ', 
-                                                          'NAME = <', vProfileName, '> : ',
-                                                          'ID = <', ObjectId, '>');
+    
+ 	declare SignificantFields varchar(256) default concat('NAME = <', vUpdatable_ProfileName, '>');
+	declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'), ' AND PERSONid = ', vPersonId);
+    declare SprocComment varchar(512) default concat('UPDATE OBJECT FIELD LIST [', SignificantFields, '] ', WhereCondition);   
     
     declare localObjectId smallint;
     declare tStatus varchar(64) default '-';
@@ -56,23 +56,24 @@ begin
     -- -------------------------------------------------------------------------
 
     -- Attempt profile update ..
-    call spGetIdForProfile (vProfileName, vPersonId, localObjectId, ReturnCode);
+    call spGetIdForProfile (vUpdatable_ProfileName, vPersonId, localObjectId, ReturnCode);
     if (ObjectId = localObjectId) then
-        set tStatus = 'IGNORED - UPDATE RESULTS IN NO CHANGE';
+        set tStatus = 'IGNORED - NO CHANGE FROM CURRENT';
         
     elseif (ObjectId is NOT NULL) then
-        set SprocComment = concat('Update to [', SignificantFields, '] where ID = ', ObjectId, ' Transaction: UPDATE');
-        
+    
         -- Update ..
         update PROFILE
            set 
                DATE_REGISTERED = current_timestamp(3),
-               NAME = vProfileName
+               NAME = vUpdatable_ProfileName
          where
-               ID = ObjectId;
+               ID = ObjectId
+		   and
+               PERSONid = vPersonId;
     
         -- Verify ..
-        call spGetIdForProfile (vProfileName, vPersonId, localObjectId, ReturnCode);
+        call spGetIdForProfile (vUpdatable_ProfileName, vPersonId, localObjectId, ReturnCode);
         if (ObjectId = localObjectId) then
           set tStatus = 'SUCCESS';
         else
@@ -83,7 +84,7 @@ begin
     end if;
     
     -- Log ..
-    set SprocComment = concat('Update OBJECT to [', SignificantFields, '] where ID = ', ifNull(ObjectId, 'NULL'), ':  ', tStatus);
+    set SprocComment = concat(SprocComment, ':  ', tStatus);
     call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
 
 end$$

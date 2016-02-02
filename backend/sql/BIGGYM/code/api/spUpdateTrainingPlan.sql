@@ -17,7 +17,7 @@ use BIGGYM;
 
 drop procedure if exists spUpdateTrainingPlan;
 delimiter $$
-create procedure spUpdateTrainingPlan(in vTrainingPlanName varchar(128),
+create procedure spUpdateTrainingPlan(in vUpdatable_TrainingPlanName varchar(128),
                                       in vProfileId smallint,
                                       in ObjectId smallint,
                                      out ReturnCode int,
@@ -29,10 +29,10 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN';
     declare SprocName varchar(128) default 'spUpdateTrainingPlan';
-    declare SprocComment varchar(512) default '';
-    declare SignificantFields varchar(256) default concat('PROFILEid = <', vProfileId, '> : ', 
-                                                          'NAME = <', vTrainingPlanName, '> : ',
-                                                          'ID = <', ObjectId, '>');
+    
+ 	declare SignificantFields varchar(256) default concat('NAME = <', vUpdatable_TrainingPlanName, '>');
+	declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'), ' AND PROFILEid = ', vProfileId);
+    declare SprocComment varchar(512) default concat('UPDATE OBJECT FIELD LIST [', SignificantFields, '] ', WhereCondition);       
     
     declare localObjectId smallint;
     declare tStatus varchar(64) default '-';
@@ -57,23 +57,24 @@ begin
     -- -------------------------------------------------------------------------
 
     -- Attempt Training Plan update ..
-    call spGetIdForTrainingPlan (vTrainingPlanName, vProfileId, localObjectId, ReturnCode);
+    call spGetIdForTrainingPlan (vUpdatable_TrainingPlanName, vProfileId, localObjectId, ReturnCode);
     if (ObjectId = localObjectId) then
-        set tStatus = 'IGNORED - UPDATE RESULTS IN NO CHANGE';
+        set tStatus = 'IGNORED - NO CHANGE FROM CURRENT';
         
     elseif (ObjectId is NOT NULL) then
-        set SprocComment = concat('Update to [', SignificantFields, '] where ID = ', ObjectId, ' Transaction: UPDATE');
-        
+    
         -- Update ..
         update TRAINING_PLAN
            set 
                DATE_REGISTERED = current_timestamp(3),
-               NAME = vTrainingPlanName
+               NAME = vUpdatable_TrainingPlanName
          where
-               ID = ObjectId;
+               ID = ObjectId
+		   and
+			   PROFILEid = vProfileId;
     
         -- Verify ..
-        call spGetIdForTrainingPlan (vTrainingPlanName, vProfileId, localObjectId, ReturnCode);
+        call spGetIdForTrainingPlan (vUpdatable_TrainingPlanName, vProfileId, localObjectId, ReturnCode);
         if (ObjectId = localObjectId) then
           set tStatus = 'SUCCESS';
         else
@@ -84,7 +85,7 @@ begin
     end if;
     
     -- Log ..
-    set SprocComment = concat('Update OBJECT to [', SignificantFields, '] where ID = ', ifNull(ObjectId, 'NULL'), ':  ', tStatus);
+    set SprocComment = concat(SprocComment, ':  ', tStatus);
     call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
     
 end$$

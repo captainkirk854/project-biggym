@@ -15,9 +15,9 @@ use BIGGYM;
 
 drop procedure if exists spUpdatePerson;
 delimiter $$
-create procedure spUpdatePerson(in vFirstName varchar(32),
-                                in vLastName varchar(32),
-                                in vBirthDate date,
+create procedure spUpdatePerson(in vUpdatable_FirstName varchar(32),
+                                in vUpdatable_LastName varchar(32),
+                                in vUpdatable_BirthDate date,
                                 in ObjectId smallint,
                                out ReturnCode int,
                                out ErrorCode int,
@@ -28,11 +28,10 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'PERSON';
     declare SprocName varchar(128) default 'spUpdatePerson';
-    declare SprocComment varchar(512) default '';
-    declare SignificantFields varchar(256) default concat('FIRST_NAME = <', vFirstName, '> : ', 
-                                                          'LAST_NAME = <', vLastName, '> : ', 
-                                                          'BIRTH_DATE = <', vBirthDate, '> : ',
-                                                          'ID = <', ObjectId, '>');
+    
+	declare SignificantFields varchar(256) default concat('FIRST_NAME = <', vUpdatable_FirstName, '> ', 'LAST_NAME = <', vUpdatable_LastName, '> ', 'BIRTH_DATE = <', vUpdatable_BirthDate, '>');
+	declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'));
+    declare SprocComment varchar(512) default concat('UPDATE OBJECT FIELD LIST [', SignificantFields, '] ', WhereCondition);
     
     declare localObjectId smallint;
     declare tStatus varchar(64) default '-';
@@ -57,25 +56,24 @@ begin
     -- -------------------------------------------------------------------------
  
     -- Attempt person update ..
-    call spGetIdForPerson (vFirstName, vLastName, vBirthdate, localObjectId, ReturnCode);
+    call spGetIdForPerson (vUpdatable_FirstName, vUpdatable_LastName, vUpdatable_BirthDate, localObjectId, ReturnCode);
     if (ObjectId = localObjectId) then
-        set tStatus = 'IGNORED - UPDATE RESULTS IN NO CHANGE';
+        set tStatus = 'IGNORED - NO CHANGE FROM CURRENT';
         
     elseif (ObjectId is NOT NULL) then
-        set SprocComment = concat('Update to [', SignificantFields, '] where ID = ', ObjectId, ' Transaction: UPDATE');
         
         -- Update ..
         update PERSON
            set 
                DATE_REGISTERED = current_timestamp(3),
-               FIRST_NAME = vFirstName,
-               LAST_NAME = vLastName,
-               BIRTH_DATE = vBirthDate
+               FIRST_NAME = vUpdatable_FirstName,
+               LAST_NAME = vUpdatable_LastName,
+               BIRTH_DATE = vUpdatable_BirthDate
          where
                ID = ObjectId;
     
         -- Verify ..
-        call spGetIdForPerson (vFirstName, vLastName, vBirthdate, localObjectId, ReturnCode);
+        call spGetIdForPerson (vUpdatable_FirstName, vUpdatable_LastName, vUpdatable_BirthDate, localObjectId, ReturnCode);
         if (ObjectId = localObjectId) then
           set tStatus = 'SUCCESS';
         else
@@ -86,7 +84,7 @@ begin
     end if;
     
     -- Log ..
-    set SprocComment = concat('Update OBJECT to [', SignificantFields, '] where ID = ', ifNull(ObjectId, 'NULL'), ':  ', tStatus);
+    set SprocComment = concat(SprocComment, ':  ', tStatus);
     call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);    
 
 end$$
