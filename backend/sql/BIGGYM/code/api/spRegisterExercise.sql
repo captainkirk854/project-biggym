@@ -17,7 +17,7 @@ drop procedure if exists spRegisterExercise;
 delimiter $$
 create procedure spRegisterExercise(in vExerciseName varchar(128),
                                     in vBodyPartName varchar(128),
-                                   out ObjectId smallint,  
+                                   out ObjectId mediumint unsigned,  
                                    out ReturnCode int,
                                    out ErrorCode int,
                                    out ErrorState int,

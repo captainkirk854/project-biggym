@@ -17,7 +17,7 @@ drop procedure if exists spUpdateExercise;
 delimiter $$
 create procedure spUpdateExercise(in vUpdatable_ExerciseName varchar(128),
                                   in vUpdatable_BodyPartName varchar(128),
-                                  in ObjectId smallint,  
+                                  in ObjectId mediumint unsigned,  
                                  out ReturnCode int,
                                  out ErrorCode int,
                                  out ErrorState int,
@@ -29,10 +29,10 @@ begin
     declare SprocName varchar(128) default 'spUpdateExercise';
     
     declare SignificantFields varchar(256) default concat('NAME = <', vUpdatable_ExerciseName, '> ', 'BODY PART = <', vUpdatable_BodyPartName, '>');
-	declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'));
+    declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'));
     declare SprocComment varchar(512) default concat('UPDATE OBJECT FIELD LIST [', SignificantFields, '] ', WhereCondition);
     
-    declare localObjectId smallint;
+    declare localObjectId mediumint unsigned;
     declare tStatus varchar(64) default '-';
     
     -- -------------------------------------------------------------------------

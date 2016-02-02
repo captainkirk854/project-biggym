@@ -18,7 +18,7 @@ delimiter $$
 create procedure spRegisterPerson(in vFirstName varchar(32),
                                   in vLastName varchar(32),
                                   in vBirthDate date,
-                                 out ObjectId smallint,
+                                 out ObjectId mediumint unsigned,
                                  out ReturnCode int,
                                  out ErrorCode int,
                                  out ErrorState int,

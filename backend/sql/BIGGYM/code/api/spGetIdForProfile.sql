@@ -14,8 +14,8 @@ use BIGGYM;
 drop procedure if exists spGetIdForProfile;
 delimiter $$
 create procedure spGetIdForProfile(in vProfileName varchar(32),
-                                   in vPersonId smallint,
-                                  out ObjectId smallint,
+                                   in vPersonId mediumint unsigned,
+                                  out ObjectId mediumint unsigned,
                                   out ReturnCode int)
 begin
 

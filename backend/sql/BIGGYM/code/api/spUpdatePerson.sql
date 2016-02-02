@@ -18,7 +18,7 @@ delimiter $$
 create procedure spUpdatePerson(in vUpdatable_FirstName varchar(32),
                                 in vUpdatable_LastName varchar(32),
                                 in vUpdatable_BirthDate date,
-                                in ObjectId smallint,
+                                in ObjectId mediumint unsigned,
                                out ReturnCode int,
                                out ErrorCode int,
                                out ErrorState int,
@@ -33,7 +33,7 @@ begin
 	declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'));
     declare SprocComment varchar(512) default concat('UPDATE OBJECT FIELD LIST [', SignificantFields, '] ', WhereCondition);
     
-    declare localObjectId smallint;
+    declare localObjectId mediumint unsigned;
     declare tStatus varchar(64) default '-';
  
     -- -------------------------------------------------------------------------

@@ -20,7 +20,7 @@ drop procedure if exists spGetObjectId;
 delimiter $$
 create procedure spGetObjectId(in ObjectName varchar(128),
                                in WhereClause varchar(1024),
-                              out ObjectId smallint,
+                              out ObjectId mediumint unsigned,
                               out ReturnCode int)
 begin
 

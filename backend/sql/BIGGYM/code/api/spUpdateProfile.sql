@@ -17,8 +17,8 @@ use BIGGYM;
 drop procedure if exists spUpdateProfile;
 delimiter $$
 create procedure spUpdateProfile(in vUpdatable_ProfileName varchar(32),
-                                 in vPersonId smallint,
-                                 in ObjectId smallint,
+                                 in vPersonId mediumint unsigned,
+                                 in ObjectId mediumint unsigned,
                                 out ReturnCode int,
                                 out ErrorCode int,
                                 out ErrorState int,
@@ -33,7 +33,7 @@ begin
 	declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'), ' AND PERSONid = ', vPersonId);
     declare SprocComment varchar(512) default concat('UPDATE OBJECT FIELD LIST [', SignificantFields, '] ', WhereCondition);   
     
-    declare localObjectId smallint;
+    declare localObjectId mediumint unsigned;
     declare tStatus varchar(64) default '-';
  
     -- -------------------------------------------------------------------------

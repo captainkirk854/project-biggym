@@ -21,7 +21,7 @@ create procedure spRegisterProfile(in vProfileName varchar(32),
                                    in vFirstName varchar(32),
                                    in vLastName varchar(32),
                                    in vBirthDate date,      
-                                  out ObjectId smallint,
+                                  out ObjectId mediumint unsigned,
                                   out ReturnCode int,
                                   out ErrorCode int,
                                   out ErrorState int,
@@ -33,7 +33,7 @@ begin
     declare SprocName varchar(128) default 'spRegisterProfile';
     declare SprocComment varchar(512) default '';
     declare SignificantFields varchar(256) default concat(vFirstName, ': ', vLastName, ': ', vBirthDate, ': ', vProfileName);
-    declare vPersonId smallint default NULL;
+    declare vPersonId mediumint unsigned default NULL;
  
     -- -------------------------------------------------------------------------
     -- Error Handling -- 

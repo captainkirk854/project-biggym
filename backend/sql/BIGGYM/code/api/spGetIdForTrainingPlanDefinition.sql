@@ -13,11 +13,12 @@ use BIGGYM;
 
 drop procedure if exists spGetIdForTrainingPlanDefinition;
 delimiter $$
-create procedure spGetIdForTrainingPlanDefinition(in vPlanId smallint,
-                                                  in vPlanDay smallint,
-                                                  in vExerciseOrdinality smallint,
-                                                  in vExerciseId smallint,
-                                                 out ObjectId smallint,
+create procedure spGetIdForTrainingPlanDefinition(in vPlanId mediumint unsigned,
+                                                  in vExerciseWeek tinyint unsigned,
+                                                  in vExerciseDay tinyint unsigned,
+                                                  in vExerciseOrdinality mediumint unsigned,
+                                                  in vExerciseId mediumint unsigned,
+                                                 out ObjectId mediumint unsigned,
                                                  out ReturnCode int)
 begin
 
@@ -26,7 +27,8 @@ begin
     
     -- Get Plan Definition Id ..
     set @getIdWhereClause = concat(      ' PLANId = ', vPlanId,
-                                    ' and (PLAN_DAY = ', ifNull(vPlanDay, 'NULL or PLAN_DAY is NULL'), ')',
+                                    ' and (EXERCISE_WEEK = ', ifNull(vExerciseDay, 'NULL or EXERCISE_WEEK is NULL'), ')',
+                                    ' and (EXERCISE_DAY = ', ifNull(vExerciseDay, 'NULL or EXERCISE_DAY is NULL'), ')',
                                     ' and (EXERCISE_ORDINALITY = ', ifNull(vExerciseOrdinality, 'NULL or EXERCISE_ORDINALITY is NULL'), ')',
                                     ' and EXERCISEid = ', vExerciseId
                                   );
@@ -40,9 +42,10 @@ delimiter ;
 Sample Usage:
 
 set @planId=5;
-set @planDay=NULL;
+set @ExerciseWeek=NULL;
+set @ExerciseDay=NULL;
 set @ExerciseOrder=NULL;
 set @ExerciseId=4;
-call spGetIdForTrainingPlanDefinition (@planId, @planDay, @ExerciseOrder, @ExerciseId, @id, @returnCode);
+call spGetIdForTrainingPlanDefinition (@planId, @ExerciseWeek, @ExerciseDay, @ExerciseOrder, @ExerciseId, @id, @returnCode);
 select @id, @returnCode;
 */

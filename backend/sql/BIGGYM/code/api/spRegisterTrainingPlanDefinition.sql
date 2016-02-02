@@ -26,7 +26,7 @@ create procedure spRegisterTrainingPlanDefinition(in vExerciseName varchar(128),
                                                   in vFirstName varchar(32),
                                                   in vLastName varchar(32),
                                                   in vBirthDate date,
-                                                 out ObjectId smallint,
+                                                 out ObjectId mediumint unsigned,
                                                  out ReturnCode int,
                                                  out ErrorCode int,
                                                  out ErrorState int,
@@ -39,10 +39,11 @@ begin
     declare SprocComment varchar(512) default '';
     declare SignificantFields varchar(256) default concat(vFirstName, ': ', vLastName, ': ', vBirthDate, ': ', vProfileName, ': ', vTrainingPlanName, ': ', vExerciseName, ': ', vBodyPartName);
 
-    declare vExerciseId smallint default NULL;
-    declare vPlanId smallint default NULL;
-    declare vPlanDay smallint default NULL;
-    declare vExerciseOrdinality smallint default NULL;
+    declare vExerciseId mediumint unsigned default NULL;
+    declare vPlanId mediumint unsigned default NULL;
+    declare vExerciseWeek tinyint unsigned default NULL;
+    declare vExerciseDay tinyint unsigned default NULL;
+    declare vExerciseOrdinality tinyint unsigned default NULL;
     
     -- -------------------------------------------------------------------------
     -- Error Handling -- 
@@ -88,7 +89,7 @@ begin
     if (vPlanId is NOT NULL and vExerciseId is NOT NULL) then
     
         set SprocComment = concat('Searching for ObjectId [', SignificantFields, ']');
-        call spGetIdForTrainingPlanDefinition (vPlanId, vPlanDay, vExerciseOrdinality, vExerciseId, ObjectId, ReturnCode); 
+        call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseWeek, vExerciseDay, vExerciseOrdinality, vExerciseId, ObjectId, ReturnCode); 
 
         if (ObjectId is NULL) then
             set SprocComment = concat('ObjectId for [', SignificantFields, '] not found - Transaction required: INSERT');    
@@ -103,7 +104,7 @@ begin
                      vPlanId,
                      vExerciseId
                     );
-               call spGetIdForTrainingPlanDefinition (vPlanId, vPlanDay, vExerciseOrdinality, vExerciseId, ObjectId, ReturnCode);
+               call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseWeek, vExerciseDay, vExerciseOrdinality, vExerciseId, ObjectId, ReturnCode);
         else
             set SprocComment = concat('ObjectId for [', SignificantFields, '] already exists');
         end if;

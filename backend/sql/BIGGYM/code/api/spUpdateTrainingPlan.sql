@@ -18,8 +18,8 @@ use BIGGYM;
 drop procedure if exists spUpdateTrainingPlan;
 delimiter $$
 create procedure spUpdateTrainingPlan(in vUpdatable_TrainingPlanName varchar(128),
-                                      in vProfileId smallint,
-                                      in ObjectId smallint,
+                                      in vProfileId mediumint unsigned,
+                                      in ObjectId mediumint unsigned,
                                      out ReturnCode int,
                                      out ErrorCode int,
                                      out ErrorState int,
@@ -34,7 +34,7 @@ begin
 	declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'), ' AND PROFILEid = ', vProfileId);
     declare SprocComment varchar(512) default concat('UPDATE OBJECT FIELD LIST [', SignificantFields, '] ', WhereCondition);       
     
-    declare localObjectId smallint;
+    declare localObjectId mediumint unsigned;
     declare tStatus varchar(64) default '-';
     
     -- -------------------------------------------------------------------------

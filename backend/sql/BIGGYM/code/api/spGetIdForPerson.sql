@@ -16,7 +16,7 @@ delimiter $$
 create procedure spGetIdForPerson(in vFirstName varchar(128),
                                   in vLastName varchar(128),
                                   in vBirthdate date,
-                                 out ObjectId smallint,
+                                 out ObjectId mediumint unsigned,
                                  out ReturnCode int)
 begin
 

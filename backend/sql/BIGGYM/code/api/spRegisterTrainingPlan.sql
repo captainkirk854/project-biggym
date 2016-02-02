@@ -23,7 +23,7 @@ create procedure spRegisterTrainingPlan(in vTrainingPlanName varchar(128),
                                         in vFirstName varchar(32),
                                         in vLastName varchar(32),
                                         in vBirthDate date,
-                                       out ObjectId smallint,
+                                       out ObjectId mediumint unsigned,
                                        out ReturnCode int,
                                        out ErrorCode int,
                                        out ErrorState int,
@@ -35,7 +35,7 @@ begin
     declare SprocName varchar(128) default 'spRegisterTrainingPlan';
     declare SprocComment varchar(512) default '';
     declare SignificantFields varchar(256) default concat(vFirstName, ': ', vLastName, ': ', vBirthDate, ': ', vProfileName, ': ', vTrainingPlanName);
-    declare vProfileId smallint default NULL;
+    declare vProfileId mediumint unsigned default NULL;
     
     -- -------------------------------------------------------------------------
     -- Error Handling -- 

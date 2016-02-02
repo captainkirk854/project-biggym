@@ -18,11 +18,12 @@ use BIGGYM;
 
 drop procedure if exists spUpdateTrainingPlanDefinition;
 delimiter $$
-create procedure spUpdateTrainingPlanDefinition(in vUpdatable_PlanDay smallint,
-                                                in vUpdatable_ExerciseOrdinality smallint,
-                                                in vUpdatable_ExerciseId smallint,
-                                                in vPlanId smallint,
-                                                in ObjectId smallint,
+create procedure spUpdateTrainingPlanDefinition(in vUpdatable_ExerciseWeek tinyint unsigned,
+                                                in vUpdatable_ExerciseDay tinyint unsigned,
+                                                in vUpdatable_ExerciseOrdinality tinyint unsigned,
+                                                in vUpdatable_ExerciseId mediumint unsigned,
+                                                in vPlanId mediumint unsigned,
+                                                in ObjectId mediumint unsigned,
                                                out ReturnCode int,
                                                out ErrorCode int,
                                                out ErrorState int,
@@ -32,12 +33,11 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN_DEFINITION';
     declare SprocName varchar(128) default 'spUpdateTrainingPlanDefinition';
-    
-  	declare SignificantFields varchar(256) default concat('PLAN_DAY = <', ifNull(vUpdatable_PlanDay, 'NULL'), '> ', 'EXERCISE_ORDINALITY = <', ifNull(vUpdatable_ExerciseOrdinality, 'NULL'), '> ',  'EXERCISEid = <', vUpdatable_ExerciseId, '>');
+    declare SignificantFields varchar(256) default concat('EXERCISE_WEEK = <', ifNull(vUpdatable_ExerciseWeek, 'NULL'), '> ', 'EXERCISE_DAY = <', ifNull(vUpdatable_ExerciseDay, 'NULL'), '> ', 'EXERCISE_ORDINALITY = <', ifNull(vUpdatable_ExerciseOrdinality, 'NULL'), '> ',  'EXERCISEid = <', vUpdatable_ExerciseId, '>');
 	declare WhereCondition varchar(256) default concat('WHERE ID = ', ifNull(ObjectId, 'NULL'), ' AND PLANid = ', vPlanId);
     declare SprocComment varchar(512) default concat('UPDATE OBJECT FIELD LIST [', SignificantFields, '] ', WhereCondition);     
     
-    declare localObjectId smallint;
+    declare localObjectId mediumint unsigned;
     declare tStatus varchar(64) default '-';
     
     -- -------------------------------------------------------------------------
@@ -60,7 +60,7 @@ begin
     -- -------------------------------------------------------------------------
 
     -- Attempt Training Plan Definition update ..
-    call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_PlanDay, vUpdatable_ExerciseOrdinality, vUpdatable_ExerciseId, localObjectId, ReturnCode);
+    call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, vUpdatable_ExerciseId, localObjectId, ReturnCode);
     if (ObjectId = localObjectId) then
         set tStatus = 'IGNORED - NO CHANGE FROM CURRENT';
         
@@ -70,16 +70,16 @@ begin
         update TRAINING_PLAN_DEFINITION
            set 
                DATE_REGISTERED = current_timestamp(3),
-               PLAN_DAY = vUpdatable_PlanDay,
+               EXERCISE_DAY = vUpdatable_ExerciseDay,
                EXERCISE_ORDINALITY = vUpdatable_ExerciseOrdinality,
                EXERCISEid = vUpdatable_ExerciseId
          where
                ID = ObjectId
 		   and
-			   PLANid = vPlanId;
+	       PLANid = vPlanId;
     
         -- Verify ..
-        call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_PlanDay, vUpdatable_ExerciseOrdinality, vUpdatable_ExerciseId, localObjectId, ReturnCode);
+        call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, vUpdatable_ExerciseId, localObjectId, ReturnCode);
         if (ObjectId = localObjectId) then
           set tStatus = 'SUCCESS';
         else
@@ -102,66 +102,67 @@ Sample Usage:
 
 set @planDefinitionId = 3;
 set @planId=5;
-set @planDay=NULL;
+set @exerciseWeek=NULL;
+set @exerciseDay=NULL;
 set @ExerciseOrder=NULL;
 set @ExerciseId=4;
-call spUpdateTrainingPlanDefinition (@planDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
 select @planDefinitionId, @returnCode;
 
 set @planDefinitionId = 3;
 set @planId=5;
-set @planDay=1;
+set @exerciseDay=1;
 set @ExerciseOrder=NULL;
 set @ExerciseId=4;
-call spUpdateTrainingPlanDefinition (@planDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
 select @planDefinitionId, @returnCode;
 
 set @planDefinitionId = 3;
 set @planId=5;
-set @planDay=1;
+set @exerciseDay=1;
 set @ExerciseOrder=1;
 set @ExerciseId=4;
-call spUpdateTrainingPlanDefinition (@planDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
 select @planDefinitionId, @returnCode;
 
 set @planDefinitionId = 3;
 set @planId=5;
-set @planDay=1;
+set @exerciseDay=1;
 set @ExerciseOrder=1;
 set @ExerciseId=5;
-call spUpdateTrainingPlanDefinition (@planDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
 select @planDefinitionId, @returnCode;
 
 
 set @planDefinitionId = 2;
 set @planId=2;
-set @planDay=1;
+set @exerciseDay=1;
 set @ExerciseOrder=1;
 set @ExerciseId=1;
-call spUpdateTrainingPlanDefinition (@planDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
 select @planDefinitionId, @returnCode;
 
 set @planDefinitionId = 2;
 set @planId=2;
-set @planDay=1;
+set @exerciseDay=1;
 set @ExerciseOrder=1;
 set @ExerciseId=3;
-call spUpdateTrainingPlanDefinition (@planDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
 select @planDefinitionId, @returnCode;
 
 set @planDefinitionId = 1;
 set @planId=2;
-set @planDay=1;
+set @exerciseDay=1;
 set @ExerciseOrder=1;
 set @ExerciseId=3;
-call spUpdateTrainingPlanDefinition (@planDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
 select @planDefinitionId, @returnCode;
 
 set @planDefinitionId = 1;
 set @planId=2;
-set @planDay=1;
+set @exerciseDay=1;
 set @ExerciseOrder=2;
 set @ExerciseId=4;
-call spUpdateTrainingPlanDefinition (@planDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
 select @planDefinitionId, @returnCode;
 */
