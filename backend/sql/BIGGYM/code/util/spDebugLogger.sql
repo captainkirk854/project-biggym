@@ -54,7 +54,7 @@ begin
                                             '''',strcln(ifNull(SqlErrorMsg, nullIndicator)),'''', 
                                       ' )'
                          );
-                      
+                     
         call spExecuteSQL (@dml, NULL, NULL, NULL, NULL);
         
     end if;

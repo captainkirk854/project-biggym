@@ -6,8 +6,9 @@ Dependency :
                 - PERSON
             
             STORED PROCEDURE :
-                - spDebugLogger 
-                - spErrorHandler
+                - spActionOnException
+                - spActionOnStart
+                - spActionOnEnd
                 - spGetIdForPerson
 */
 
@@ -27,42 +28,31 @@ begin
 
     -- Declare ..
     declare ObjectName varchar(128) default 'PERSON';
-    declare SprocName varchar(128) default 'spCreatePerson';
+    declare SpName varchar(128) default 'spCreatePerson';
+    declare SignificantFields varchar(256) default concat('FIRST_NAME=', vNew_FirstName, ',LAST_NAME =', vNew_LastName, ',BIRTH_DATE =', vNew_BirthDate);
+    declare ReferenceFields varchar(256) default concat('na');
+    declare TransactionType varchar(16) default 'insert';
     
-    declare SignificantFields varchar(256) default concat('FIRST_NAME = <', vNew_FirstName, '> ', 'LAST_NAME = <', vNew_LastName, '> ', 'BIRTH_DATE = <', vNew_BirthDate, '>');
-    declare ReferenceObjects varchar(256) default concat(' NONE ');
-    declare SprocComment varchar(512) default concat('insert into object field list [', SignificantFields, '] ', 'using reference(s) [', ReferenceObjects, ']');
-    
+    declare SpComment varchar(512);
     declare tStatus varchar(64) default '-';
     
-    -- -------------------------------------------------------------------------
-    -- Exception Handling -- 
-    -- -------------------------------------------------------------------------
     declare EXIT handler for SQLEXCEPTION
-        begin
-           set SprocComment = concat('SEVERITY 1 EXCEPTION: ', SprocComment);
-          call spErrorHandler (ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-          call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-        end;
-
-    -- Variable Initialisation ..
+    begin
+      set @severity = 1;
+      call spActionOnException (ObjectName, SpName, @severity, SpComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    end;
+    
+    -- Initialise ..
     set ReturnCode = 0;
     set ErrorCode = 0;
     set ErrorState = 0;
     set ErrorMsg = '-';
-    -- -------------------------------------------------------------------------
-    -- Exception Handling --
-    -- -------------------------------------------------------------------------
+    call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     
-    -- Clean character input ..
-    set vNew_FirstName = strcln(vNew_FirstName);
-    set vNew_LastName = strcln(vNew_LastName);
-    set vNew_BirthDate = strcln(vNew_BirthDate);
- 
-    -- Check for valid input ..
-    if(length(vNew_FirstName)*length(vNew_LastName)*length(vNew_BirthDate) != 0) then
- 
-        -- Attempt person registration ..
+    -- Only "good" string input is allowed ..
+    if(strisgood(vNew_FirstName) and strisgood(vNew_LastName) and strisgood(vNew_BirthDate)) then
+    
+        -- Attempt create ..
         call spGetIdForPerson (vNew_FirstName, vNew_LastName, vNew_BirthDate, ObjectId, ReturnCode);
         if (ObjectId is NULL) then
             insert into 
@@ -78,20 +68,21 @@ begin
                      vNew_LastName,
                      vNew_BirthDate
                     );
-            set tStatus = 'SUCCESS';
+            -- success ..
+            set tStatus = 0;
             call spGetIdForPerson (vNew_FirstName, vNew_LastName, vNew_BirthDate, ObjectId, ReturnCode);
         else
-            set tStatus = 'FIELD VALUE(S) ALREADY PRESENT';
+            -- already exists ..
+            set tStatus = 1;
         end if;
     else
-        set tStatus = 'ONLY ILLEGAL CHARACTERS IN ONE OR MORE FIELD VALUE(S)';
-        set ReturnCode = -1;
+        -- illegal characters found ..
+        set tStatus = -1;
     end if;
 
     -- Log ..
-    set SprocComment = concat(SprocComment, ': OBJECT ID ', ifNull(ObjectId, 'NULL'));
-    set SprocComment = concat(SprocComment, ':  ', tStatus);
-    call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    set ReturnCode = tStatus;
+    call spActionOnEnd (ObjectName, SpName, ObjectId, tStatus, SpComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
  
 end$$
 delimiter ;

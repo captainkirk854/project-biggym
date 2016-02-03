@@ -6,8 +6,9 @@ Dependency :
                 - PERSON
             
             STORED PROCEDURE :
-                - spDebugLogger 
-                - spErrorHandler
+                - spActionOnException
+                - spActionOnStart
+                - spActionOnEnd
                 - spGetIdForPerson
 */
 
@@ -27,38 +28,33 @@ begin
 
     -- Declare ..
     declare ObjectName varchar(128) default 'PERSON';
-    declare SprocName varchar(128) default 'spUpdatePerson';
+    declare SpName varchar(128) default 'spUpdatePerson';
+    declare SignificantFields varchar(256) default concat('FIRST_NAME=', vUpdatable_FirstName, ',LAST_NAME =', vUpdatable_LastName, ',BIRTH_DATE =', vUpdatable_BirthDate);
+    declare ReferenceFields varchar(256) default concat('ID=', ifNull(ObjectId, 'NULL'));
+    declare TransactionType varchar(16) default 'update';
     
-    declare SignificantFields varchar(256) default concat('FIRST_NAME = <', vUpdatable_FirstName, '> ', 'LAST_NAME = <', vUpdatable_LastName, '> ', 'BIRTH_DATE = <', vUpdatable_BirthDate, '>');
-    declare WhereCondition varchar(256) default concat('where ID = ', ifNull(ObjectId, 'NULL'));
-    declare SprocComment varchar(512) default concat('update object field list [', SignificantFields, '] ', WhereCondition);
-    
-    declare localObjectId mediumint unsigned;
+    declare SpComment varchar(512);
     declare tStatus varchar(64) default '-';
- 
-    -- -------------------------------------------------------------------------
-    -- Exception Handling -- 
-    -- -------------------------------------------------------------------------
+    declare localObjectId mediumint unsigned;
+    
     declare EXIT handler for SQLEXCEPTION
-        begin
-           set SprocComment = concat('SEVERITY 1 EXCEPTION: ', SprocComment);
-          call spErrorHandler (ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-          call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-        end;
-
-    -- Variable Initialisation ..
+    begin
+      set @severity = 1;
+      call spActionOnException (ObjectName, SpName, @severity, SpComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    end;
+    
+    -- Initialise ..
     set ReturnCode = 0;
     set ErrorCode = 0;
     set ErrorState = 0;
     set ErrorMsg = '-';
-    -- -------------------------------------------------------------------------
-    -- Exception Handling --
-    -- -------------------------------------------------------------------------
- 
-    -- Attempt person update ..
+    call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
+    
+    -- Attempt update ..
     call spGetIdForPerson (vUpdatable_FirstName, vUpdatable_LastName, vUpdatable_BirthDate, localObjectId, ReturnCode);
     if (ObjectId = localObjectId) then
-        set tStatus = 'IGNORED - NO CHANGE FROM CURRENT';
+        -- no update required ..
+        set tStatus = 2;
         
     elseif (ObjectId is NOT NULL) then
         
@@ -75,18 +71,20 @@ begin
         -- Verify ..
         call spGetIdForPerson (vUpdatable_FirstName, vUpdatable_LastName, vUpdatable_BirthDate, localObjectId, ReturnCode);
         if (ObjectId = localObjectId) then
-          set tStatus = 'SUCCESS';
+            -- success ..
+            set tStatus = 0;
         else
-          set tStatus = 'FAILURE';
+            -- unexpected multiple occurrence ..
+            set tStatus = -2;
         end if;
     else
-        set tStatus = 'IGNORED';
+        -- transaction ignored ..
+        set tStatus = -3;
     end if;
     
     -- Log ..
-    set SprocComment = concat(SprocComment, ': OBJECT ID ', ifNull(localObjectId, 'NULL'));
-    set SprocComment = concat(SprocComment, ':  ', tStatus);
-    call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);    
+    set ReturnCode = tStatus;
+    call spActionOnEnd (ObjectName, SpName, ObjectId, tStatus, SpComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);   
 
 end$$
 delimiter ;

@@ -8,8 +8,9 @@ Dependency :
                 - PERSON
             
             STORED PROCEDURE :
-                - spDebugLogger 
-                - spErrorHandler
+                - spActionOnException
+                - spActionOnStart
+                - spActionOnEnd
                 - spGetIdForTrainingPlan
 */
 
@@ -19,7 +20,7 @@ drop procedure if exists spCreateTrainingPlan;
 delimiter $$
 create procedure spCreateTrainingPlan(in vNew_TrainingPlanName varchar(128),
                                       in vProfileId mediumint unsigned,
-									 out ObjectId mediumint unsigned,
+                                     out ObjectId mediumint unsigned,
                                      out ReturnCode int,
                                      out ErrorCode int,
                                      out ErrorState int,
@@ -28,67 +29,59 @@ begin
 
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN';
-    declare SprocName varchar(128) default 'spCreateTrainingPlan';
-    
-    declare SignificantFields varchar(256) default concat('NAME = <', vNew_TrainingPlanName, '>');
-    declare WhereCondition varchar(256) default concat('where PROFILEid = ', vProfileId);
-    declare SprocComment varchar(512) default concat('insert into object field list [', SignificantFields, '] ', WhereCondition);
-    
+    declare SpName varchar(128) default 'spCreateTrainingPlan';
+    declare SignificantFields varchar(256) default concat('NAME=', vNew_TrainingPlanName);
+    declare ReferenceFields varchar(256) default concat('PROFILEid=', vProfileId);
+    declare TransactionType varchar(16) default 'insert';
+
+    declare SpComment varchar(512);
     declare tStatus varchar(64) default '-';
     
-    -- -------------------------------------------------------------------------
-    -- Error Handling -- 
-    -- -------------------------------------------------------------------------
-     declare EXIT handler for SQLEXCEPTION
-        begin
-           set SprocComment = concat('SEVERITY 1 EXCEPTION: ', SprocComment);
-          call spErrorHandler (ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-          call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-        end;
- 
-    -- Variable Initialisation ..
+    declare EXIT handler for SQLEXCEPTION
+    begin
+      set @severity = 1;
+      call spActionOnException (ObjectName, SpName, @severity, SpComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    end;
+
+    -- Initialise ..
     set ReturnCode = 0;
     set ErrorCode = 0;
     set ErrorState = 0;
     set ErrorMsg = '-';
-    -- -------------------------------------------------------------------------
-    -- Error Handling --
-    -- -------------------------------------------------------------------------
-
-    -- Clean character input ..
-    set vNew_TrainingPlanName = strcln(vNew_TrainingPlanName);
+    call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     
-    -- Check for valid input ..
-    if(length(vNew_TrainingPlanName) != 0) then
+    -- Only "good" string input is allowed ..
+    if(strisgood(vNew_TrainingPlanName)) then
 
-		-- Attempt Training Plan registration ..
-		call spGetIdForTrainingPlan (vNew_TrainingPlanName, vProfileId, ObjectId, ReturnCode);
-		if (ObjectId is NULL) then
-			insert into 
-					TRAINING_PLAN
-					(
-					 NAME,
-					 PROFILEid
-					)
-					values
-					(
-					 vNew_TrainingPlanName,
-					 vProfileId
-					);
-			set tStatus = 'SUCCESS';
-			call spGetIdForTrainingPlan (vNew_TrainingPlanName, vProfileId, ObjectId, ReturnCode);
-		else
-			set tStatus = 'FIELD VALUE(S) ALREADY PRESENT';
-		end if;
-	else
-        set tStatus = 'ONLY ILLEGAL CHARACTERS IN ONE OR MORE FIELD VALUE(S)';
-        set ReturnCode = -1;
-	end if;
-    
+        -- Attempt create ..
+        call spGetIdForTrainingPlan (vNew_TrainingPlanName, vProfileId, ObjectId, ReturnCode);
+        if (ObjectId is NULL) then
+            insert into 
+                    TRAINING_PLAN
+                    (
+                     NAME,
+                     PROFILEid
+                    )
+                    values
+                    (
+                     vNew_TrainingPlanName,
+                     vProfileId
+                    );
+            -- success ..
+            set tStatus = 0;
+            call spGetIdForTrainingPlan (vNew_TrainingPlanName, vProfileId, ObjectId, ReturnCode);
+        else
+            -- already exists ..
+            set tStatus = 1;
+        end if;
+    else
+        -- illegal characters found ..
+        set tStatus = -1;
+    end if;
+
     -- Log ..
-    set SprocComment = concat(SprocComment, ': OBJECT ID ', ifNull(ObjectId, 'NULL'));
-    set SprocComment = concat(SprocComment, ':  ', tStatus);
-    call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    set ReturnCode = tStatus;
+    call spActionOnEnd (ObjectName, SpName, ObjectId, tStatus, SpComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
     
 end$$
 delimiter ;

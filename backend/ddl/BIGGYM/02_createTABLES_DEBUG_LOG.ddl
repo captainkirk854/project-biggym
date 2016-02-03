@@ -8,7 +8,7 @@ create table if not exists DEBUG_LOG
   OBJECT_NAME varchar(128) not null,
   SPROC_NAME varchar(128) not null,
   SPROC_COMMENT varchar(512) not null,
-  SPROC_RETURN_CODE int unsigned not null,
+  SPROC_RETURN_CODE int not null,
   SQL_ERROR_CODE int unsigned not null,
   SQL_STATE_CODE int unsigned not null,
   SQL_ERROR_MESSAGE varchar(512) not null,

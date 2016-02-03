@@ -9,8 +9,9 @@ Dependency :
                 - PERSON
             
             STORED PROCEDURE :
-                - spDebugLogger 
-                - spErrorHandler
+                - spActionOnException
+                - spActionOnStart
+                - spActionOnEnd
                 - spGetIdForTrainingPlanDefinition
 */
 
@@ -32,37 +33,36 @@ begin
 
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN_DEFINITION';
-    declare SprocName varchar(128) default 'spUpdateTrainingPlanDefinition';
-    declare SignificantFields varchar(256) default concat('EXERCISE_WEEK = <', ifNull(vUpdatable_ExerciseWeek, 'NULL'), '> ', 'EXERCISE_DAY = <', ifNull(vUpdatable_ExerciseDay, 'NULL'), '> ', 'EXERCISE_ORDINALITY = <', ifNull(vUpdatable_ExerciseOrdinality, 'NULL'), '> ',  'EXERCISEid = <', vUpdatable_ExerciseId, '>');
-    declare WhereCondition varchar(256) default concat('where ID = ', ifNull(ObjectId, 'NULL'), ' AND PLANid = ', vPlanId);
-    declare SprocComment varchar(512) default concat('update object field list [', SignificantFields, '] ', WhereCondition);  
+    declare SpName varchar(128) default 'spUpdateTrainingPlanDefinition';
+    declare SignificantFields varchar(256) default concat('EXERCISE_WEEK=', ifNull(vUpdatable_ExerciseWeek, 'NULL'), 
+                                                          ',EXERCISE_DAY=', ifNull(vUpdatable_ExerciseDay, 'NULL'), 
+                                                          ',EXERCISE_ORDINALITY=', ifNull(vUpdatable_ExerciseOrdinality, 'NULL'), 
+                                                          ',EXERCISEid=', vUpdatable_ExerciseId);
+    declare ReferenceFields varchar(256) default concat('ID=', ifNull(ObjectId, 'NULL'), ',PLANid=', vPlanId);
+    declare TransactionType varchar(16) default 'update';    
     
-    declare localObjectId mediumint unsigned;
+    declare SpComment varchar(512);
     declare tStatus varchar(64) default '-';
+    declare localObjectId mediumint unsigned;    
     
-    -- -------------------------------------------------------------------------
-    -- Error Handling -- 
-    -- -------------------------------------------------------------------------
     declare EXIT handler for SQLEXCEPTION
-        begin
-           set SprocComment = concat('SEVERITY 1 EXCEPTION: ', SprocComment);
-          call spErrorHandler (ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-          call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-        end;
- 
-    -- Variable Initialisation ..
+    begin
+      set @severity = 1;
+      call spActionOnException (ObjectName, SpName, @severity, SpComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    end;
+    
+    -- Initialise ..
     set ReturnCode = 0;
     set ErrorCode = 0;
     set ErrorState = 0;
     set ErrorMsg = '-';
-    -- -------------------------------------------------------------------------
-    -- Error Handling --
-    -- -------------------------------------------------------------------------
-
-    -- Attempt Training Plan Definition update ..
+    call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
+    
+    -- Attempt update ..
     call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, localObjectId, ReturnCode);
     if (ObjectId = localObjectId) then
-        set tStatus = 'IGNORED - NO CHANGE FROM CURRENT';
+        -- no update required ..
+        set tStatus = 2;
         
     elseif (ObjectId is NOT NULL) then
         
@@ -70,7 +70,7 @@ begin
         update TRAINING_PLAN_DEFINITION
            set 
                DATE_REGISTERED = current_timestamp(3),
-			   EXERCISEid = vUpdatable_ExerciseId,
+               EXERCISEid = vUpdatable_ExerciseId,
                EXERCISE_WEEK = vUpdatable_ExerciseWeek,
                EXERCISE_DAY = vUpdatable_ExerciseDay,
                EXERCISE_ORDINALITY = vUpdatable_ExerciseOrdinality
@@ -82,18 +82,20 @@ begin
         -- Verify ..
         call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, localObjectId, ReturnCode);
         if (ObjectId = localObjectId) then
-          set tStatus = 'SUCCESS';
+            -- success ..
+            set tStatus = 0;
         else
-          set tStatus = 'FAILURE';
+            -- unexpected multiple occurrence ..
+            set tStatus = -2;
         end if;
     else
-        set tStatus = 'IGNORED';
+        -- transaction ignored ..
+        set tStatus = -3;
     end if;
     
     -- Log ..
-    set SprocComment = concat(SprocComment, ': OBJECT ID ', ifNull(localObjectId, 'NULL'));
-    set SprocComment = concat(SprocComment, ':  ', tStatus);
-    call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    set ReturnCode = tStatus;
+    call spActionOnEnd (ObjectName, SpName, ObjectId, tStatus, SpComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
 
 end$$
 delimiter ;
