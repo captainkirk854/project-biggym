@@ -8,8 +8,8 @@ use BIGGYM;
 
 create or replace view vwPlanDefinition as
 select 
-    def.PLANid,
     def.ID DEFINITIONid,
+    def.PLANid,
     def.EXERCISEid,
     def.DATE_REGISTERED DEFINITION_REGISTRATION,
     round(datediff(curdate(), def.DATE_REGISTERED), 1) DEFINITION_AGE,

@@ -60,7 +60,7 @@ begin
     -- -------------------------------------------------------------------------
 
     -- Attempt Training Plan Definition update ..
-    call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, vUpdatable_ExerciseId, localObjectId, ReturnCode);
+    call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, localObjectId, ReturnCode);
     if (ObjectId = localObjectId) then
         set tStatus = 'IGNORED - NO CHANGE FROM CURRENT';
         
@@ -70,17 +70,17 @@ begin
         update TRAINING_PLAN_DEFINITION
            set 
                DATE_REGISTERED = current_timestamp(3),
+			   EXERCISEid = vUpdatable_ExerciseId,
                EXERCISE_WEEK = vUpdatable_ExerciseWeek,
                EXERCISE_DAY = vUpdatable_ExerciseDay,
-               EXERCISE_ORDINALITY = vUpdatable_ExerciseOrdinality,
-               EXERCISEid = vUpdatable_ExerciseId
+               EXERCISE_ORDINALITY = vUpdatable_ExerciseOrdinality
          where
                ID = ObjectId
            and
                PLANid = vPlanId;
     
         -- Verify ..
-        call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, vUpdatable_ExerciseId, localObjectId, ReturnCode);
+        call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, localObjectId, ReturnCode);
         if (ObjectId = localObjectId) then
           set tStatus = 'SUCCESS';
         else

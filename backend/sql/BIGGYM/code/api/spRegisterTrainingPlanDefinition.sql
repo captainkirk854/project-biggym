@@ -38,11 +38,12 @@ begin
     declare ObjectName varchar(128) default 'TRAINING_PLAN_DEFINITION';
     declare SprocName varchar(128) default 'spRegisterTrainingPlanDefinition';
     declare vPlanId mediumint unsigned default NULL;
-    declare vExerciseWeek tinyint unsigned default NULL;
+    declare vExerciseId mediumint unsigned default NULL;
+    
+    declare vExerciseWeek tinyint unsigned default 1;
     declare vExerciseDay tinyint unsigned default NULL;
     declare vExerciseOrdinality tinyint unsigned default NULL;
-    declare vExerciseId mediumint unsigned default NULL;   
-    
+   
     declare SignificantFields varchar(256) default concat(' PLANid, EXERCISEid ');
     declare ReferenceObjects varchar(256) default concat('EXERCISEid(', 'NAME = <', vExerciseName, '>, ' , 'BODY_PART = <', vBodyPartName, '>) and ' ,'PLANId(', 'NAME = <', vTrainingPlanName, '>) and ' , 'PROFILEId(', 'NAME = <', vProfileName, '>) and ' ,'PERSONid(', 'FIRST_NAME = <', vFirstName, '> ', 'LAST_NAME = <', vLastName, '> ', 'BIRTH_DATE = <', vBirthDate, '>)');
     declare SprocComment varchar(512) default concat('insert into object field list [', SignificantFields, '] ', 'using reference(s) [', ReferenceObjects, ']');
@@ -91,7 +92,7 @@ begin
  
     -- Attempt TrainingPlanDefinition registration ..
     if (vPlanId is NOT NULL and vExerciseId is NOT NULL) then
-        call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseWeek, vExerciseDay, vExerciseOrdinality, vExerciseId, ObjectId, ReturnCode); 
+        call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseId, vExerciseWeek, vExerciseDay, vExerciseOrdinality, ObjectId, ReturnCode); 
         if (ObjectId is NULL) then    
             insert into 
                     TRAINING_PLAN_DEFINITION
@@ -105,7 +106,7 @@ begin
                      vExerciseId
                     );
                 set tStatus = 'SUCCESS';
-                call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseWeek, vExerciseDay, vExerciseOrdinality, vExerciseId, ObjectId, ReturnCode);
+                call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseId, vExerciseWeek, vExerciseDay, vExerciseOrdinality, ObjectId, ReturnCode); 
         else
                 set tStatus = 'FIELD VALUE(S) ALREADY PRESENT';
         end if;
