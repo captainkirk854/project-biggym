@@ -24,7 +24,7 @@
 tput clear
 
 # Customisable persistent variables ..
-cfgProjectRoot="$HOME/code/github/captainkirk854/project-BigGym/backend"
+cfgProjectRoot="$HOME/code/github/captainkirk854/project-BigGym/backend/BIGGYM"
 
 
 #-----------------------------------
@@ -54,7 +54,7 @@ currDir=`pwd`
 # Objects ..
 #--------------------------
 echo "Building: Objects .."
-cd $cfgProjectRoot/ddl/BIGGYM > /dev/null 2>&1
+cd $cfgProjectRoot/ddl > /dev/null 2>&1
 mysqlb.sh $userName $userPass \*.ddl
 mysqlb.sh $userName $userPass \*.sql
 
@@ -62,16 +62,16 @@ mysqlb.sh $userName $userPass \*.sql
 # Functions and Stored Procedures ..
 #--------------------------
 echo "Building: Functions and Stored Procedures .."
-cd $cfgProjectRoot/sql/BIGGYM/code/util > /dev/null 2>&1
+cd $cfgProjectRoot/sql/util > /dev/null 2>&1
 mysqlb.sh $userName $userPass \*.sql
-cd $cfgProjectRoot/sql/BIGGYM/code/api > /dev/null 2>&1
+cd $cfgProjectRoot/sql/api > /dev/null 2>&1
 mysqlb.sh $userName $userPass \*.sql
 
 #--------------------------
 # Sample Data ..
 #--------------------------
 echo "Building: Sample Data .."
-cd $cfgProjectRoot/data/sample/BIGGYM/using_sprocs > /dev/null 2>&1
+cd $cfgProjectRoot/data/sample/using_sprocs > /dev/null 2>&1
 mysqlb.sh $userName $userPass sample_set1.mysql
 
 
