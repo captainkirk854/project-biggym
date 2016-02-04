@@ -6,7 +6,6 @@ Dependency :
                 - any
 
             FUNCTION :
-                - strcln
 
             STORED PROCEDURE :
                 - spErrorHandler
@@ -54,7 +53,7 @@ begin
     set ObjectId = NULL;
     set @ObjectId = NULL;
 
-    set @sql = concat('select ID into @ObjectId from ', strcln(ObjectName), ' where ', WhereClause, ' limit 1 ');
+    set @sql = concat('select ID into @ObjectId from ', ObjectName, ' where ', WhereClause, ' limit 1 ');
     call spExecuteSQL (@sql, NULL, NULL, NULL, NULL);
     set ObjectId = @ObjectId;
         

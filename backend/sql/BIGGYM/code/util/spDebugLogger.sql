@@ -45,13 +45,13 @@ begin
                                       ' )',
                               ' values ', 
                                       ' (', 
-                                            '''',strcln(ifNull(ObjectName, nullIndicator)),'''', ',',
-                                            '''',strcln(ifNull(SprocName, nullIndicator)),'''', ',',
-                                            '''',strcln(ifNull(SprocComment, nullIndicator)),'''', ',',
+                                            '''',strcln(ifNull(ObjectName, nullIndicator), 'show'),'''', ',',
+                                            '''',strcln(ifNull(SprocName, nullIndicator), 'show'),'''', ',',
+                                            '''',strcln(ifNull(SprocComment, nullIndicator), 'show'),'''', ',',
                                                  SprocReturnCode,      ',',
                                                  SqlErrorCode,       ',',
                                                  SqlStateCode,       ',',
-                                            '''',strcln(ifNull(SqlErrorMsg, nullIndicator)),'''', 
+                                            '''',strcln(ifNull(SqlErrorMsg, nullIndicator), 'show'),'''', 
                                       ' )'
                          );
                      

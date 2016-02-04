@@ -32,7 +32,7 @@ create procedure spRegisterTrainingPlan(in vNew_TrainingPlanName varchar(128),
 begin
 
     -- Declare ..
-    declare ObjectName varchar(128) default 'TRAINING_PLAN';
+    declare ObjectName varchar(128) default '-various-';
  	declare SpName varchar(128) default 'spRegisterTrainingPlan';
     declare SignificantFields varchar(256) default concat('NAME=', vNew_TrainingPlanName);
     declare ReferenceFields varchar(256) default concat('PROFILEId(', 'NAME=', vProfileName, ') and ' ,

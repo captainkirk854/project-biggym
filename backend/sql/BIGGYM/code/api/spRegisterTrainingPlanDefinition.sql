@@ -36,7 +36,7 @@ create procedure spRegisterTrainingPlanDefinition(in vExerciseName varchar(128),
 begin
 
     -- Declare ..
-    declare ObjectName varchar(128) default 'TRAINING_PLAN_DEFINITION';
+    declare ObjectName varchar(128) default '-various-';
  	declare SpName varchar(128) default 'spRegisterTrainingPlanDefinition';
     declare SignificantFields varchar(256) default concat('PLANid, EXERCISEid');
     declare ReferenceFields varchar(256) default concat('EXERCISEid(', 'NAME=', vExerciseName, ',BODY_PART=', vBodyPartName, '>) and ' ,

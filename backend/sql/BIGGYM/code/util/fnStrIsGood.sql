@@ -12,7 +12,7 @@ begin
   declare returnString varchar(1024) default '';
   
   -- Process ..
-  if(length(inputString) = length(strcln(inputString))) then
+  if(length(inputString) = length(strcln(inputString, 'clean'))) then
     return true;
   else
     return false;

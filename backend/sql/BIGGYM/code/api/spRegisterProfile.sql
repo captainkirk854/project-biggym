@@ -30,7 +30,7 @@ create procedure spRegisterProfile(in vNew_ProfileName varchar(32),
 begin
 
     -- Declare ..
-    declare ObjectName varchar(128) default 'PROFILE';
+    declare ObjectName varchar(128) default '-various-';
 	declare SpName varchar(128) default 'spRegisterProfile';
     declare SignificantFields varchar(256) default concat('NAME=', vNew_ProfileName);
     declare ReferenceFields varchar(256) default concat('PERSONid(', 'FIRST_NAME=', vFirstName, ',LAST_NAME=', vLastName, ',BIRTH_DATE=', vBirthDate, ')');
