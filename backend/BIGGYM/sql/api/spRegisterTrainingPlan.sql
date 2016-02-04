@@ -60,7 +60,7 @@ begin
     -- Attempt create: Profile ..
     call spRegisterProfile (vProfileName, vFirstName, vLastName, vBirthDate, vProfileId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
      
-    -- Attempt create: TrainingPlan ..
+    -- Attempt create: Training Plan ..
     if (vProfileId is NOT NULL) then
         call spCreateTrainingPlan (vNew_TrainingPlanName, vProfileId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
     end if;

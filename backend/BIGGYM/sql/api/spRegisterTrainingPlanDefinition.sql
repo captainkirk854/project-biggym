@@ -58,15 +58,13 @@ begin
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
-    -- Attempt create: Profile ..
-
-    -- Attempt pre-emptive exercise-bodypart registration ..
+    -- Attempt create: Exercise-Bodypart ..
     call spCreateExercise (vExerciseName, vBodyPartName, vExerciseId, ReturnCode, ErrorCode,ErrorState, ErrorMsg);
 
-    -- Attempt pre-emptive profile registration cascade ..
+    -- Attempt create: Profile ..
     call spRegisterTrainingPlan (vTrainingPlanName, vProfileName, vFirstName, vLastName, vBirthDate, vPlanId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
  
-    -- Attempt TrainingPlanDefinition registration ..
+    -- Attempt create: Training Plan Definition ..
     if (vExerciseId is NOT NULL and vPlanId is NOT NULL) then
         call spCreateTrainingPlanDefinition (vExerciseId, vPlanId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
     end if;
