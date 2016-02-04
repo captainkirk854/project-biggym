@@ -11,24 +11,16 @@ select
      prg.ID PROGRESSId,
      vwPD.*,
      prg.DATE_REGISTERED PROGRESS_REGISTRATION,
-     round(datediff(curdate(), prg.DATE_REGISTERED), 1) PROGRESS_AGE,
-     prg.SET_01_REPS,
-     prg.SET_01_WEIGHT,
-     prg.SET_02_REPS,
-     prg.SET_02_WEIGHT,
-     prg.SET_03_REPS,
-     prg.SET_03_WEIGHT,
-     prg.SET_04_REPS,
-     prg.SET_04_WEIGHT,
-     prg.SET_05_REPS,
-     prg.SET_05_WEIGHT,
-     prg.SET_06_REPS,
-     prg.SET_06_WEIGHT
+     round(datediff(curdate(), prg.DATE_PHYSICAL), 1) PROGRESS_AGE,
+     prg.SET_REPS,
+     prg.SET_WEIGHT,
+     prg.DATE_PHYSICAL,
+     prg.SET_ORDINALITY
  from
      vwPlanDefinition vwPD,
-     PROGRESS prg
+     PROGRESS prg 
 where
      vwPD.DEFINITIONid = prg.DEFINITIONid
     ;
 
-select * from vwPlanProgress limit 10;
+select * from vwPlanProgress order by DATE_PHYSICAL, SET_ORDINALITY limit 10;

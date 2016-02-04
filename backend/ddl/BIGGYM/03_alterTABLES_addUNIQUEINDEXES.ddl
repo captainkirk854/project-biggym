@@ -38,11 +38,12 @@ alter table TRAINING_PLAN_DEFINITION
   EXERCISE_ORDINALITY asc
  );
 
-/*
-alter table PERSONAL_PROGRESS 
- add unique index IDXU_PERSONAL_PROGRESS_01 
+alter table PROGRESS 
+ add unique index IDXU_PROGRESS_01 
  (
-  EXERCISE_CONFIGid asc, 
-  EXERCISE_CONFIGid asc
+  DEFINITIONid asc, 
+  SET_ORDINALITY asc, 
+  SET_REPS asc, 
+  SET_WEIGHT asc, 
+  DATE_PHYSICAL asc 
  );
-*/
