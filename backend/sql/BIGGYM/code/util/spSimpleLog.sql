@@ -18,7 +18,7 @@ delimiter $$
 create procedure spSimpleLog(in ObjectName varchar(128),
                              in SprocName varchar(128),
                              in LogComment varchar(512),
-						     in ReturnCode int,
+                             in ReturnCode int,
                              in ErrorCode int,
                              in ErrorState int,
                              in ErrorMsg varchar(512))

@@ -32,10 +32,10 @@ begin
               -- Use regular expression to filter allowable characters ..
               if (c1 regexp regExpAllowableFilter) then
                 set returnString = concat(returnString, c1); 
-			  else
-				if(lower(cleanMode) = 'show') then
-					set returnString = concat(returnString, badCharFlag);
-				end if;
+              else
+                if(lower(cleanMode) = 'show') then
+                    set returnString = concat(returnString, badCharFlag);
+                end if;
               end if; 
               set pos = pos + 1;
             end; 

@@ -7,7 +7,7 @@ Dependency :
                 - PERSON
             
             STORED PROCEDURE :
-				- spActionOnException
+                - spActionOnException
                 - spActionOnStart
                 - spSimpleLog
                 - spCreatePerson
@@ -31,7 +31,7 @@ begin
 
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
-	declare SpName varchar(128) default 'spRegisterProfile';
+    declare SpName varchar(128) default 'spRegisterProfile';
     declare SignificantFields varchar(256) default concat('NAME=', vNew_ProfileName);
     declare ReferenceFields varchar(256) default concat('PERSONid(', 'FIRST_NAME=', vFirstName, ',LAST_NAME=', vLastName, ',BIRTH_DATE=', vBirthDate, ')');
     declare TransactionType varchar(16) default 'insert';
@@ -51,19 +51,19 @@ begin
     set ErrorCode = 0;
     set ErrorState = 0;
     set ErrorMsg = '-';
-	call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
+    call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
-	-- Attempt create: Person ..
-	call spCreatePerson (vFirstName, vLastName, vBirthDate, vPersonId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    -- Attempt create: Person ..
+    call spCreatePerson (vFirstName, vLastName, vBirthDate, vPersonId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
    
-	-- Attempt create: Profile ..
-	if (vPersonId is NOT NULL) then
-		call spCreateProfile (vNew_ProfileName, vPersonId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-	end if;
+    -- Attempt create: Profile ..
+    if (vPersonId is NOT NULL) then
+        call spCreateProfile (vNew_ProfileName, vPersonId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    end if;
 
     -- Log ..
-	call spSimpleLog (ObjectName, SpName, concat('----[END] return code: ', ReturnCode), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
+    call spSimpleLog (ObjectName, SpName, concat('----[END] return code: ', ReturnCode), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
 end$$
 delimiter ;

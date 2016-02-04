@@ -8,7 +8,7 @@ Dependency :
                 - PERSON
             
             STORED PROCEDURE :
-				- spActionOnException
+                - spActionOnException
                 - spActionOnStart
                 - spSimpleLog
                 - spRegisterProfile
@@ -33,13 +33,13 @@ begin
 
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
- 	declare SpName varchar(128) default 'spRegisterTrainingPlan';
+    declare SpName varchar(128) default 'spRegisterTrainingPlan';
     declare SignificantFields varchar(256) default concat('NAME=', vNew_TrainingPlanName);
     declare ReferenceFields varchar(256) default concat('PROFILEId(', 'NAME=', vProfileName, ') and ' ,
-														'PERSONid(', 'FIRST_NAME=', vFirstName, ',LAST_NAME=', vLastName, ',BIRTH_DATE=', vBirthDate, ')');
+                                                        'PERSONid(', 'FIRST_NAME=', vFirstName, ',LAST_NAME=', vLastName, ',BIRTH_DATE=', vBirthDate, ')');
     declare TransactionType varchar(16) default 'insert';   
     
-	declare SpComment varchar(512); 
+    declare SpComment varchar(512); 
     
     declare vProfileId mediumint unsigned default NULL;    
     
@@ -54,19 +54,19 @@ begin
     set ErrorCode = 0;
     set ErrorState = 0;
     set ErrorMsg = '-';
-	call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
+    call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
-	-- Attempt create: Profile ..
-	call spRegisterProfile (vProfileName, vFirstName, vLastName, vBirthDate, vProfileId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    -- Attempt create: Profile ..
+    call spRegisterProfile (vProfileName, vFirstName, vLastName, vBirthDate, vProfileId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
      
-	-- Attempt create: TrainingPlan ..
-	if (vProfileId is NOT NULL) then
-		call spCreateTrainingPlan (vNew_TrainingPlanName, vProfileId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    -- Attempt create: TrainingPlan ..
+    if (vProfileId is NOT NULL) then
+        call spCreateTrainingPlan (vNew_TrainingPlanName, vProfileId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
     end if;
  
     -- Log ..
-	call spSimpleLog (ObjectName, SpName, concat('----[END] return code: ', ReturnCode), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
+    call spSimpleLog (ObjectName, SpName, concat('----[END] return code: ', ReturnCode), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
     
 end$$
 delimiter ;

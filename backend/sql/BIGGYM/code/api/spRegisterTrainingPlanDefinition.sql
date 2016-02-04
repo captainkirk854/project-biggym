@@ -9,7 +9,7 @@ Dependency :
                 - PERSON
             
             STORED PROCEDURE :
-				- spActionOnException
+                - spActionOnException
                 - spActionOnStart
                 - spSimpleLog
                 - spCreateExercise
@@ -37,12 +37,12 @@ begin
 
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
- 	declare SpName varchar(128) default 'spRegisterTrainingPlanDefinition';
+    declare SpName varchar(128) default 'spRegisterTrainingPlanDefinition';
     declare SignificantFields varchar(256) default concat('PLANid, EXERCISEid');
     declare ReferenceFields varchar(256) default concat('EXERCISEid(', 'NAME=', vExerciseName, ',BODY_PART=', vBodyPartName, '>) and ' ,
-														'PLANId(', 'NAME=', vTrainingPlanName, ') and ' ,
-														'PROFILEId(', 'NAME=', vProfileName, ') and ' ,
-														'PERSONid(', 'FIRST_NAME=', vFirstName, ',LAST_NAME=', vLastName, ',BIRTH_DATE=', vBirthDate, ')');
+                                                        'PLANId(', 'NAME=', vTrainingPlanName, ') and ' ,
+                                                        'PROFILEId(', 'NAME=', vProfileName, ') and ' ,
+                                                        'PERSONid(', 'FIRST_NAME=', vFirstName, ',LAST_NAME=', vLastName, ',BIRTH_DATE=', vBirthDate, ')');
     declare TransactionType varchar(16) default 'insert'; 
     
     declare SpComment varchar(512);
@@ -55,10 +55,10 @@ begin
     set ErrorCode = 0;
     set ErrorState = 0;
     set ErrorMsg = '-';
-	call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
+    call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
-	-- Attempt create: Profile ..
+    -- Attempt create: Profile ..
 
     -- Attempt pre-emptive exercise-bodypart registration ..
     call spCreateExercise (vExerciseName, vBodyPartName, vExerciseId, ReturnCode, ErrorCode,ErrorState, ErrorMsg);
@@ -68,11 +68,11 @@ begin
  
     -- Attempt TrainingPlanDefinition registration ..
     if (vExerciseId is NOT NULL and vPlanId is NOT NULL) then
-		call spCreateTrainingPlanDefinition (vExerciseId, vPlanId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+        call spCreateTrainingPlanDefinition (vExerciseId, vPlanId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
     end if;
 
     -- Log ..
-	call spSimpleLog (ObjectName, SpName, concat('----[END] return code: ', ReturnCode), ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    call spSimpleLog (ObjectName, SpName, concat('----[END] return code: ', ReturnCode), ReturnCode, ErrorCode, ErrorState, ErrorMsg);
 
 end$$
 delimiter ;
