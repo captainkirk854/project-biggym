@@ -43,8 +43,8 @@ call spRegisterProfile ('StarBuck', 'Dirk', 'Benedict', '1945-03-01', @id, @retu
 
 
 -- Training Plan ..
-call spRegisterTrainingPlan ('My winter training for big, big gains - trust me', 'Numero Uno', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterTrainingPlan ('Ultimate, Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlan ('My winter training for big big gains - trust me', 'Numero Uno', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlan ('Ultimate Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterTrainingPlan ('Big Jims Big Gym mass gaining', 'Big Jim', 'Jim', 'Nasium', '3000-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterTrainingPlan ('High Rep Piggy Backs as instructed by Yoda on Dagobah.', 'Lucky Luke', 'Luke', 'Skywalker', '1951-09-25', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterTrainingPlan ('Heavy Lifting - Maximum Contraction', 'Muscular Mike', 'Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
@@ -53,8 +53,8 @@ call spRegisterTrainingPlan ('I aint gettin on no plane sucka workout', 'Mr.T', 
 
 
 -- Training Plan Definition ..
-call spRegisterTrainingPlanDefinition ('Bench Press', 'Chest', 'Ultimate, Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterTrainingPlanDefinition ('Squats', 'Legs', 'Ultimate, Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlanDefinition ('Bench Press', 'Chest', 'Ultimate Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlanDefinition ('Squats', 'Legs', 'Ultimate Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterTrainingPlanDefinition ('Deadlift', 'All', 'Heavy Lifting - Maximum Contraction', 'Muscular Mike', 'Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 

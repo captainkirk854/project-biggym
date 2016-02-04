@@ -7,10 +7,11 @@ Dependency :
                 - PERSON
             
             STORED PROCEDURE :
-                - spDebugLogger 
-                - spErrorHandler
+				- spActionOnException
+                - spActionOnStart
+                - spSimpleLog
                 - spCreatePerson
-                - spGetIdForProfile
+                - spCreateProfile
 */
 
 use BIGGYM;
@@ -30,82 +31,39 @@ begin
 
     -- Declare ..
     declare ObjectName varchar(128) default 'PROFILE';
-    declare SprocName varchar(128) default 'spRegisterProfile';
-    declare vPersonId mediumint unsigned default NULL;
-    
-    declare SignificantFields varchar(256) default concat('NAME = <', vNew_ProfileName, '>');
-    declare ReferenceObjects varchar(256) default concat(' PERSONid(', 'FIRST_NAME = <', vFirstName, '> ', 'LAST_NAME = <', vLastName, '> ', 'BIRTH_DATE = <', vBirthDate, '>)' );
-    declare SprocComment varchar(512) default concat('insert into object field list [', SignificantFields, '] ', 'using reference(s) [', ReferenceObjects, ']');
-    
-    declare tStatus varchar(64) default '-';
-    
-    -- -------------------------------------------------------------------------
-    -- Error Handling -- 
-    -- -------------------------------------------------------------------------
-    declare EXIT handler for SQLEXCEPTION
-        begin
-           set SprocComment = concat('SEVERITY 1 EXCEPTION: ', SprocComment);
-          call spErrorHandler (ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-          call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-        end;
+	declare SpName varchar(128) default 'spRegisterProfile';
+    declare SignificantFields varchar(256) default concat('NAME=', vNew_ProfileName);
+    declare ReferenceFields varchar(256) default concat('PERSONid(', 'FIRST_NAME=', vFirstName, ',LAST_NAME=', vLastName, ',BIRTH_DATE=', vBirthDate, ')');
+    declare TransactionType varchar(16) default 'insert';
 
-    -- Variable Initialisation ..
+    declare SpComment varchar(512);
+    
+    declare vPersonId mediumint unsigned;
+    
+    declare EXIT handler for SQLEXCEPTION
+    begin
+      set @severity = 1;
+      call spActionOnException (ObjectName, SpName, @severity, SpComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    end;
+      
+    -- Initialise ..
     set ReturnCode = 0;
     set ErrorCode = 0;
     set ErrorState = 0;
     set ErrorMsg = '-';
-    -- -------------------------------------------------------------------------
-    -- Error Handling --
-    -- -------------------------------------------------------------------------
-    
-    -- Clean character input ..
-    set vNew_ProfileName = strcln(vNew_ProfileName);
+	call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
+    call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
-    -- Check for valid input ..
-    if(length(vNew_ProfileName) != 0) then
+	-- Attempt create: Person ..
+	call spCreatePerson (vFirstName, vLastName, vBirthDate, vPersonId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+   
+	-- Attempt create: Profile ..
+	if (vPersonId is NOT NULL) then
+		call spCreateProfile (vNew_ProfileName, vPersonId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+	end if;
 
-        -- Attempt pre-emptive person creation ..
-        call spCreatePerson (vFirstName, 
-                             vLastName, 
-                             vBirthDate, 
-                             vPersonId, 
-                             ReturnCode, 
-                             ErrorCode,
-                             ErrorState,
-                             ErrorMsg);
-       
-        -- Attempt Profile registration ..
-        if (vPersonId is NOT NULL) then
-            call spGetIdForProfile (vNew_ProfileName, vPersonId, ObjectId, ReturnCode);
-            if (ObjectId is NULL) then
-                insert into 
-                        PROFILE
-                        (
-                         NAME,
-                         PERSONid
-                        )
-                        values
-                        (
-                         vNew_ProfileName,
-                         vPersonId
-                        );
-                set tStatus = 'SUCCESS';
-                call spGetIdForProfile (vNew_ProfileName, vPersonId, ObjectId, ReturnCode);
-            else
-                set tStatus = 'FIELD VALUE(S) ALREADY PRESENT';
-            end if;
-        else
-            set tStatus = 'CANNOT FIND REFERENCE OBJECT(S)';
-        end if;
-    else
-        set tStatus = 'ONLY ILLEGAL CHARACTERS IN ONE OR MORE FIELD VALUE(S)';
-        set ReturnCode = -1;
-    end if;
- 
     -- Log ..
-    set SprocComment = concat(SprocComment, ': OBJECT ID ', ifNull(ObjectId, 'NULL'));
-    set SprocComment = concat(SprocComment, ':  ', tStatus);
-    call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);   
+	call spSimpleLog (ObjectName, SpName, concat('----[END] return code: ', ReturnCode), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
 end$$
 delimiter ;

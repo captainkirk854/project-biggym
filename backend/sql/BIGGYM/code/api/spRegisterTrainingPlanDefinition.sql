@@ -9,11 +9,12 @@ Dependency :
                 - PERSON
             
             STORED PROCEDURE :
-                - spDebugLogger 
-                - spErrorHandler
-                - spCreateExercise 
+				- spActionOnException
+                - spActionOnStart
+                - spSimpleLog
+                - spCreateExercise
                 - spRegisterTrainingPlan
-                - spGetIdForTrainingPlanDefinition
+                - spCreateTrainingPlanDefinition
 */
 
 use BIGGYM;
@@ -36,88 +37,42 @@ begin
 
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN_DEFINITION';
-    declare SprocName varchar(128) default 'spRegisterTrainingPlanDefinition';
+ 	declare SpName varchar(128) default 'spRegisterTrainingPlanDefinition';
+    declare SignificantFields varchar(256) default concat('PLANid, EXERCISEid');
+    declare ReferenceFields varchar(256) default concat('EXERCISEid(', 'NAME=', vExerciseName, ',BODY_PART=', vBodyPartName, '>) and ' ,
+														'PLANId(', 'NAME=', vTrainingPlanName, ') and ' ,
+														'PROFILEId(', 'NAME=', vProfileName, ') and ' ,
+														'PERSONid(', 'FIRST_NAME=', vFirstName, ',LAST_NAME=', vLastName, ',BIRTH_DATE=', vBirthDate, ')');
+    declare TransactionType varchar(16) default 'insert'; 
+    
+    declare SpComment varchar(512);
+    
     declare vPlanId mediumint unsigned default NULL;
     declare vExerciseId mediumint unsigned default NULL;
-    
-    declare vExerciseWeek tinyint unsigned default 1;
-    declare vExerciseDay tinyint unsigned default NULL;
-    declare vExerciseOrdinality tinyint unsigned default NULL;
    
-    declare SignificantFields varchar(256) default concat(' PLANid, EXERCISEid ');
-    declare ReferenceObjects varchar(256) default concat('EXERCISEid(', 'NAME = <', vExerciseName, '>, ' , 'BODY_PART = <', vBodyPartName, '>) and ' ,'PLANId(', 'NAME = <', vTrainingPlanName, '>) and ' , 'PROFILEId(', 'NAME = <', vProfileName, '>) and ' ,'PERSONid(', 'FIRST_NAME = <', vFirstName, '> ', 'LAST_NAME = <', vLastName, '> ', 'BIRTH_DATE = <', vBirthDate, '>)');
-    declare SprocComment varchar(512) default concat('insert into object field list [', SignificantFields, '] ', 'using reference(s) [', ReferenceObjects, ']');
-    
-    declare tStatus varchar(64) default '-';   
-
-    -- -------------------------------------------------------------------------
-    -- Error Handling -- 
-    -- -------------------------------------------------------------------------
-     declare EXIT handler for SQLEXCEPTION
-        begin
-           set SprocComment = concat('SEVERITY 1 EXCEPTION: ', SprocComment);
-          call spErrorHandler (ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-          call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-        end;
- 
-    -- Variable Initialisation ..
+    -- Initialise ..
     set ReturnCode = 0;
     set ErrorCode = 0;
     set ErrorState = 0;
     set ErrorMsg = '-';
-    -- -------------------------------------------------------------------------
-    -- Error Handling --
-    -- -------------------------------------------------------------------------
+	call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
+    call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
+
+	-- Attempt create: Profile ..
 
     -- Attempt pre-emptive exercise-bodypart registration ..
-    call spCreateExercise (vExerciseName, 
-                           vBodyPartName, 
-                           vExerciseId, 
-                           ReturnCode, 
-                           ErrorCode,
-                           ErrorState,
-                           ErrorMsg);
+    call spCreateExercise (vExerciseName, vBodyPartName, vExerciseId, ReturnCode, ErrorCode,ErrorState, ErrorMsg);
 
     -- Attempt pre-emptive profile registration cascade ..
-    call spRegisterTrainingPlan (vTrainingPlanName, 
-                                 vProfileName, 
-                                 vFirstName, 
-                                 vLastName, 
-                                 vBirthDate, 
-                                 vPlanId, 
-                                 ReturnCode, 
-                                 ErrorCode,
-                                 ErrorState,
-                                 ErrorMsg);
+    call spRegisterTrainingPlan (vTrainingPlanName, vProfileName, vFirstName, vLastName, vBirthDate, vPlanId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
  
     -- Attempt TrainingPlanDefinition registration ..
-    if (vPlanId is NOT NULL and vExerciseId is NOT NULL) then
-        call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseId, vExerciseWeek, vExerciseDay, vExerciseOrdinality, ObjectId, ReturnCode); 
-        if (ObjectId is NULL) then    
-            insert into 
-                    TRAINING_PLAN_DEFINITION
-                    (
-                     PLANId,
-                     EXERCISEid
-                    )
-                    values
-                    (
-                     vPlanId,
-                     vExerciseId
-                    );
-                set tStatus = 'SUCCESS';
-                call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseId, vExerciseWeek, vExerciseDay, vExerciseOrdinality, ObjectId, ReturnCode); 
-        else
-                set tStatus = 'FIELD VALUE(S) ALREADY PRESENT';
-        end if;
-    else
-        set tStatus = 'CANNOT FIND REFERENCE OBJECT(S)';
+    if (vExerciseId is NOT NULL and vPlanId is NOT NULL) then
+		call spCreateTrainingPlanDefinition (vExerciseId, vPlanId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
     end if;
 
     -- Log ..
-    set SprocComment = concat(SprocComment, ': OBJECT ID ', ifNull(ObjectId, 'NULL'));
-    set SprocComment = concat(SprocComment, ':  ', tStatus);
-    call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+	call spSimpleLog (ObjectName, SpName, concat('----[END] return code: ', ReturnCode), ReturnCode, ErrorCode, ErrorState, ErrorMsg);
 
 end$$
 delimiter ;

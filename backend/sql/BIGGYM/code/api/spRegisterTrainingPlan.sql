@@ -8,10 +8,11 @@ Dependency :
                 - PERSON
             
             STORED PROCEDURE :
-                - spDebugLogger 
-                - spErrorHandler
+				- spActionOnException
+                - spActionOnStart
+                - spSimpleLog
                 - spRegisterProfile
-                - spGetIdForTrainingPlan
+                - spCreateTrainingPlan
 */
 
 use BIGGYM;
@@ -32,83 +33,40 @@ begin
 
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN';
-    declare SprocName varchar(128) default 'spRegisterTrainingPlan';
+ 	declare SpName varchar(128) default 'spRegisterTrainingPlan';
+    declare SignificantFields varchar(256) default concat('NAME=', vNew_TrainingPlanName);
+    declare ReferenceFields varchar(256) default concat('PROFILEId(', 'NAME=', vProfileName, ') and ' ,
+														'PERSONid(', 'FIRST_NAME=', vFirstName, ',LAST_NAME=', vLastName, ',BIRTH_DATE=', vBirthDate, ')');
+    declare TransactionType varchar(16) default 'insert';   
+    
+	declare SpComment varchar(512); 
+    
     declare vProfileId mediumint unsigned default NULL;    
     
-    declare SignificantFields varchar(256) default concat('NAME = <', vNew_TrainingPlanName, '>');
-    declare ReferenceObjects varchar(256) default concat(' PROFILEId(', 'NAME = <', vProfileName, '>) and ' ,'PERSONid(', 'FIRST_NAME = <', vFirstName, '> ', 'LAST_NAME = <', vLastName, '> ', 'BIRTH_DATE = <', vBirthDate, '>)');
-    declare SprocComment varchar(512) default concat('insert into object field list [', SignificantFields, '] ', 'using reference(s) [', ReferenceObjects, ']');
-    
-    declare tStatus varchar(64) default '-';   
-    
-    -- -------------------------------------------------------------------------
-    -- Error Handling -- 
-    -- -------------------------------------------------------------------------
-     declare EXIT handler for SQLEXCEPTION
-        begin
-           set SprocComment = concat('SEVERITY 1 EXCEPTION: ', SprocComment);
-          call spErrorHandler (ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-          call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-        end;
- 
-    -- Variable Initialisation ..
+    declare EXIT handler for SQLEXCEPTION
+    begin
+      set @severity = 1;
+      call spActionOnException (ObjectName, SpName, @severity, SpComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    end;
+      
+    -- Initialise ..
     set ReturnCode = 0;
     set ErrorCode = 0;
     set ErrorState = 0;
     set ErrorMsg = '-';
-    -- -------------------------------------------------------------------------
-    -- Error Handling --
-    -- -------------------------------------------------------------------------
-    
-    -- Clean character input ..
-    set vNew_TrainingPlanName = strcln(vNew_TrainingPlanName);
+	call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
+    call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
-    -- Check for valid input ..
-    if(length(vNew_TrainingPlanName) != 0) then
-
-        -- Attempt pre-emptive profile registration cascade ..
-        call spRegisterProfile (vProfileName, 
-                                vFirstName, 
-                                vLastName, 
-                                vBirthDate, 
-                                vProfileId, 
-                                ReturnCode, 
-                                ErrorCode,
-                                ErrorState,
-                                ErrorMsg);
+	-- Attempt create: Profile ..
+	call spRegisterProfile (vProfileName, vFirstName, vLastName, vBirthDate, vProfileId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
      
-        -- Attempt TrainingPlan registration ..
-        if (vProfileId is NOT NULL) then
-            call spGetIdForTrainingPlan (vNew_TrainingPlanName, vProfileId, ObjectId, ReturnCode);
-            if (ObjectId is NULL) then
-                insert into 
-                        TRAINING_PLAN
-                        (
-                         NAME,
-                         PROFILEid
-                        )
-                        values
-                        (
-                         vNew_TrainingPlanName,
-                         vProfileId
-                        );
-                set tStatus = 'SUCCESS';
-                call spGetIdForTrainingPlan (vNew_TrainingPlanName, vProfileId, ObjectId, ReturnCode);
-            else
-                set tStatus = 'FIELD VALUE(S) ALREADY PRESENT';
-            end if;
-        else
-            set tStatus = 'CANNOT FIND REFERENCE OBJECT(S)';
-        end if;
-    else
-        set tStatus = 'ONLY ILLEGAL CHARACTERS IN ONE OR MORE FIELD VALUE(S)';
-        set ReturnCode = -1;
+	-- Attempt create: TrainingPlan ..
+	if (vProfileId is NOT NULL) then
+		call spCreateTrainingPlan (vNew_TrainingPlanName, vProfileId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
     end if;
  
     -- Log ..
-    set SprocComment = concat(SprocComment, ': OBJECT ID ', ifNull(ObjectId, 'NULL'));
-    set SprocComment = concat(SprocComment, ':  ', tStatus);
-    call spDebugLogger (database(), ObjectName, SprocName, SprocComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
+	call spSimpleLog (ObjectName, SpName, concat('----[END] return code: ', ReturnCode), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
     
 end$$
 delimiter ;

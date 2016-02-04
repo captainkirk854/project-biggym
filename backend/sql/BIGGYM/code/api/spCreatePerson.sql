@@ -98,4 +98,12 @@ select * from PERSON order by DATE_REGISTERED asc;
 call spCreatePerson ('Dirk!!!%%', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
 select * from PERSON order by DATE_REGISTERED asc;
+
+call spCreatePerson ('Dirk', 'Benedict (OR 1=1)', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
+select * from PERSON order by DATE_REGISTERED asc;
+
+call spCreatePerson ('Dirk', 'Benedict ''(OR 1=1)', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
+select * from PERSON order by DATE_REGISTERED asc;
 */
