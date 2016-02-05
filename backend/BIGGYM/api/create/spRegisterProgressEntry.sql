@@ -53,6 +53,7 @@ begin
     declare TransactionType varchar(16) default 'insert'; 
     
     declare SpComment varchar(512);
+    declare tStatus varchar(64) default 0;
     
     declare vExerciseId mediumint unsigned;
     declare vPersonId mediumint unsigned default NULL;
@@ -84,10 +85,18 @@ begin
 
     if (vPlanDefinitionId is NOT NULL) then
         call spCreateProgressEntry (vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_DatePhysical, vPlanDefinitionId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+        if(ErrorCode != 0) then
+			-- unexpected database transaction problem encountered
+			set tStatus = -5;
+        end if;
+    else
+		-- unexpected NULL value for one or more REFERENCEid(s)
+		set tStatus = -4;
+		set ReturnCode = tStatus;
     end if;
 
     -- Log ..
-    call spSimpleLog (ObjectName, SpName, concat('----[END] return code: ', ReturnCode), ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    call spActionOnEnd (ObjectName, SpName, ObjectId, tStatus, '----[END]', ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
 end$$
 delimiter ;
@@ -95,12 +104,12 @@ delimiter ;
 
 /*
 Sample Usage:
-set @SetOrdinality =1;
+set @SetOrdinality =3;
 set @SetReps = 10;
 set @SetWeight = 65.5;
 set @DatePhysical = '1974-03-25';
 set @ExerciseWeek = 2;
-set @ExerciseDay = 2;
+set @ExerciseDay = 1;
 set @ExerciseOrdinality = 2;
 set @ExerciseName = 'Bicep Barbell Curls';
 set @BodyPartName = 'Arms';

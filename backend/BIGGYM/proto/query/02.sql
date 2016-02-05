@@ -1,6 +1,22 @@
 use BIGGYM;
 
 select 
+		plan.*,
+        def.*,
+        ex.*
+from 
+		vwPersonProfilePlan plan,
+        TRAINING_PLAN_DEFINITION def,
+        EXERCISE ex
+where
+		def.PLANid = plan.PLANid
+  and
+		def.EXERCISEid = ex.ID
+	;
+        
+
+
+select 
       vwPePrPl.*,
       vwPlPr.*
   from 

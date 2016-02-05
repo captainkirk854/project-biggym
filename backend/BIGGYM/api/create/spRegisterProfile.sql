@@ -37,8 +37,9 @@ begin
     declare TransactionType varchar(16) default 'insert';
 
     declare SpComment varchar(512);
+    declare tStatus varchar(64) default 0;
     
-    declare vPersonId mediumint unsigned;
+    declare vPersonId mediumint unsigned default NULL;
     
     declare EXIT handler for SQLEXCEPTION
     begin
@@ -56,14 +57,22 @@ begin
 
     -- Attempt create: Person ..
     call spCreatePerson (vFirstName, vLastName, vBirthDate, vPersonId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-   
+  
     -- Attempt create: Profile ..
     if (vPersonId is NOT NULL) then
         call spCreateProfile (vNew_ProfileName, vPersonId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+        if(ErrorCode != 0) then
+			-- unexpected database transaction problem encountered
+			set tStatus = -5;
+        end if;
+    else
+		-- unexpected NULL value for one or more REFERENCEid(s)
+		set tStatus = -4;
+		set ReturnCode = tStatus;
     end if;
 
     -- Log ..
-    call spSimpleLog (ObjectName, SpName, concat('----[END] return code: ', ReturnCode), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
+    call spActionOnEnd (ObjectName, SpName, ObjectId, tStatus, '----[END]', ReturnCode, ErrorCode, ErrorState, ErrorMsg);
 
 end$$
 delimiter ;

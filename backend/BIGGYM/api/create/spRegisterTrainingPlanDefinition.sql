@@ -46,6 +46,7 @@ begin
     declare TransactionType varchar(16) default 'insert'; 
     
     declare SpComment varchar(512);
+    declare tStatus varchar(64) default 0;
     
     declare vPlanId mediumint unsigned default NULL;
     declare vExerciseId mediumint unsigned default NULL;
@@ -67,10 +68,18 @@ begin
     -- Attempt create: Training Plan Definition ..
     if (vExerciseId is NOT NULL and vPlanId is NOT NULL) then
         call spCreateTrainingPlanDefinition (vExerciseId, vPlanId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+        if(ErrorCode != 0) then
+			-- unexpected database transaction problem encountered
+			set tStatus = -5;
+        end if;
+	else
+		-- unexpected NULL value for one or more REFERENCEid(s)
+		set tStatus = -4;
+		set ReturnCode = tStatus;
     end if;
 
     -- Log ..
-    call spSimpleLog (ObjectName, SpName, concat('----[END] return code: ', ReturnCode), ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+	call spActionOnEnd (ObjectName, SpName, ObjectId, tStatus, '----[END]', ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
 end$$
 delimiter ;
