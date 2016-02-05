@@ -62,13 +62,13 @@ begin
     if (vPersonId is NOT NULL) then
         call spCreateProfile (vNew_ProfileName, vPersonId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         if(ErrorCode != 0) then
-			-- unexpected database transaction problem encountered
-			set tStatus = -5;
+            -- unexpected database transaction problem encountered
+            set tStatus = -5;
         end if;
     else
-		-- unexpected NULL value for one or more REFERENCEid(s)
-		set tStatus = -4;
-		set ReturnCode = tStatus;
+        -- unexpected NULL value for one or more REFERENCEid(s)
+        set tStatus = -4;
+        set ReturnCode = tStatus;
     end if;
 
     -- Log ..
