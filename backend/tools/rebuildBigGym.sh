@@ -5,6 +5,7 @@
 # Author      Date         Version     Comments
 # ------      ----------   -------     --------
 # Fraioli     2016-01-31       1.0     Created
+# Fraioli     2016-02-05       1.1     Compacted
 #---------------------------------------------------------------------------------------------------------------------
 
 
@@ -13,6 +14,16 @@
 #-----------------------------------------------
 
 #----------------------------------------------------------
+fnIngest()
+#----------------------------------------------------------
+{
+ dir=$1
+ suffix=$2
+
+ cd $dir > /dev/null 2>&1
+ mysqlb.sh $userName $userPass \*.$suffix
+ cd - > /dev/null 2>&1
+}
 #----------------------------------------------------------
 
 
@@ -25,6 +36,10 @@ tput clear
 
 # Customisable persistent variables ..
 cfgProjectRoot="$HOME/code/github/captainkirk854/project-BigGym/backend/BIGGYM"
+cfgDDL="$cfgProjectRoot/ddl"
+cfgAPI="$cfgProjectRoot/api"
+cfgDATA="$cfgProjectRoot/data"
+cfgSAMPLE="$cfgDATA/sample"
 
 
 #-----------------------------------
@@ -54,26 +69,24 @@ currDir=`pwd`
 # Objects ..
 #--------------------------
 echo "Building: Objects .."
-cd $cfgProjectRoot/ddl > /dev/null 2>&1
-mysqlb.sh $userName $userPass \*.ddl
-mysqlb.sh $userName $userPass \*.sql
+fnIngest $cfgDDL ddl
+fnIngest $cfgDDL sql
 
 #--------------------------
 # Functions and Stored Procedures ..
 #--------------------------
 echo "Building: Functions and Stored Procedures .."
-cd $cfgProjectRoot/sql/util > /dev/null 2>&1
-mysqlb.sh $userName $userPass \*.sql
-cd $cfgProjectRoot/sql/api > /dev/null 2>&1
-mysqlb.sh $userName $userPass \*.sql
+fnIngest $cfgAPI/create sql
+fnIngest $cfgAPI/delete sql
+fnIngest $cfgAPI/get sql
+fnIngest $cfgAPI/update sql
+fnIngest $cfgAPI/util sql
 
 #--------------------------
 # Sample Data ..
 #--------------------------
 echo "Building: Sample Data .."
-cd $cfgProjectRoot/data/sample/using_sprocs > /dev/null 2>&1
-mysqlb.sh $userName $userPass sample_set1.mysql
-
+fnIngest $cfgSAMPLE/using_sprocs mysql
 
 #-----------------------------------
 # Happy end ..
