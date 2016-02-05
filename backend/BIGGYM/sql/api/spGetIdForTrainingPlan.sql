@@ -22,8 +22,10 @@ begin
     -- Declare ..
        declare ObjectName varchar(128) default 'TRAINING_PLAN';
         
-    -- Get Plan Id ..                                 
+    -- Prepare ..
        set @getIdWhereClause = concat('NAME = ''', vTrainingPlanName,  ''' and PROFILEid = ', vProfileId);
+
+    -- Get ..                                 
        call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode); 
     
 end$$

@@ -22,9 +22,11 @@ begin
 
     -- Declare ..
     declare ObjectName varchar(128) default 'PERSON';
-
-    -- Get Person Id ..
+    
+    -- Prepare ..
     set @getIdWhereClause = concat('FIRST_NAME = ''', vFirstName, ''' and LAST_NAME = ''', vLastName,  ''' and BIRTH_DATE = ''', vBirthdate, '''');
+
+    -- Get ..
     call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
     
 end$$

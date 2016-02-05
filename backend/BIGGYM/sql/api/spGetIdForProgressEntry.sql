@@ -32,7 +32,7 @@ begin
                                     ' and DATE_PHYSICAL = ''', vDatePhysical, '''',
                                     ' and DEFINITIONid = ', vPlanDefinitionId
                                   );
-    
+
     -- Get ..   
     call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
 

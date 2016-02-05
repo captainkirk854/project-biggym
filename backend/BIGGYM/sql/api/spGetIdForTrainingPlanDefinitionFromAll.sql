@@ -41,10 +41,10 @@ begin
     declare vProfileId mediumint unsigned default NULL;
     declare vPlanId mediumint unsigned default NULL;
        
-    -- Initialise ..
+    -- Prepare ..
     set ReturnCode = 0;
 
-    -- Get TrainingPlanDefinition Id ..
+    -- Get ..
     call spGetIdForExercise (vExerciseName, vBodyPartName, vExerciseId, ReturnCode);
     if (vExerciseId is NOT NULL) then
         call spGetIdForPerson (vFirstName, vLastName, vBirthDate, vPersonId, ReturnCode);

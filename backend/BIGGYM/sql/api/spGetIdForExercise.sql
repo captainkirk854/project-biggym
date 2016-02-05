@@ -22,8 +22,10 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'EXERCISE';
 
-    -- Get Id ...
+    -- Prepare ..
     set @getIdWhereClause = concat('NAME = ''', vExerciseName,  ''' and BODY_PART = ''', vBodyPartName, '''');
+    
+    -- Get ..
     call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
 
 end$$

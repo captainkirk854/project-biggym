@@ -22,8 +22,10 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'PROFILE';
     
-    -- Get Profile Id ..
+    -- Prepare ..
     set @getIdWhereClause = concat('NAME = ''', vProfileName,  ''' and PERSONid = ', vPersonId);
+
+    -- Get ..
     call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
     
 end$$

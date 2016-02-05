@@ -33,7 +33,7 @@ begin
                                     ' and (EXERCISE_ORDINALITY = ', ifNull(vExerciseOrdinality, 'NULL or EXERCISE_ORDINALITY is NULL'), ')'
                                   );
     
-    -- Get Plan Definition Id ..   
+    -- Get ..   
     call spGetObjectId (ObjectName, @getIdWhereClause, ObjectId,  ReturnCode);
 
 end$$
