@@ -1,11 +1,10 @@
 #!/bin/bash
 #---------------------------------------------------------------------------------------------------------------------
-# Purpose : Convenience tool to quickly (re-)build and load BIGGYM
+# Purpose : Convenience tool to quickly run unit tests for sprocs
 #
 # Author      Date         Version     Comments
 # ------      ----------   -------     --------
-# Fraioli     2016-01-31       1.0     Created
-# Fraioli     2016-02-05       1.1     Compacted
+# Fraioli     2016-02-06       1.0     Created
 #---------------------------------------------------------------------------------------------------------------------
 
 
@@ -14,7 +13,7 @@
 #-----------------------------------------------
 
 #----------------------------------------------------------
-fnIngest()
+fnRunMyTapUnitTest()
 #----------------------------------------------------------
 {
  dir=$1
@@ -25,7 +24,7 @@ fnIngest()
    echo "============================================================================================================="
    echo "USING [$suffix] FILE(S) IN [$dir] .."
    cd $dir > /dev/null 2>&1
-   mysqlb.sh $userName $userPass \*.$suffix 
+   mysqlb.sh $userName $userPass \*.$suffix -suppress
    cd - > /dev/null 2>&1
  else
    echo "[$dir] not found!"
@@ -43,10 +42,8 @@ tput clear
 
 # Customisable persistent variables ..
 cfgProjectRoot="$HOME/code/github/captainkirk854/project-BigGym/backend/BIGGYM"
-cfgDDL="$cfgProjectRoot/ddl"
-cfgAPI="$cfgProjectRoot/api"
-cfgDATA="$cfgProjectRoot/data"
-cfgSAMPLE="$cfgDATA/sample"
+cfgTEST="$cfgProjectRoot/tests"
+cfgAPI="$cfgTEST/api"
 
 
 #-----------------------------------
@@ -73,27 +70,14 @@ currDir=`pwd`
 
 #Run ..
 #--------------------------
-# Objects ..
-#--------------------------
-echo "Building: Objects .."
-fnIngest $cfgDDL ddl
-fnIngest $cfgDDL sql
-
-#--------------------------
 # Functions and Stored Procedures ..
 #--------------------------
-echo "Building: Functions and Stored Procedures .."
-fnIngest $cfgAPI/create sql
-fnIngest $cfgAPI/delete sql
-fnIngest $cfgAPI/get sql
-fnIngest $cfgAPI/update sql
-fnIngest $cfgAPI/util sql
-
-#--------------------------
-# Sample Data ..
-#--------------------------
-echo "Building: Sample Data .."
-fnIngest $cfgSAMPLE/using_sprocs mysql
+echo "Testing: Functions and Stored Procedures .."
+fnRunMyTapUnitTest $cfgAPI/create mytap
+fnRunMyTapUnitTest $cfgAPI/delete mytap
+fnRunMyTapUnitTest $cfgAPI/get mytap
+fnRunMyTapUnitTest $cfgAPI/update mytap
+fnRunMyTapUnitTest $cfgAPI/util mytap
 
 #-----------------------------------
 # Happy end ..

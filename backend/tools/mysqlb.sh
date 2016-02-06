@@ -7,6 +7,7 @@
 # Author      Date         Version     Comments                      
 # ------      ----------   -------     --------
 # Fraioli     2016-01-21       1.0     Created
+# Fraioli     2016-02-06       1.1     Updated with -suppress option (specifically to run with mytap unit tests)
 #---------------------------------------------------------------------------------------------------------------------
 
 
@@ -39,7 +40,7 @@ runCommand()
 #########################
 # Main
 #########################
-tput clear
+#tput clear
 
 # Customisable persistent variables ..
 dependentTool="mysql"
@@ -73,11 +74,25 @@ else
 fi
 
 #Run ..
-CmdPrefix="$dependentTool --user=$userName --password=$userPass < "
-if [ -n "$runType" ] && [ "$runType"="-fast" ] ;then
+CmdRoot="$dependentTool --user=$userName --password=$userPass "
+CmdPrefix="$CmdRoot < "
+
+if [ "$runType" == "-fast" ];then
   Cmd=$CmdPrefix"<(cat $fileWildcard)"
   runCommand "$Cmd"
-else
+elif [ "$runType" == "-suppress" ];then
+  OutputSuppressionOptions="--disable-pager --batch --raw --skip-column-names --unbuffered --execute "
+  Cmd="$CmdRoot $OutputSuppressionOptions"
+  for file in `ls $fileWildcard`; 
+  do 
+    echo ""
+    echo "-------------------------------------------------------------"
+    echo "PROCESSING: [$file]"
+    echo "-------------------------------------------------------------"
+    Cmd="$Cmd 'source $file'"
+    runCommand "$Cmd"
+  done
+elif [ ! -n "$runType" ];then
   for file in `ls $fileWildcard`; 
   do 
     echo ""

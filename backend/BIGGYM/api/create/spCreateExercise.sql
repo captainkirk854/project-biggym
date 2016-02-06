@@ -83,21 +83,3 @@ begin
     
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-
-call spCreateExercise ('Pullups', 'Back', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select  @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-select * from EXERCISE order by DATE_REGISTERED asc;
-
-
-call spCreateExercise ('!!!!***', 'Back', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select  @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-select * from EXERCISE order by DATE_REGISTERED asc;
-
-call spCreateExercise ('!!!!***pullup', 'Back', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select  @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-select * from EXERCISE order by DATE_REGISTERED asc;
-*/
