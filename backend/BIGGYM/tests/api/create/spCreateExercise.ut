@@ -20,7 +20,6 @@ set @TEST_COMMENT_PREFIX=concat('TESTING [', @SPROC_NAME, '] ');
 -- ----------------------------------------------------------
 -- Run Tests ..
 -- ----------------------------------------------------------
-
 set @TEST_COMMENT='Create new exercise';
 set @ExerciseName='A brand new exercise';
 set @BodyPartName='Back';
