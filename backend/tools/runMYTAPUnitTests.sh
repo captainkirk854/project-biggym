@@ -44,6 +44,7 @@ tput clear
 cfgProjectRoot="$HOME/code/github/captainkirk854/project-BigGym/backend/BIGGYM"
 cfgTEST="$cfgProjectRoot/tests"
 cfgAPI="$cfgTEST/api"
+cfgUnitTestSuffix=ut
 
 
 #-----------------------------------
@@ -73,11 +74,11 @@ currDir=`pwd`
 # Functions and Stored Procedures ..
 #--------------------------
 echo "Testing: Functions and Stored Procedures .."
-fnRunMyTapUnitTest $cfgAPI/create mytap
-fnRunMyTapUnitTest $cfgAPI/delete mytap
-fnRunMyTapUnitTest $cfgAPI/get mytap
-fnRunMyTapUnitTest $cfgAPI/update mytap
-fnRunMyTapUnitTest $cfgAPI/util mytap
+fnRunMyTapUnitTest $cfgAPI/create $cfgUnitTestSuffix
+fnRunMyTapUnitTest $cfgAPI/delete $cfgUnitTestSuffix
+fnRunMyTapUnitTest $cfgAPI/get $cfgUnitTestSuffix
+fnRunMyTapUnitTest $cfgAPI/update $cfgUnitTestSuffix
+fnRunMyTapUnitTest $cfgAPI/util $cfgUnitTestSuffix
 
 #-----------------------------------
 # Happy end ..

@@ -50,28 +50,36 @@ begin
     set ErrorMsg = '-';
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
 
-    -- Attempt create ..  
-    insert into 
-            PROGRESS
-            ( 
-             SET_ORDINALITY, 
-             SET_REPS, 
-             SET_WEIGHT, 
-             DATE_PHYSICAL,
-             DEFINITIONid
-            )
-            values
-            (
-             vNew_SetOrdinality,
-             vNew_SetReps,
-             vNew_SetWeight,
-             vNew_DatePhysical,
-             vPlanDefinitionId
-            );
 
-    -- success ..
-    set tStatus = 0;
-    call spGetIdForProgressEntry (vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_DatePhysical, vPlanDefinitionId, ObjectId, ReturnCode);
+    -- Check if date uses valid format (YY-mm-dd) ..
+    if (date(vNew_DatePhysical) is NOT NULL and (vNew_DatePhysical != '0000-00-00')) then
+
+        -- Attempt create ..  
+        insert into 
+                PROGRESS
+                ( 
+                 SET_ORDINALITY, 
+                 SET_REPS, 
+                 SET_WEIGHT, 
+                 DATE_PHYSICAL,
+                 DEFINITIONid
+                )
+                values
+                (
+                 vNew_SetOrdinality,
+                 vNew_SetReps,
+                 vNew_SetWeight,
+                 vNew_DatePhysical,
+                 vPlanDefinitionId
+                );
+
+        -- success ..
+        set tStatus = 0;
+        call spGetIdForProgressEntry (vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_DatePhysical, vPlanDefinitionId, ObjectId, ReturnCode);
+    else
+        -- invalid date format used ..
+        set tStatus = -6;  
+    end if;
     
     -- Log ..
     set ReturnCode = tStatus;
@@ -79,24 +87,3 @@ begin
 
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-
-set @SetOrdinality =1;
-set @SetReps = 10;
-set @SetWeight = 65.5;
-set @DatePhysical = '1995-01-25';
-set @PlanDefinitionId = 1;
-
-call spCreateProgressEntry (@SetOrdinality, 
-                            @SetReps, 
-                            @SetWeight, 
-                            @DatePhysical, 
-                            @PlanDefinitionId, 
-                            @progressid, 
-                            @returnCode, @errorCode, @stateCode, @errorMsg);
-select @progressid, @returnCode;
-
-*/

@@ -40,6 +40,7 @@ begin
                 when FinalStatus = -3 then 'anomalous data - transaction ignored'
                 when FinalStatus = -4 then 'unexpected NULL value for one or more REFERENCEid(s)'
                 when FinalStatus = -5 then 'unexpected database transaction problem encountered'
+                when FinalStatus = -6 then 'invalid date format used'
             else
                 concat('status number of [', FinalStatus, '] undefined')
             end;    

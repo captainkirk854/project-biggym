@@ -85,19 +85,3 @@ begin
     
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-set @profileId=11;
-call spCreateTrainingPlan ('Get Bigger Scam Workout', @profileId, @trainingPlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @profileId, @trainingPlanId, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-set @profileId=11;
-call spCreateTrainingPlan ('Get Bigger Workout', @profileId, @trainingPlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @profileId, @trainingPlanId, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-set @profileId=12;
-call spCreateTrainingPlan ('Get Bigger Workout', @profileId, @trainingPlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @profileId, @trainingPlanId, @returnCode, @errorCode, @stateCode, @errorMsg;
-*/

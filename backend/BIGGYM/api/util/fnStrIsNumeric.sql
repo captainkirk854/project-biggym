@@ -8,26 +8,29 @@ create function strisnumeric (inputString varchar(1024))
 returns boolean 
 begin
 
-    -- Initialise .. 
+    -- Configurable ..
     declare decimalPoint char(1) default '.';
     declare powerOf char(1) default 'E';
-    declare regExpClasses varchar(512) default concat('[ [:digit:] [.+.] [.-.] [.', decimalPoint, '.] [.', powerOf, '.] ]');
+    declare regExpCharacters varchar(512) default '[.+.] [.-.]';
+    declare regExpClasses varchar(512) default '[:digit:]';
+
+    -- Initialise .. 
+    declare regExpAllowableFilter varchar(512) default concat('[ ', regExpClasses, regExpCharacters, '[.', decimalPoint, '.] [.', powerOf, '.] ]');
     declare pos, stringLength smallint unsigned default 1;
     declare dpCount, poCount smallint unsigned default 0;
     declare c1 varchar(1);
     
     declare isNonNumeric boolean default false;
     
-
     -- Process ..
     if (inputString is NOT NULL) then
         set stringLength = char_length(inputString); 
         repeat 
             begin 
-              set c1 = mid(upper(inputString), pos, 1 );
+              set c1 = mid(upper(inputString), pos, 1);
               
               -- Use regular expression character classes to filter allowable numeric characters ..
-              if (not c1 regexp regExpClasses) then
+              if (not c1 regexp regExpAllowableFilter) then
                 set isNonNumeric = true;
               end if;
               

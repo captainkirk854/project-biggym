@@ -83,19 +83,3 @@ begin
 
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-
-set @planId=5;
-set @ExerciseId=4;
-call spCreateTrainingPlanDefinition (@ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @planDefinitionId, @returnCode;
-
-set @planId=NULL;
-set @ExerciseId=4;
-call spCreateTrainingPlanDefinition (@ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @planDefinitionId, @returnCode;
-
-*/

@@ -89,8 +89,8 @@ elif [ "$runType" == "-suppress" ];then
     echo "-------------------------------------------------------------"
     echo "PROCESSING: [$file]"
     echo "-------------------------------------------------------------"
-    Cmd="$Cmd 'source $file'"
-    runCommand "$Cmd"
+    CmdWithArgs="$Cmd 'source $file'"
+    runCommand "$CmdWithArgs"
   done
 elif [ ! -n "$runType" ];then
   for file in `ls $fileWildcard`; 

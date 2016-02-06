@@ -52,28 +52,35 @@ begin
     -- Only "good" string input is allowed ..
     if(strisgood(vNew_FirstName) and strisgood(vNew_LastName) and strisgood(vNew_BirthDate)) then
     
-        -- Attempt create ..
-        call spGetIdForPerson (vNew_FirstName, vNew_LastName, vNew_BirthDate, ObjectId, ReturnCode);
-        if (ObjectId is NULL) then
-            insert into 
-                    PERSON
-                    (
-                     FIRST_NAME,
-                     LAST_NAME,
-                     BIRTH_DATE
-                    )
-                    values
-                    (
-                     vNew_FirstName,
-                     vNew_LastName,
-                     vNew_BirthDate
-                    );
-            -- success ..
-            set tStatus = 0;
+        -- Check if date uses valid format (YY-mm-dd) ..
+        if (date(vNew_BirthDate) is NOT NULL and (vNew_BirthDate != '0000-00-00')) then
+    
+            -- Attempt create ..
             call spGetIdForPerson (vNew_FirstName, vNew_LastName, vNew_BirthDate, ObjectId, ReturnCode);
+            if (ObjectId is NULL) then
+                insert into 
+                        PERSON
+                        (
+                         FIRST_NAME,
+                         LAST_NAME,
+                         BIRTH_DATE
+                        )
+                        values
+                        (
+                         vNew_FirstName,
+                         vNew_LastName,
+                         vNew_BirthDate
+                        );
+                -- success ..
+                set tStatus = 0;
+                call spGetIdForPerson (vNew_FirstName, vNew_LastName, vNew_BirthDate, ObjectId, ReturnCode);
+            else
+                -- already exists ..
+                set tStatus = 1;
+            end if;
         else
-            -- already exists ..
-            set tStatus = 1;
+            -- invalid date format used ..
+            set tStatus = -6;            
         end if;
     else
         -- illegal characters found ..
@@ -86,24 +93,3 @@ begin
  
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-
-call spCreatePerson ('Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-select * from PERSON order by DATE_REGISTERED asc;
-
-call spCreatePerson ('Dirk!!!%%', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-select * from PERSON order by DATE_REGISTERED asc;
-
-call spCreatePerson ('Dirk', 'Benedict (OR 1=1)', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-select * from PERSON order by DATE_REGISTERED asc;
-
-call spCreatePerson ('Dirk', 'Benedict ''(OR 1=1)', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-select * from PERSON order by DATE_REGISTERED asc;
-*/

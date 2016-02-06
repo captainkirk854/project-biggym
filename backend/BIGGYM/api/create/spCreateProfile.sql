@@ -84,20 +84,3 @@ begin
 
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-
-set @personId=10;
-call spCreateProfile ('Faceman', @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-set @personId=10;
-call spCreateProfile ('cara di hombre', @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-set @personId=9;
-call spCreateProfile ('cara di hombre', @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg;
-*/

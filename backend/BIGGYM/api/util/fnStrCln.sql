@@ -27,7 +27,7 @@ begin
         set stringLength = char_length(inputString); 
         repeat 
             begin 
-              set c1 = mid(inputString, pos, 1 );
+              set c1 = mid(inputString, pos, 1);
               
               -- Use regular expression to filter allowable characters ..
               if (c1 regexp regExpAllowableFilter) then
@@ -49,22 +49,3 @@ begin
 end $$
  
 delimiter ;
-
-/*
-Sample Usage:
-
-select strcln('This works !!!!&&&$$!', 'clean');
-select strcln('This works !!!!&&&$$!', 'show');
-
-select strcln('This is allowable and simple as 1 2 3', 'clean');
-select strcln('This is allowable and simple as 1 2 3', 'show');
-
-select strcln('These chaps "$"$"()"$ might disappear', 'clean');
-select strcln('These chaps "$"$"()"$ might disappear', 'show');
-
-select strcln('''', 'clean');
-select strcln('''', 'show');
-
-select strcln(NULL, 'clean');
-select strcln(NULL, 'show');
-*/ 
