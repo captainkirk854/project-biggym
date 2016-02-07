@@ -20,24 +20,3 @@ begin
 end $$
  
 delimiter ;
-
-
-/*
-Sample Usage:
-
-set @goodString = 'xyz';
-set @naughtyString = 'x!!yz';
-select 
-    case
-        when strisgood(@goodString) = true then 'Good'
-    else
-        'Naughty'
-    end GOOD,
-    case
-        when strisgood(@naughtyString) = true then 'Good'
-    else
-        'Naughty'
-    end NAUGHTY  
-    ;
-    
-*/

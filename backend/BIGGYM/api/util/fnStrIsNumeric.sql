@@ -21,16 +21,21 @@ begin
     declare c1 varchar(1);
     
     declare isNonNumeric boolean default false;
+    set stringLength = char_length(trim(inputString));
     
-    -- Process ..
-    if (inputString is NOT NULL) then
-        set stringLength = char_length(inputString); 
+    -- Process .. 
+    if (inputString is NOT NULL and stringLength != 0) then
         repeat 
             begin 
               set c1 = mid(upper(inputString), pos, 1);
               
               -- Use regular expression character classes to filter allowable numeric characters ..
               if (not c1 regexp regExpAllowableFilter) then
+                set isNonNumeric = true;
+              end if;
+              
+              -- Specials at position 1 is a no ...
+              if (((c1 = decimalPoint) or (c1 = powerOf)) and pos = 1) then
                 set isNonNumeric = true;
               end if;
               
@@ -64,24 +69,3 @@ begin
 end $$
  
 delimiter ;
-
-/*
-Sample Usage:
-
-select strisnumeric('123');
-select strisnumeric('abc');
-select strisnumeric('ab1c');
-select strisnumeric('-123');
-select strisnumeric('+123');
-select strisnumeric('+-123');
-select strisnumeric('12.4453');
-select strisnumeric('12.4453E5');
-select strisnumeric('E12.44535');
-select strisnumeric('E12.44E535');
-select strisnumeric('12.4453F5');
-select strisnumeric('12.4453.5');
-select strisnumeric('is this sentence numerical?');
-select strisnumeric('This is allowable and simple as 1 2 3');
-select strisnumeric('''');
-select strisnumeric(NULL);
-*/

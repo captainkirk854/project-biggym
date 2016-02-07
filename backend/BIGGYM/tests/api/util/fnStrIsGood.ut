@@ -1,0 +1,67 @@
+use BIGGYM;
+
+-- ----------------------------------------------------------
+-- Start test run ..
+-- ----------------------------------------------------------
+begin;
+
+-- ----------------------------------------------------------
+-- Initialise ..
+-- ----------------------------------------------------------
+set @NUM_TESTS=6;
+set @FUNC_NAME='strisgood';
+
+-- ----------------------------------------------------------
+-- Set number of tests in this plan ..
+-- ----------------------------------------------------------
+select tap.plan(@NUM_TESTS);
+set @TEST_COMMENT_PREFIX=concat('TESTING [', @FUNC_NAME, '] ');
+
+-- ----------------------------------------------------------
+-- Prerequisite operation(s) ..
+-- ----------------------------------------------------------
+
+-- ----------------------------------------------------------
+-- Run Tests ..
+-- ----------------------------------------------------------
+set @TEST_COMMENT='Is string allowed?';
+set @StringIn='This should be allowed';
+select strisgood(@StringIn) into @RESULT;
+set @CONDITION_PASS=(@RESULT);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Is string allowed?';
+set @StringIn='This should also be allowed!';
+select strisgood(@StringIn) into @RESULT;
+set @CONDITION_PASS=(@RESULT);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Is string allowed?';
+set @StringIn='This should not ***^% be allowed!';
+select strisgood(@StringIn) into @RESULT;
+set @CONDITION_PASS=(not @RESULT);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Is string allowed?';
+set @StringIn='1234567';
+select strisgood(@StringIn) into @RESULT;
+set @CONDITION_PASS=(@RESULT);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Is string allowed?';
+set @StringIn='123.4567';
+select strisgood(@StringIn) into @RESULT;
+set @CONDITION_PASS=(@RESULT);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Is string allowed?';
+set @StringIn='     ';
+select strisgood(@StringIn) into @RESULT;
+set @CONDITION_PASS=(@RESULT);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+-- ----------------------------------------------------------
+-- Finish tests and clean up.
+-- ----------------------------------------------------------
+call tap.finish();
+rollback;

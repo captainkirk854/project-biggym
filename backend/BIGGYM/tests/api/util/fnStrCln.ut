@@ -9,13 +9,13 @@ begin;
 -- Initialise ..
 -- ----------------------------------------------------------
 set @NUM_TESTS=10;
-set @UTIL_NAME='strcln';
+set @FUNC_NAME='strcln';
 
 -- ----------------------------------------------------------
 -- Set number of tests in this plan ..
 -- ----------------------------------------------------------
 select tap.plan(@NUM_TESTS);
-set @TEST_COMMENT_PREFIX=concat('TESTING [', @UTIL_NAME, '] ');
+set @TEST_COMMENT_PREFIX=concat('TESTING [', @FUNC_NAME, '] ');
 
 -- ----------------------------------------------------------
 -- Prerequisite operation(s) ..
