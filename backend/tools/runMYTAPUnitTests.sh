@@ -18,11 +18,14 @@ fnRunMyTapUnitTest()
 {
  dir=$1
  suffix=$2
-
+#
+  sep="-------------------------------------------------------------------------------------------------------------"
+#
  if [ -d $dir ];then
    echo ""
-   echo "============================================================================================================="
+   echo $sep
    echo "USING [$suffix] FILE(S) IN [$dir] .."
+   echo $sep
    cd $dir > /dev/null 2>&1
    mysqlb.sh $userName $userPass \*.$suffix -suppress
    cd - > /dev/null 2>&1

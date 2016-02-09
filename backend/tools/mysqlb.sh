@@ -22,17 +22,31 @@ runCommand()
 #
 # Initialise ...
  stringToSuppress="Using a password"
- noErrors=1
+ noErrorsOrWarnings=1
 #
 # Run ..
  eval $CMD 2>&1 | grep -v "$stringToSuppress"
  rc=$?
 
- if [ $rc -ne $noErrors ];then
+ if [ $rc -ne $noErrorsOrWarnings ];then
    echo "#########################################################"
    echo "!!!!!!! CAUTION: SOMETHING MAY NEED CHECKING HERE !!!!!!!"
    echo "#########################################################"
  fi
+}
+#----------------------------------------------------------
+
+#----------------------------------------------------------
+processFile()
+{
+ fileToProcess=$1
+ cmdArgs=$2
+#
+ echo ""
+ echo ""
+ echo "PROCESSING: [$fileToProcess]"
+ runCommand "$cmdArgs"
+ echo " |__completed"
 }
 #----------------------------------------------------------
 
@@ -85,22 +99,14 @@ elif [ "$runType" == "-suppress" ];then
   Cmd="$CmdRoot $OutputSuppressionOptions"
   for file in `ls $fileWildcard`; 
   do 
-    echo ""
-    echo "-------------------------------------------------------------"
-    echo "PROCESSING: [$file]"
-    echo "-------------------------------------------------------------"
     CmdWithArgs="$Cmd 'source $file'"
-    runCommand "$CmdWithArgs"
+    processFile $file "$CmdWithArgs"
   done
 elif [ ! -n "$runType" ];then
   for file in `ls $fileWildcard`; 
   do 
-    echo ""
-    echo "-------------------------------------------------------------"
-    echo "PROCESSING: [$file]"
-    echo "-------------------------------------------------------------"
     Cmd=$CmdPrefix$file
-    runCommand "$Cmd"
+    processFile $file "$Cmd"
   done
 fi
 

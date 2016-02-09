@@ -8,7 +8,7 @@ begin;
 -- ----------------------------------------------------------
 -- Initialise ..
 -- ----------------------------------------------------------
-set @NUM_TESTS=10;
+set @NUM_TESTS=11;
 set @FUNC_NAME='strcln';
 
 -- ----------------------------------------------------------
@@ -92,6 +92,13 @@ set @StringIn='''';
 set @fnMode='show';
 select strcln(@StringIn, @fnMode) into @RESULT;
 set @CONDITION_PASS=(length(@RESULT) = 1);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Blank string should remain unaffected after cleaning';
+set @StringIn='          ';
+set @fnMode='clean';
+select strcln(@StringIn, @fnMode) into @RESULT;
+set @CONDITION_PASS=(length(@RESULT) > 3);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 -- ----------------------------------------------------------
