@@ -18,17 +18,53 @@ fnRunMyTapUnitTest()
 {
  dir=$1
  suffix=$2
+ pause=$3
 #
-  sep="-------------------------------------------------------------------------------------------------------------"
-#
+ # Define some colour codes to use ..
+ lightyellow=93
+ lightred=101
+ cyan=36
+ black=40
+ default=49
+
+ # Set colour for test failure result ..
+ fg=$lightyellow
+ bg=$lightred
+ colourTestFail="01;$fg;$bg"
+ grepTestFail='\b(not ok|Failed|Looks like you failed)\b|$'
+
+ # Set colour for test pass result ..
+ fg=$cyan
+ bg=$black
+ colourTestPass="01;$fg;$bg"
+ grepTestPass='\b(ok)\b|$'
+
+ # Other things ..
+ fg=$lightyellow
+ bg=$default
+ colourOtherThings="01;$fg;$bg"
+ grepOtherThings='\b(PROCESSING|__completed)\b|$'
+ 
+ sep="-------------------------------------------------------------------------------------------------------------"
+
+ # Process test and colourise the resultant output accordingly ..
  if [ -d $dir ];then
    echo ""
    echo $sep
    echo "USING [$suffix] FILE(S) IN [$dir] .."
    echo $sep
    cd $dir > /dev/null 2>&1
-   mysqlb.sh $userName $userPass \*.$suffix -suppress
+   # Run test and colour the output stream with different colour formats according to string ..
+   mysqlb.sh $userName $userPass \*.$suffix -suppress \
+                                                      | GREP_COLOR=$colourTestFail    egrep --colour=always "$grepTestFail" \
+                                                      | GREP_COLOR=$colourTestPass    egrep --colour=always "$grepTestPass" \
+                                                      | GREP_COLOR=$colourOtherThings egrep --colour=always "$grepOtherThings" 
    cd - > /dev/null 2>&1
+
+   # pause ..
+   if [ -n "$pause" ];then
+     sleep $pause
+   fi
  else
    echo "[$dir] not found!"
  fi
@@ -56,9 +92,10 @@ cfgUnitTestSuffix=ut
 product=`basename $0 .sh`
 
 # Assign input arguments ..
-if [ $# -eq 2 ];then
+if ([ $# -eq 2 ] || [ $# -eq 3 ]);then
   userName=$1
   userPass=$2
+  pauseTime=$3
 else
   echo " "
   echo "USAGE ERROR !"
@@ -66,6 +103,7 @@ else
   echo " "
   echo " e.g. "
   echo "     $product.sh root pa$$w0rD  "
+  echo "     $product.sh root pa$$w0rD 5 "
   echo " "
   exit 1
 fi
@@ -73,15 +111,16 @@ fi
 currDir=`pwd`
 
 #Run ..
+
 #--------------------------
-# Functions and Stored Procedures ..
+# Testing start ..
 #--------------------------
 echo "Testing: Functions and Stored Procedures .."
-fnRunMyTapUnitTest $cfgAPI/create $cfgUnitTestSuffix
-fnRunMyTapUnitTest $cfgAPI/delete $cfgUnitTestSuffix
-fnRunMyTapUnitTest $cfgAPI/get $cfgUnitTestSuffix
-fnRunMyTapUnitTest $cfgAPI/update $cfgUnitTestSuffix
-fnRunMyTapUnitTest $cfgAPI/util $cfgUnitTestSuffix
+fnRunMyTapUnitTest $cfgAPI/create $cfgUnitTestSuffix $pauseTime
+fnRunMyTapUnitTest $cfgAPI/delete $cfgUnitTestSuffix $pauseTime
+fnRunMyTapUnitTest $cfgAPI/get $cfgUnitTestSuffix $pauseTime
+fnRunMyTapUnitTest $cfgAPI/update $cfgUnitTestSuffix $pauseTime
+fnRunMyTapUnitTest $cfgAPI/util $cfgUnitTestSuffix $pauseTime
 
 #-----------------------------------
 # Happy end ..
