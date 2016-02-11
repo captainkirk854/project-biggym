@@ -21,7 +21,8 @@ use BIGGYM;
 
 drop procedure if exists spRegisterProgressEntry;
 delimiter $$
-create procedure spRegisterProgressEntry(in vNew_SetOrdinality tinyint unsigned,
+create procedure spRegisterProgressEntry(in opMode varchar(64),                  -- CREATE_ALL_REFERENCES_WHERE_NEEDED|ASSUME_ALL_REFERENCES_EXIST
+                                         in vNew_SetOrdinality tinyint unsigned,
                                          in vNew_SetReps tinyint unsigned,
                                          in vNew_SetWeight float,
                                          in vNew_DatePhysical datetime,
@@ -54,6 +55,7 @@ begin
     
     declare SpComment varchar(512);
     declare tStatus varchar(64) default 0;
+    declare IdNullCode int default 0;
     
     declare vExerciseId mediumint unsigned;
     declare vPersonId mediumint unsigned default NULL;
@@ -69,71 +71,48 @@ begin
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
-    -- Get TrainingPlanDefinition Id ..
-    call spGetIdForTrainingPlanDefinitionFromAll (vExerciseWeek, 
-                                                  vExerciseDay, 
-                                                  vExerciseOrdinality, 
-                                                  vExerciseName, 
-                                                  vBodyPartName, 
-                                                  vTrainingPlanName, 
-                                                  vProfileName, 
-                                                  vFirstName, 
-                                                  vLastName, 
-                                                  vBirthDate, 
-                                                  vPlanDefinitionId, 
-                                                  ReturnCode);
+    -- Set operational mode if NULL or blank ..
+    if(length(trim(opMode)) = 0 or (opMode is NULL)) then
+      set opMode = "CREATE_ALL_REFERENCES_WHERE_NEEDED";
+    end if;
+
+    -- Get TrainingPlanDefinition Id one way or another ..
+    if (opMode = "ASSUME_ALL_REFERENCES_EXIST") then
+        call spGetIdForTrainingPlanDefinitionFromAll (vExerciseWeek,
+                                                      vExerciseDay, 
+                                                      vExerciseOrdinality, 
+                                                      vExerciseName, 
+                                                      vBodyPartName, 
+                                                      vTrainingPlanName, 
+                                                      vProfileName, 
+                                                      vFirstName, 
+                                                      vLastName, 
+                                                      vBirthDate,
+                                                      IdNullCode,
+                                                      vPlanDefinitionId, 
+                                                      ReturnCode);
+    elseif (opMode = "CREATE_ALL_REFERENCES_WHERE_NEEDED") then
+        call spRegisterTrainingPlanDefinition  (vExerciseName, vBodyPartName, vTrainingPlanName, vExerciseWeek, vExerciseDay, vExerciseOrdinality, vProfileName, vFirstName, vLastName, vBirthDate, vPlanDefinitionId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    else
+        set vPlanDefinitionId = NULL;
+    end if;
 
     if (vPlanDefinitionId is NOT NULL) then
         call spCreateProgressEntry (vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_DatePhysical, vPlanDefinitionId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         if(ErrorCode != 0) then
             -- unexpected database transaction problem encountered
             set tStatus = -5;
+        else
+            set tStatus = ReturnCode;
         end if;
     else
         -- unexpected NULL value for one or more REFERENCEid(s)
         set tStatus = -4;
         set ReturnCode = tStatus;
     end if;
-
+    
     -- Log ..
     call spActionOnEnd (ObjectName, SpName, ObjectId, tStatus, '----[END]', ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-set @SetOrdinality =3;
-set @SetReps = 10;
-set @SetWeight = 65.5;
-set @DatePhysical = '1974-03-25';
-set @ExerciseWeek = 2;
-set @ExerciseDay = 1;
-set @ExerciseOrdinality = 2;
-set @ExerciseName = 'Bicep Barbell Curls';
-set @BodyPartName = 'Arms';
-set @TrainingPlanName = 'Ultimate Predator-beating training plan';
-set @ProfileName = 'Dutch Schaefer';
-set @FirstName = 'Arnold';
-set @LastName = 'Schwarzenegger';
-set @BirthDate = '1947-07-30';
-
-call spRegisterProgressEntry (@SetOrdinality,
-                              @SetReps,
-                              @SetWeight,
-                              @DatePhysical,
-                              @ExerciseWeek,
-                              @ExerciseDay,
-                              @ExerciseOrdinality,
-                              @ExerciseName,
-                              @BodyPartName,
-                              @TrainingPlanName,
-                              @ProfileName,
-                              @FirstName,
-                              @LastName,
-                              @BirthDate,
-                              @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-                         
-select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-*/

@@ -8,7 +8,7 @@ begin;
 -- ----------------------------------------------------------
 -- Initialise ..
 -- ----------------------------------------------------------
-set @NUM_TESTS=1;
+set @NUM_TESTS=2;
 set @SPROC_NAME='spCreateProgressEntry';
 
 -- ----------------------------------------------------------
@@ -35,7 +35,10 @@ call spCreateProfile (@profileName, @personId, @profileId, @returnCode, @errorCo
 set @planName='Maximum Power required';
 call spCreateTrainingPlan (@planName, @profileId, @planId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
-call spCreateTrainingPlanDefinition  (@exerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @exerciseWeek=1;
+set @exerciseDay=1;
+set @exerciseOrder=1;
+call spCreateTrainingPlanDefinition  (@exerciseId, @planId, @exerciseWeek, @exerciseDay, @exerciseOrder, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 -- ----------------------------------------------------------
 -- Run Tests ..

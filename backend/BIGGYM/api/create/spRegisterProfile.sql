@@ -64,6 +64,8 @@ begin
         if(ErrorCode != 0) then
             -- unexpected database transaction problem encountered
             set tStatus = -5;
+        else
+            set tStatus = ReturnCode;
         end if;
     else
         -- unexpected NULL value for one or more REFERENCEid(s)
@@ -76,16 +78,3 @@ begin
 
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-
-call spRegisterProfile ('Faceman', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-call spRegisterProfile ('StarBuck', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-call spRegisterProfile ('Starbuck', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-select * from PROFILE order by DATE_REGISTERED asc;
-*/

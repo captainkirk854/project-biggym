@@ -24,6 +24,9 @@ delimiter $$
 create procedure spRegisterTrainingPlanDefinition(in vExerciseName varchar(128),
                                                   in vBodyPartName varchar(128),   
                                                   in vTrainingPlanName varchar(128),
+                                                  in vNew_ExerciseWeek tinyint unsigned,
+                                                  in vNew_ExerciseDay tinyint unsigned,
+                                                  in vNew_ExerciseOrdinality tinyint unsigned,               
                                                   in vProfileName varchar(32),
                                                   in vFirstName varchar(32),
                                                   in vLastName varchar(32),
@@ -38,7 +41,7 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterTrainingPlanDefinition';
-    declare SignificantFields varchar(256) default concat('PLANid, EXERCISEid');
+    declare SignificantFields varchar(256) default concat('PLANid,EXERCISEid,EXERCISE_WEEK=',vNew_ExerciseWeek, ',EXERCISE_DAY=', vNew_ExerciseDay,'EXERCISE_ORDINALITY=', vNew_ExerciseOrdinality);
     declare ReferenceFields varchar(256) default concat('EXERCISEid(', 'NAME=', vExerciseName, ',BODY_PART=', vBodyPartName, '>) and ' ,
                                                         'PLANId(', 'NAME=', vTrainingPlanName, ') and ' ,
                                                         'PROFILEId(', 'NAME=', vProfileName, ') and ' ,
@@ -67,10 +70,12 @@ begin
  
     -- Attempt create: Training Plan Definition ..
     if (vExerciseId is NOT NULL and vPlanId is NOT NULL) then
-        call spCreateTrainingPlanDefinition (vExerciseId, vPlanId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+        call spCreateTrainingPlanDefinition (vExerciseId, vPlanId, vNew_ExerciseWeek, vNew_ExerciseDay, vNew_ExerciseOrdinality, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         if(ErrorCode != 0) then
             -- unexpected database transaction problem encountered
             set tStatus = -5;
+        else
+            set tStatus = ReturnCode;
         end if;
     else
         -- unexpected NULL value for one or more REFERENCEid(s)
@@ -83,19 +88,3 @@ begin
 
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-
-call spRegisterTrainingPlanDefinition ('Curls','Arms', 'Get Bigger Workout', 'Faceman', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-call spRegisterTrainingPlanDefinition ('Curls','Arms', 'Get Bigger Workout', 'Mr.T', 'Lawrence', 'Tureaud', '1952-05-21', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-call spRegisterTrainingPlanDefinition ('Triceps Press','Arms', 'Get Bigger Workout', 'Mr.T', 'Lawrence', 'Tureaud', '1952-05-21', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-select * from TRAINING_PLAN_DEFINITION order by DATE_REGISTERED asc;
-*/

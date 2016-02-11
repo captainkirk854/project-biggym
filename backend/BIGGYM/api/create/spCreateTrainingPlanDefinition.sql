@@ -21,6 +21,9 @@ drop procedure if exists spCreateTrainingPlanDefinition;
 delimiter $$
 create procedure spCreateTrainingPlanDefinition(in vExerciseId mediumint unsigned,
                                                 in vPlanId mediumint unsigned,
+                                                in vNew_ExerciseWeek tinyint unsigned,
+                                                in vNew_ExerciseDay tinyint unsigned,
+                                                in vNew_ExerciseOrdinality tinyint unsigned,
                                                out ObjectId mediumint unsigned,
                                                out ReturnCode int,
                                                out ErrorCode int,
@@ -31,17 +34,13 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN_DEFINITION';
     declare SpName varchar(128) default 'spCreateTrainingPlanDefinition';
-    declare SignificantFields varchar(256) default concat('na');
+    declare SignificantFields varchar(256) default concat('EXERCISE_WEEK=',vNew_ExerciseWeek, ',EXERCISE_DAY=', vNew_ExerciseDay,'EXERCISE_ORDINALITY=', vNew_ExerciseOrdinality);
     declare ReferenceFields varchar(256) default concat('PLANid=', vPlanId, ',EXERCISEid=',vExerciseId);
     declare TransactionType varchar(16) default 'insert';
 
     declare SpComment varchar(512);
     declare tStatus varchar(64) default '-';
     
-    declare vNew_ExerciseWeek tinyint unsigned default 1;
-    declare vNew_ExerciseDay tinyint unsigned default NULL;
-    declare vNew_ExerciseOrdinality tinyint unsigned default NULL; 
-   
     declare EXIT handler for SQLEXCEPTION
     begin
       set @severity = 1;
@@ -62,12 +61,18 @@ begin
                 TRAINING_PLAN_DEFINITION
                 (
                  PLANId,
-                 EXERCISEid
+                 EXERCISEid,
+                 EXERCISE_WEEK,
+                 EXERCISE_DAY,
+                 EXERCISE_ORDINALITY
                 )
                 values
                 (
                  vPlanId,
-                 vExerciseId
+                 vExerciseId,
+                 vNew_ExerciseWeek,
+                 vNew_ExerciseDay,
+                 vNew_ExerciseOrdinality
                 );
         -- success ..
         set tStatus = 0;

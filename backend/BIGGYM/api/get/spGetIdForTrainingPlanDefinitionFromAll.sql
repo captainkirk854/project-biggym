@@ -31,6 +31,7 @@ create procedure spGetIdForTrainingPlanDefinitionFromAll(in vExerciseWeek tinyin
                                                          in vFirstName varchar(32),
                                                          in vLastName varchar(32),
                                                          in vBirthDate date,
+                                                        out IdNullCode int,
                                                         out ObjectId mediumint unsigned,
                                                         out ReturnCode int)
 begin
@@ -42,6 +43,7 @@ begin
     declare vPlanId mediumint unsigned default NULL;
        
     -- Prepare ..
+    set IdNullCode = 0;
     set ReturnCode = 0;
 
     -- Get ..
@@ -54,9 +56,20 @@ begin
                 call spGetIdForTrainingPlan (vTrainingPlanName, vProfileId, vPlanId, ReturnCode);
                 if (vPlanId is NOT NULL) then
                     call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseId, vExerciseWeek, vExerciseDay, vExerciseOrdinality, ObjectId, ReturnCode);
+                    if(ObjectId is NULL) then
+                        set IdNullCode = -14; -- ObjectId is NULL
+                    end if;
+                else
+                    set IdNullCode = -13; -- vPlanId is NULL
                 end if;
+            else
+                set IdNullCode = -12; -- vProfileId is NULL
             end if;
+        else
+            set IdNullCode = -11; -- vPersonId is NULL
         end if;
+    else
+        set IdNullCode = -10; -- vExerciseId is NULL
     end if;
     
 end$$
@@ -66,9 +79,9 @@ delimiter ;
 /*
 Sample Usage:
 
-call spGetIdForTrainingPlanDefinitionFromAll (2, 1, 2, 'Bicep Barbell Curls','Arms', 'Ultimate Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode);
-select @id, @returnCode;
+call spGetIdForTrainingPlanDefinitionFromAll (2, 1, 2, 'Bicep Barbell Curls','Arms', 'Ultimate Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @IdNullCode, @id, @returnCode);
+select @id, @IdNullCode;
 
-call spGetIdForTrainingPlanDefinitionFromAll (2, 1, 2, 'Bicep Barbell Curls','Arms', 'Ultimate Predator-beating training plan', 'XDutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode);
-select @id, @returnCode;
+call spGetIdForTrainingPlanDefinitionFromAll (2, 1, 2, 'Bicep Barbell Curls','Arms', 'Ultimate Predator-beating training plan', 'XDutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @IdNullCode, @id, @returnCode);
+select @id, @IdNullCode;
 */

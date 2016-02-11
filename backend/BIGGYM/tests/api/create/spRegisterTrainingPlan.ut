@@ -9,7 +9,7 @@ begin;
 -- Initialise ..
 -- ----------------------------------------------------------
 set @NUM_TESTS=1;
-set @SPROC_NAME='spCreateTrainingPlanDefinition';
+set @SPROC_NAME='spRegisterTrainingPlan';
 
 -- ----------------------------------------------------------
 -- Set number of tests in this plan ..
@@ -20,28 +20,17 @@ set @TEST_COMMENT_PREFIX=concat('TESTING [', @SPROC_NAME, '] ');
 -- ----------------------------------------------------------
 -- Prerequisite operation(s) ..
 -- ----------------------------------------------------------
-set @exerciseName='A brand new exercise';
-set @bodypartName='brand new body part';
-call spCreateExercise (@exerciseName, @bodypartName, @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
-set @firstname='Sylvester';
-set @lastname='McCoy';
-set @dob='1943-08-20';
-call spCreatePerson (@firstname, @lastname, @dob, @personId, @returnCode, @errorCode, @stateCode, @errorMsg);
-
-set @profileName='The worst doctor and cannot lift weights';
-call spCreateProfile (@profileName, @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
-
-set @planName='Maximum Power required';
-call spCreateTrainingPlan (@planName, @profileId, @planId, @returnCode, @errorCode, @stateCode, @errorMsg);
 -- ----------------------------------------------------------
 -- Run Tests ..
 -- ----------------------------------------------------------
-set @TEST_COMMENT='Create new training plan definition';
-set @ExerciseWeek=1;
-set @ExerciseDay=2;
-set @ExerciseOrdinality=3;
-call spCreateTrainingPlanDefinition  (@exerciseId, @planId, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @TEST_COMMENT='Create new training plan';
+set @Firstname='Sylvester';
+set @Lastname='McCoy';
+set @DOB='1943-08-20';
+set @ProfileName='The worst doctor and could never lift weights';
+set @PlanName='Maximum Power required';
+call spRegisterTrainingPlan (@PlanName, @ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 

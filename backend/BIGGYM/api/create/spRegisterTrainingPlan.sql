@@ -67,6 +67,8 @@ begin
         if(ErrorCode != 0) then
             -- unexpected database transaction problem encountered
             set tStatus = -5;
+        else
+            set tStatus = ReturnCode;
         end if;
     else
         -- unexpected NULL value for one or more REFERENCEid(s)
@@ -79,16 +81,3 @@ begin
     
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-
-call spRegisterTrainingPlan ('Get Bigger Workout', 'Faceman', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-call spRegisterTrainingPlan ('Get Bigger Workout', 'Mr.T', 'Lawrence', 'Tureaud', '1952-05-21', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @id, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-select * from TRAINING_PLAN order by DATE_REGISTERED asc;
-*/
