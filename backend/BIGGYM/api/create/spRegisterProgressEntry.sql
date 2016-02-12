@@ -21,7 +21,7 @@ use BIGGYM;
 
 drop procedure if exists spRegisterProgressEntry;
 delimiter $$
-create procedure spRegisterProgressEntry(in opMode varchar(64),                  -- CREATE_ALL_REFERENCES_WHERE_NEEDED|ASSUME_ALL_REFERENCES_EXIST
+create procedure spRegisterProgressEntry(in opMode varchar(64),                  -- REFERENCES_EXISTENCE_CREATE|REFERENCES_EXISTENCE_ASSUME
                                          in vNew_SetOrdinality tinyint unsigned,
                                          in vNew_SetReps tinyint unsigned,
                                          in vNew_SetWeight float,
@@ -46,8 +46,9 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterProgressEntry';
-    declare SignificantFields varchar(256) default concat('DEFINITIONid');
-    declare ReferenceFields varchar(256) default concat('EXERCISEid(', 'NAME=', vExerciseName, ',BODY_PART=', vBodyPartName, '>) and ' ,
+    declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', vNew_SetOrdinality, ',SET_REPS=', vNew_SetReps, ',SET_WEIGHT=',vNew_SetWeight, ',DATE_PHYSICAL=', vNew_DatePhysical);
+    declare ReferenceFields varchar(256) default concat('DEFINITIONid(', 'EXERCISE_WEEK=', vExerciseWeek, ',EXERCISE_DAY=', vExerciseDay, ',EXERCISE_ORDINALITY=', vExerciseOrdinality, ') and ' ,
+                                                        'EXERCISEid(', 'NAME=', vExerciseName, ',BODY_PART=', vBodyPartName, '>) and ' ,
                                                         'PLANId(', 'NAME=', vTrainingPlanName, ') and ' ,
                                                         'PROFILEId(', 'NAME=', vProfileName, ') and ' ,
                                                         'PERSONid(', 'FIRST_NAME=', vFirstName, ',LAST_NAME=', vLastName, ',BIRTH_DATE=', vBirthDate, ')');
@@ -73,11 +74,11 @@ begin
 
     -- Set operational mode if NULL or blank ..
     if(length(trim(opMode)) = 0 or (opMode is NULL)) then
-      set opMode = "CREATE_ALL_REFERENCES_WHERE_NEEDED";
+      set opMode = "REFERENCES_EXISTENCE_CREATE";
     end if;
 
     -- Get TrainingPlanDefinition Id one way or another ..
-    if (opMode = "ASSUME_ALL_REFERENCES_EXIST") then
+    if (opMode = "REFERENCES_EXISTENCE_ASSUME") then
         call spGetIdForTrainingPlanDefinitionFromAll (vExerciseWeek,
                                                       vExerciseDay, 
                                                       vExerciseOrdinality, 
@@ -91,14 +92,38 @@ begin
                                                       IdNullCode,
                                                       vPlanDefinitionId, 
                                                       ReturnCode);
-    elseif (opMode = "CREATE_ALL_REFERENCES_WHERE_NEEDED") then
-        call spRegisterTrainingPlanDefinition  (vExerciseName, vBodyPartName, vTrainingPlanName, vExerciseWeek, vExerciseDay, vExerciseOrdinality, vProfileName, vFirstName, vLastName, vBirthDate, vPlanDefinitionId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+
+    elseif (opMode = "REFERENCES_EXISTENCE_CREATE") then
+        call spRegisterTrainingPlanDefinition  (vExerciseName, 
+                                                vBodyPartName, 
+                                                vTrainingPlanName, 
+                                                vExerciseWeek, 
+                                                vExerciseDay, 
+                                                vExerciseOrdinality, 
+                                                vProfileName, 
+                                                vFirstName, 
+                                                vLastName, 
+                                                vBirthDate, 
+                                                vPlanDefinitionId, 
+                                                ReturnCode, 
+                                                ErrorCode, 
+                                                ErrorState, 
+                                                ErrorMsg);
     else
         set vPlanDefinitionId = NULL;
     end if;
 
     if (vPlanDefinitionId is NOT NULL) then
-        call spCreateProgressEntry (vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_DatePhysical, vPlanDefinitionId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+        call spCreateProgressEntry (vNew_SetOrdinality, 
+                                    vNew_SetReps, 
+                                    vNew_SetWeight, 
+                                    vNew_DatePhysical, 
+                                    vPlanDefinitionId, 
+                                    ObjectId, 
+                                    ReturnCode, 
+                                    ErrorCode, 
+                                    ErrorState, 
+                                    ErrorMsg);
         if(ErrorCode != 0) then
             -- unexpected database transaction problem encountered
             set tStatus = -5;

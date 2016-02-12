@@ -21,27 +21,34 @@ fnRunMyTapUnitTest()
  pause=$3
 #
  # Define some colour codes to use ..
- lightyellow=93
- lightred=101
- cyan=36
- black=40
- default=49
+ fgRed=31
+ fgLightyellow=93
+ bgLightred=101
+ fgCyan=36
+ bgBlack=40
+ bgDefault=49
 
  # Set colour for test failure result ..
- fg=$lightyellow
- bg=$lightred
+ fg=$fgLightyellow
+ bg=$bgLightred
  colourTestFail="01;$fg;$bg"
  grepTestFail='\b(not ok|Failed|Looks like you failed)\b|$'
 
  # Set colour for test pass result ..
- fg=$cyan
- bg=$black
+ fg=$fgCyan
+ bg=$bgBlack
  colourTestPass="01;$fg;$bg"
  grepTestPass='\b(ok)\b|$'
 
+ # Set colour for test warnings ..
+ fg=$fgRed
+ bg=$bgBlack
+ colourTestWarning="01;$fg;$bg"
+ grepTestWarning='\b(Looks like you planned|test but ran)\b|$'
+
  # Other things ..
- fg=$lightyellow
- bg=$default
+ fg=$fgLightyellow
+ bg=$bgDefault
  colourOtherThings="01;$fg;$bg"
  grepOtherThings='\b(PROCESSING|__completed)\b|$'
  
@@ -58,6 +65,7 @@ fnRunMyTapUnitTest()
    mysqlb.sh $userName $userPass \*.$suffix -suppress \
                                                       | GREP_COLOR=$colourTestFail    egrep --colour=always "$grepTestFail" \
                                                       | GREP_COLOR=$colourTestPass    egrep --colour=always "$grepTestPass" \
+                                                      | GREP_COLOR=$colourTestWarning egrep --colour=always "$grepTestWarning" \
                                                       | GREP_COLOR=$colourOtherThings egrep --colour=always "$grepOtherThings" 
    cd - > /dev/null 2>&1
 

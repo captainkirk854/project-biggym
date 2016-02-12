@@ -1,6 +1,9 @@
 #!/bin/bash
 #---------------------------------------------------------------------------------------------------------------------
 # Purpose : Constant runner wrapper for Unit Tester ..
+#
+# Dependencies: > runMYTAPUnitTests.sh
+#               > morepause 
 #---------------------------------------------------------------------------------------------------------------------
 
 #########################
@@ -32,7 +35,7 @@ fi
 
 
 # Run ..
-while [ 1 -eq 1 ]; 
+while [ 1 ]; 
 do 
-  runMYTAPUnitTests.sh $userName $userPass $pauseTime
+  runMYTAPUnitTests.sh $userName $userPass | morepause $pauseTime
 done

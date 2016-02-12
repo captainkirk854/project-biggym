@@ -53,10 +53,9 @@ call spRegisterTrainingPlan ('I aint gettin on no plane sucka workout', 'Mr.T', 
 
 
 -- Training Plan Definition ..
-call spRegisterTrainingPlanDefinition ('Bench Press', 'Chest', 'Ultimate Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterTrainingPlanDefinition ('Squats', 'Legs', 'Ultimate Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterTrainingPlanDefinition ('Deadlift', 'All', 'Heavy Lifting - Maximum Contraction', 'Muscular Mike', 'Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-
+call spRegisterTrainingPlanDefinition ('Bench Press', 'Chest', 'Ultimate Predator-beating training plan', 1, 1, 1, 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlanDefinition ('Squats', 'Legs', 'Ultimate Predator-beating training plan', 1, 1, 2, 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlanDefinition ('Deadlift', 'All', 'Heavy Lifting - Maximum Contraction',1, 1, 1, 'Muscular Mike', 'Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
 -- Object Updates ...
