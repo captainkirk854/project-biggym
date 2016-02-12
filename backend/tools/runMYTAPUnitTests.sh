@@ -22,11 +22,13 @@ fnRunMyTapUnitTest()
 #
  # Define some colour codes to use ..
  fgRed=31
- fgLightyellow=93
- bgLightred=101
+ fgYellow=32
  fgCyan=36
+ fgLightyellow=93
  bgBlack=40
+ bgWhite=47
  bgDefault=49
+ bgLightred=101
 
  # Set colour for test failure result ..
  fg=$fgLightyellow
@@ -45,6 +47,12 @@ fnRunMyTapUnitTest()
  bg=$bgBlack
  colourTestWarning="01;$fg;$bg"
  grepTestWarning='\b(Looks like you planned|test but ran)\b|$'
+
+ # Set colour for core errors ..
+ fg=$fgRed
+ bg=$bgWhite
+ colourCoreErrors="01;$fg;$bg"
+ grepCoreErrors='\b(ERROR|does not exist)\b|$'
 
  # Other things ..
  fg=$fgLightyellow
@@ -66,6 +74,7 @@ fnRunMyTapUnitTest()
                                                       | GREP_COLOR=$colourTestFail    egrep --colour=always "$grepTestFail" \
                                                       | GREP_COLOR=$colourTestPass    egrep --colour=always "$grepTestPass" \
                                                       | GREP_COLOR=$colourTestWarning egrep --colour=always "$grepTestWarning" \
+                                                      | GREP_COLOR=$colourCoreErrors  egrep --colour=always "$grepCoreErrors" \
                                                       | GREP_COLOR=$colourOtherThings egrep --colour=always "$grepOtherThings" 
    cd - > /dev/null 2>&1
 
