@@ -1,0 +1,81 @@
+use BIGGYM;
+
+-- ----------------------------------------------------------
+-- Start test run ..
+-- ----------------------------------------------------------
+begin;
+
+-- ----------------------------------------------------------
+-- Initialise ..
+-- ----------------------------------------------------------
+set @NUM_TESTS=6;
+set @SPROC_NAME='spUpdateExercise';
+
+-- ----------------------------------------------------------
+-- Set number of tests in this plan ..
+-- ----------------------------------------------------------
+select tap.plan(@NUM_TESTS);
+set @TEST_COMMENT_PREFIX=concat('TESTING [', @SPROC_NAME, '] ');
+
+-- ----------------------------------------------------------
+-- Prerequisite operation(s) ..
+-- ----------------------------------------------------------
+set @ExerciseName='Dips';
+set @BodypartName='Arms';
+call spCreateExercise (@ExerciseName, @BodyPartName, @ArmsObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @ExerciseName='Dips';
+set @BodypartName='Chest';
+call spCreateExercise (@ExerciseName, @BodyPartName, @ChestObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+-- ----------------------------------------------------------
+-- Run Tests ..
+-- ----------------------------------------------------------
+set @TEST_COMMENT='Update existing exercise to a new one';
+set @ExerciseName='Deep Dips';
+set @BodypartName='Chest';
+call spUpdateExercise (@ExerciseName, @BodyPartName, @ArmsObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ArmsObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Update existing exercise to an already existing duplicate';
+set @ExerciseName='Dips';
+set @BodypartName='Chest';
+call spUpdateExercise (@ExerciseName, @BodyPartName, @ArmsObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ArmsObjectId is NOT NULL and @returnCode < 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Update NULL exercise';
+set @NullObjectId=NULL;
+set @ExerciseName='Dips';
+set @BodypartName='Chest';
+call spUpdateExercise (@ExerciseName, @BodyPartName, @NullObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ArmsObjectId is NOT NULL and @returnCode < 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Update existing exercise to a new completely NULL one';
+set @ExerciseName=NULL;
+set @BodypartName=NULL;
+call spUpdateExercise (@ExerciseName, @BodyPartName, @ArmsObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ArmsObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Update existing exercise to a new partially NULL one';
+set @ExerciseName=NULL;
+set @BodypartName='Chest';
+call spUpdateExercise (@ExerciseName, @BodyPartName, @ArmsObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ArmsObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Update existing exercise to a new partially NULL one';
+set @ExerciseName='Dips';
+set @BodypartName=NULL;
+call spUpdateExercise (@ExerciseName, @BodyPartName, @ArmsObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ArmsObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+-- ----------------------------------------------------------
+-- Finish tests and clean up.
+-- ----------------------------------------------------------
+call tap.finish();
+rollback;

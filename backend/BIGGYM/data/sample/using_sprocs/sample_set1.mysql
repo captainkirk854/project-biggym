@@ -60,8 +60,9 @@ call spRegisterTrainingPlanDefinition ('Deadlift', 'All', 'Heavy Lifting - Maxim
 
 -- Object Updates ...
 -- Exercise ..
-call spUpdateExercise ('Pullups', 'Back', 9, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spUpdateExercise ('Pullups-Speziale', 'Back', 9, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @exerciseId=9;
+call spUpdateExercise ('Pullups', 'Back', @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdateExercise ('Pullups-Speziale', 'Back', @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 -- Person ..
 call spUpdatePerson ('Dirkus', 'Benedictus', '1945-03-01', 10, @returnCode, @errorCode, @stateCode, @errorMsg);

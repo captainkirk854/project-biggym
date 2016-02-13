@@ -18,7 +18,7 @@ drop procedure if exists spUpdateExercise;
 delimiter $$
 create procedure spUpdateExercise(in vUpdatable_ExerciseName varchar(128),
                                   in vUpdatable_BodyPartName varchar(128),
-                                  in ObjectId mediumint unsigned,  
+                               inout ObjectId mediumint unsigned,  
                                  out ReturnCode int,
                                  out ErrorCode int,
                                  out ErrorState int,
@@ -49,35 +49,43 @@ begin
     set ErrorMsg = '-';
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
 
-    -- Attempt update ..
-    call spGetIdForExercise (vUpdatable_ExerciseName, vUpdatable_BodyPartName, localObjectId, ReturnCode);
-    if (ObjectId = localObjectId) then
-        -- no update required ..
-        set tStatus = 2;
-        
-    elseif (ObjectId is NOT NULL) then
+    -- Only proceed for not null objectId ..
+    if (ObjectId is NOT NULL) then
     
-        -- Update ..
-        update EXERCISE
-           set 
-               DATE_REGISTERED = current_timestamp(3),
-               NAME = vUpdatable_ExerciseName,
-               BODY_PART = vUpdatable_BodyPartName
-         where
-               ID = ObjectId;
-    
-        -- Verify ..
+        -- Attempt update ..
         call spGetIdForExercise (vUpdatable_ExerciseName, vUpdatable_BodyPartName, localObjectId, ReturnCode);
+ 
         if (ObjectId = localObjectId) then
-            -- success ..
-            set tStatus = 0;
+            -- no update required ..
+            set tStatus = 2;
+            
+        elseif (localObjectId is NULL) then
+        
+            -- Can update as no duplicate exists ..
+            update EXERCISE
+               set 
+                   DATE_REGISTERED = current_timestamp(3),
+                   NAME = vUpdatable_ExerciseName,
+                   BODY_PART = vUpdatable_BodyPartName
+             where
+                   ID = ObjectId;
+        
+            -- Verify ..
+            call spGetIdForExercise (vUpdatable_ExerciseName, vUpdatable_BodyPartName, localObjectId, ReturnCode);
+            if (ObjectId = localObjectId) then
+                -- success ..
+                set tStatus = 0;
+            else
+                -- unexpected multiple occurrence ..
+                set tStatus = -2;
+            end if;
         else
-            -- unexpected multiple occurrence ..
-            set tStatus = -2;
+            -- transaction attempt ignored as duplicate exists ..
+            set tStatus = -3;
         end if;
     else
-        -- transaction ignored ..
-        set tStatus = -3;
+        -- unexpected NULL value for Object Id
+        set tStatus = -7;
     end if;
     
     -- Log ..
@@ -90,8 +98,8 @@ delimiter ;
 
 /*
 Sample Usage:
-set @exerciseId=9;
-call spUpdateExercise ('Pullups', 'Back', @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @exerciseId=7;
+call spUpdateExercise ('Dips', 'Chest', @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
 select  @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg;
 
 set @exerciseId=10;

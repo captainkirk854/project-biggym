@@ -37,10 +37,11 @@ begin
                 when FinalStatus = 2  then 'input field value(s) already match - no update required'
                 when FinalStatus = -1 then 'illegal character(s) in one or more input field value(s)'
                 when FinalStatus = -2 then 'unexpected occurrence of more than one row of input field value(s)'
-                when FinalStatus = -3 then 'anomalous data - transaction ignored'
+                when FinalStatus = -3 then 'anomalous data (likely duplicate) - transaction ignored'
                 when FinalStatus = -4 then 'unexpected NULL value for one or more REFERENCEid(s)'
                 when FinalStatus = -5 then 'unexpected database transaction problem encountered'
                 when FinalStatus = -6 then 'invalid date format used'
+                when FinalStatus = -7 then 'unexpected NULL value for Object Id'
             else
                 concat('status number of [', FinalStatus, '] undefined')
             end;    
