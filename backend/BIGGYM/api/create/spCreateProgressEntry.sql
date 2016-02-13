@@ -30,8 +30,11 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'PROGRESS';
     declare SpName varchar(128) default 'spCreateProgressEntry';
-    declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', vNew_SetOrdinality, ',SET_REPS=', vNew_SetReps, ',SET_WEIGHT=',vNew_SetWeight, ',DATE_PHYSICAL=', vNew_DatePhysical);
-    declare ReferenceFields varchar(256) default concat('DEFINITIONid=', vPlanDefinitionId);
+    declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', saynull(vNew_SetOrdinality), 
+                                                          ',SET_REPS=', saynull(vNew_SetReps), 
+                                                          ',SET_WEIGHT=', saynull(vNew_SetWeight), 
+                                                          ',DATE_PHYSICAL=', saynull(vNew_DatePhysical));
+    declare ReferenceFields varchar(256) default concat('DEFINITIONid=', saynull(vPlanDefinitionId));
     declare TransactionType varchar(16) default 'insert';
 
     declare SpComment varchar(512);

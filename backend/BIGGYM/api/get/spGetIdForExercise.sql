@@ -31,14 +31,3 @@ begin
     
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-
-call spGetIdForExercise ('Dips','Arms', @id, @returnCode);
-select @id, @returnCode;
-
-call spGetIdForExercise (NULL,NULL, @id, @returnCode);
-select @id, @returnCode;
-*/

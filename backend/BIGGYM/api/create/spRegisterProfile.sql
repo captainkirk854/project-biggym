@@ -32,8 +32,10 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterProfile';
-    declare SignificantFields varchar(256) default concat('NAME=', vNew_ProfileName);
-    declare ReferenceFields varchar(256) default concat('PERSONid(', 'FIRST_NAME=', vFirstName, ',LAST_NAME=', vLastName, ',BIRTH_DATE=', vBirthDate, ')');
+    declare SignificantFields varchar(256) default concat('NAME=', saynull(vNew_ProfileName));
+    declare ReferenceFields varchar(256) default concat('FIRST_NAME=', saynull(vFirstName), 
+                                                        ',LAST_NAME =', saynull(vLastName), 
+                                                        ',BIRTH_DATE =', saynull(vBirthDate));
     declare TransactionType varchar(16) default 'insert';
 
     declare SpComment varchar(512);

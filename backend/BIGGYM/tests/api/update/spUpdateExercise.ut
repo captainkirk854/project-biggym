@@ -53,25 +53,25 @@ call spUpdateExercise (@ExerciseName, @BodyPartName, @NullObjectId, @returnCode,
 set @CONDITION_PASS=(@ArmsObjectId is NOT NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
-set @TEST_COMMENT='Update existing exercise to a new completely NULL one';
+set @TEST_COMMENT='Attempt to update existing exercise to a new completely NULL one';
 set @ExerciseName=NULL;
 set @BodypartName=NULL;
 call spUpdateExercise (@ExerciseName, @BodyPartName, @ArmsObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
-set @CONDITION_PASS=(@ArmsObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+set @CONDITION_PASS=(@ArmsObjectId is NOT NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Update existing exercise to a new partially NULL one';
 set @ExerciseName=NULL;
 set @BodypartName='Chest';
 call spUpdateExercise (@ExerciseName, @BodyPartName, @ArmsObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
-set @CONDITION_PASS=(@ArmsObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+set @CONDITION_PASS=(@ArmsObjectId is NOT NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Update existing exercise to a new partially NULL one';
 set @ExerciseName='Dips';
 set @BodypartName=NULL;
 call spUpdateExercise (@ExerciseName, @BodyPartName, @ArmsObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
-set @CONDITION_PASS=(@ArmsObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+set @CONDITION_PASS=(@ArmsObjectId is NOT NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 -- ----------------------------------------------------------

@@ -1,10 +1,10 @@
 use BIGGYM;
 
 
-drop function if exists fnprettylist; 
+drop function if exists prettify; 
 delimiter $$ 
 
-create function fnprettylist (inputStringList varchar(1024), 
+create function prettify (inputStringList varchar(1024), 
                               inputDelimiter varchar(10)) 
 returns varchar(2048)
 begin
@@ -24,8 +24,8 @@ delimiter ;
 Sample Usage:
 
 set @list='NAME=PULLUPS,BODY_PART=ARMS';
-select fnprettylist(@list, ',');    
+select prettify(@list, ',');    
 
 set @list='NAME=PULLUPS,       BODY_PART=    ARMS';
-select fnprettylist(@list, ','); 
+select prettify(@list, ','); 
 */

@@ -29,8 +29,8 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'PROFILE';
     declare SpName varchar(128) default 'spCreateProfile';
-    declare SignificantFields varchar(256) default concat('NAME=', vNew_ProfileName);
-    declare ReferenceFields varchar(256) default concat('PERSONid=', vPersonId);
+    declare SignificantFields varchar(256) default concat('NAME=', saynull(vNew_ProfileName));
+    declare ReferenceFields varchar(256) default concat('PERSONid=', saynull(vPersonId));
     declare TransactionType varchar(16) default 'insert';
 
     declare SpComment varchar(512);
@@ -50,7 +50,7 @@ begin
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     
     -- Only "good" string input is allowed ..
-    if(strisgood(vNew_ProfileName)) then
+    if(strisgood(vNew_ProfileName) and vPersonId is NOT NULL) then
     
         -- Attempt create ..
         call spGetIdForProfile (vNew_ProfileName, vPersonId, ObjectId, ReturnCode);
@@ -74,7 +74,7 @@ begin
             set tStatus = 1;
         end if;
     else
-        -- illegal characters found ..
+        -- illegal or null characters found ..
         set tStatus = -1;
     end if;
     

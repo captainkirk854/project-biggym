@@ -41,11 +41,24 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterTrainingPlanDefinition';
-    declare SignificantFields varchar(256) default concat('PLANid,EXERCISEid,EXERCISE_WEEK=',vNew_ExerciseWeek, ',EXERCISE_DAY=', vNew_ExerciseDay,'EXERCISE_ORDINALITY=', vNew_ExerciseOrdinality);
-    declare ReferenceFields varchar(256) default concat('EXERCISEid(', 'NAME=', vExerciseName, ',BODY_PART=', vBodyPartName, '>) and ' ,
-                                                        'PLANId(', 'NAME=', vTrainingPlanName, ') and ' ,
-                                                        'PROFILEId(', 'NAME=', vProfileName, ') and ' ,
-                                                        'PERSONid(', 'FIRST_NAME=', vFirstName, ',LAST_NAME=', vLastName, ',BIRTH_DATE=', vBirthDate, ')');
+    declare SignificantFields varchar(256) default concat('PLANid, EXERCISEid, EXERCISE_WEEK=', saynull(vNew_ExerciseWeek), 
+                                                          ',EXERCISE_DAY=', saynull(vNew_ExerciseDay),
+                                                          ',EXERCISE_ORDINALITY=', saynull(vNew_ExerciseOrdinality));
+    declare ReferenceFields varchar(256) default concat('EXERCISEid(', 
+                                                                     'NAME=', saynull(vExerciseName),
+                                                                     ',BODY_PART=', saynull(vBodyPartName),
+                                                                  ') and ' ,
+                                                        'PLANId(', 
+                                                                'NAME=', saynull(vTrainingPlanName),
+                                                              ') and ' ,
+                                                        'PROFILEId(', 
+                                                                    'NAME=', saynull(vProfileName),
+                                                                 ') and ' ,
+                                                        'PERSONid(', 
+                                                                    'FIRST_NAME=', saynull(vFirstName), 
+                                                                    ',LAST_NAME =', saynull(vLastName), 
+                                                                    ',BIRTH_DATE =', saynull(vBirthDate), 
+                                                                ')');
     declare TransactionType varchar(16) default 'insert'; 
     
     declare SpComment varchar(512);

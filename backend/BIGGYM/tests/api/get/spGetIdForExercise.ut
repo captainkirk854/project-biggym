@@ -1,0 +1,48 @@
+use BIGGYM;
+
+-- ----------------------------------------------------------
+-- Start test run ..
+-- ----------------------------------------------------------
+begin;
+
+-- ----------------------------------------------------------
+-- Initialise ..
+-- ----------------------------------------------------------
+set @NUM_TESTS=2;
+set @SPROC_NAME='spGetIdForExercise';
+
+-- ----------------------------------------------------------
+-- Set number of tests in this plan ..
+-- ----------------------------------------------------------
+select tap.plan(@NUM_TESTS);
+set @TEST_COMMENT_PREFIX=concat('TESTING [', @SPROC_NAME, '] ');
+
+-- ----------------------------------------------------------
+-- Prerequisite operation(s) ..
+-- ----------------------------------------------------------
+set @exerciseName='A brand new exercise';
+set @bodypartName='brand new body part';
+call spCreateExercise (@exerciseName, @bodypartName, @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+-- ----------------------------------------------------------
+-- Run Tests ..
+-- ----------------------------------------------------------
+set @TEST_COMMENT='Get id for existing exercise';
+set @ExerciseName='A brand new exercise';
+set @BodyPartName='brand new body part';
+call spGetIdForExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode);
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @ObjectId = @exerciseId and @returnCode >= 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Get id for non-existent exercise';
+set @ExerciseName='Bench-Turnips';
+set @BodyPartName=NULL;
+call spGetIdForExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode);
+set @CONDITION_PASS=(@ObjectId is NULL and @returnCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+-- ----------------------------------------------------------
+-- Finish tests and clean up.
+-- ----------------------------------------------------------
+call tap.finish();
+rollback;

@@ -34,11 +34,12 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN_DEFINITION';
     declare SpName varchar(128) default 'spUpdateTrainingPlanDefinition';
-    declare SignificantFields varchar(256) default concat('EXERCISE_WEEK=', ifNull(vUpdatable_ExerciseWeek, 'NULL'), 
-                                                          ',EXERCISE_DAY=', ifNull(vUpdatable_ExerciseDay, 'NULL'), 
-                                                          ',EXERCISE_ORDINALITY=', ifNull(vUpdatable_ExerciseOrdinality, 'NULL'), 
-                                                          ',EXERCISEid=', vUpdatable_ExerciseId);
-    declare ReferenceFields varchar(256) default concat('ID=', ifNull(ObjectId, 'NULL'), ',PLANid=', vPlanId);
+    declare SignificantFields varchar(256) default concat('EXERCISE_WEEK=', saynull(vUpdatable_ExerciseWeek), 
+                                                          ',EXERCISE_DAY=', saynull(vUpdatable_ExerciseDay), 
+                                                          ',EXERCISE_ORDINALITY=', saynull(vUpdatable_ExerciseOrdinality), 
+                                                          ',EXERCISEid=', saynull(vUpdatable_ExerciseId));
+    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId), 
+                                                        ',PLANid=', saynull(vPlanId));
     declare TransactionType varchar(16) default 'update';    
     
     declare SpComment varchar(512);

@@ -46,12 +46,30 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterProgressEntry';
-    declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', vNew_SetOrdinality, ',SET_REPS=', vNew_SetReps, ',SET_WEIGHT=',vNew_SetWeight, ',DATE_PHYSICAL=', vNew_DatePhysical);
-    declare ReferenceFields varchar(256) default concat('DEFINITIONid(', 'EXERCISE_WEEK=', vExerciseWeek, ',EXERCISE_DAY=', vExerciseDay, ',EXERCISE_ORDINALITY=', vExerciseOrdinality, ') and ' ,
-                                                        'EXERCISEid(', 'NAME=', vExerciseName, ',BODY_PART=', vBodyPartName, '>) and ' ,
-                                                        'PLANId(', 'NAME=', vTrainingPlanName, ') and ' ,
-                                                        'PROFILEId(', 'NAME=', vProfileName, ') and ' ,
-                                                        'PERSONid(', 'FIRST_NAME=', vFirstName, ',LAST_NAME=', vLastName, ',BIRTH_DATE=', vBirthDate, ')');
+    declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', saynull(vNew_SetOrdinality), 
+                                                          ',SET_REPS=', saynull(vNew_SetReps),
+                                                          ',SET_WEIGHT=', saynull(vNew_SetWeight),
+                                                          ',DATE_PHYSICAL=', saynull(vNew_DatePhysical));
+    declare ReferenceFields varchar(256) default concat('DEFINITIONid(', 
+                                                                      'EXERCISE_WEEK=', saynull(vExerciseWeek), 
+                                                                      ',EXERCISE_DAY=', saynull(vExerciseDay),
+                                                                      ',EXERCISE_ORDINALITY=', saynull(vExerciseOrdinality),
+                                                                    ') and ' ,
+                                                        'EXERCISEid(', 
+                                                                     'NAME=', saynull(vExerciseName),
+                                                                     ',BODY_PART=', saynull(vBodyPartName),
+                                                                    ') and ' ,
+                                                        'PLANId(', 
+                                                                'NAME=', saynull(vTrainingPlanName),
+                                                              ') and ' ,
+                                                        'PROFILEId(', 
+                                                                    'NAME=', saynull(vProfileName),
+                                                                 ') and ' ,
+                                                        'PERSONid(', 
+                                                                    'FIRST_NAME=', saynull(vFirstName), 
+                                                                    ',LAST_NAME =', saynull(vLastName), 
+                                                                    ',BIRTH_DATE =', saynull(vBirthDate), 
+                                                                ')');
     declare TransactionType varchar(16) default 'insert'; 
     
     declare SpComment varchar(512);

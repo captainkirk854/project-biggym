@@ -28,7 +28,8 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'EXERCISE';
     declare SpName varchar(128) default 'spCreateExercise';
-    declare SignificantFields varchar(256) default concat('NAME=', vNew_ExerciseName, ',BODY_PART=', vNew_BodyPartName);
+    declare SignificantFields varchar(256) default concat('NAME=', saynull(vNew_ExerciseName), 
+                                                          ',BODY_PART=', saynull(vNew_BodyPartName));
     declare ReferenceFields varchar(256) default concat('na');
     declare TransactionType varchar(16) default 'insert';
     
@@ -73,7 +74,7 @@ begin
             set tStatus = 1;
         end if;
     else
-        -- illegal characters found ..
+        -- illegal or null characters found ..
         set tStatus = -1;
     end if;
 

@@ -30,8 +30,8 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN';
     declare SpName varchar(128) default 'spCreateTrainingPlan';
-    declare SignificantFields varchar(256) default concat('NAME=', vNew_TrainingPlanName);
-    declare ReferenceFields varchar(256) default concat('PROFILEid=', vProfileId);
+    declare SignificantFields varchar(256) default concat('NAME=', saynull(vNew_TrainingPlanName));
+    declare ReferenceFields varchar(256) default concat('PROFILEid=', saynull(vProfileId));
     declare TransactionType varchar(16) default 'insert';
 
     declare SpComment varchar(512);
@@ -51,7 +51,7 @@ begin
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     
     -- Only "good" string input is allowed ..
-    if(strisgood(vNew_TrainingPlanName)) then
+    if(strisgood(vNew_TrainingPlanName) and vProfileId is NOT NULL) then
 
         -- Attempt create ..
         call spGetIdForTrainingPlan (vNew_TrainingPlanName, vProfileId, ObjectId, ReturnCode);
@@ -75,7 +75,7 @@ begin
             set tStatus = 1;
         end if;
     else
-        -- illegal characters found ..
+        -- illegal or null characters found ..
         set tStatus = -1;
     end if;
 

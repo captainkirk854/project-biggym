@@ -29,7 +29,9 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'PERSON';
     declare SpName varchar(128) default 'spCreatePerson';
-    declare SignificantFields varchar(256) default concat('FIRST_NAME=', vNew_FirstName, ',LAST_NAME =', vNew_LastName, ',BIRTH_DATE =', vNew_BirthDate);
+    declare SignificantFields varchar(256) default concat('FIRST_NAME=', saynull(vNew_FirstName), 
+                                                          ',LAST_NAME =', saynull(vNew_LastName), 
+                                                          ',BIRTH_DATE =', saynull(vNew_BirthDate));
     declare ReferenceFields varchar(256) default concat('na');
     declare TransactionType varchar(16) default 'insert';
     
@@ -80,10 +82,10 @@ begin
             end if;
         else
             -- invalid date format used ..
-            set tStatus = -6;            
+            set tStatus = -6;
         end if;
     else
-        -- illegal characters found ..
+        -- illegal or null characters found ..
         set tStatus = -1;
     end if;
 

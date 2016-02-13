@@ -8,7 +8,7 @@ begin;
 -- ----------------------------------------------------------
 -- Initialise ..
 -- ----------------------------------------------------------
-set @NUM_TESTS=7;
+set @NUM_TESTS=8;
 set @SPROC_NAME='spCreateExercise';
 
 -- ----------------------------------------------------------
@@ -16,6 +16,10 @@ set @SPROC_NAME='spCreateExercise';
 -- ----------------------------------------------------------
 select tap.plan(@NUM_TESTS);
 set @TEST_COMMENT_PREFIX=concat('TESTING [', @SPROC_NAME, '] ');
+
+-- ----------------------------------------------------------
+-- Prerequisite operation(s) ..
+-- ----------------------------------------------------------
 
 -- ----------------------------------------------------------
 -- Run Tests ..
@@ -65,6 +69,13 @@ select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 set @TEST_COMMENT='NULL exercise, new body part ';
 set @ExerciseName=NULL;
 set @BodyPartName='ZYX';
+call spCreateExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='NULL exercise, NULL body part ';
+set @ExerciseName=NULL;
+set @BodyPartName=NULL;
 call spCreateExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));

@@ -30,8 +30,9 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN';
     declare SpName varchar(128) default 'spUpdateTrainingPlan';
-    declare SignificantFields varchar(256) default concat('NAME=', vUpdatable_TrainingPlanName);
-    declare ReferenceFields varchar(256) default concat('ID=', ifNull(ObjectId, 'NULL'), ',PROFILEid=', vProfileId);
+    declare SignificantFields varchar(256) default concat('NAME=', saynull(vUpdatable_TrainingPlanName));
+    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId), 
+                                                        ',PROFILEid=', saynull(vProfileId));
     declare TransactionType varchar(16) default 'update';
     
     declare SpComment varchar(512);

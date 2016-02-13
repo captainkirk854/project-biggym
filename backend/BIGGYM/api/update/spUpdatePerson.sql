@@ -29,8 +29,10 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'PERSON';
     declare SpName varchar(128) default 'spUpdatePerson';
-    declare SignificantFields varchar(256) default concat('FIRST_NAME=', vUpdatable_FirstName, ',LAST_NAME =', vUpdatable_LastName, ',BIRTH_DATE =', vUpdatable_BirthDate);
-    declare ReferenceFields varchar(256) default concat('ID=', ifNull(ObjectId, 'NULL'));
+    declare SignificantFields varchar(256) default concat('FIRST_NAME=', saynull(vUpdatable_FirstName), 
+                                                          ',LAST_NAME =', saynull(vUpdatable_LastName), 
+                                                          ',BIRTH_DATE =', saynull(vUpdatable_BirthDate));
+    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId));
     declare TransactionType varchar(16) default 'update';
     
     declare SpComment varchar(512);

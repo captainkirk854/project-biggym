@@ -26,10 +26,11 @@ create procedure spDebugLogger(in DebugLoggingDatabase varchar(128),
                                in SqlErrorMsg varchar(512))
 begin
 
+    -- Initialise ..
     declare DebugLoggingTable varchar(128) default 'DEBUG_LOG';
-    declare nullIndicator char(1) default '-';
+    declare dash char(1) default '-';
 
-    -- Use the existence of a logging table to trigger logging to that table ..
+    -- Use existence of logging table to trigger logging ..
     if (select 1 from INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'BASE TABLE' and TABLE_SCHEMA = DebugLoggingDatabase and TABLE_NAME = DebugLoggingTable) then
 
         set @dml = concat('insert into ', 
@@ -45,13 +46,13 @@ begin
                                       ' )',
                               ' values ', 
                                       ' (', 
-                                            '''',strcln(ifNull(ObjectName, nullIndicator), 'show'),'''', ',',
-                                            '''',strcln(ifNull(SprocName, nullIndicator), 'show'),'''', ',',
-                                            '''',strcln(ifNull(SprocComment, nullIndicator), 'show'),'''', ',',
-                                                 SprocReturnCode,      ',',
-                                                 SqlErrorCode,       ',',
-                                                 SqlStateCode,       ',',
-                                            '''',strcln(ifNull(SqlErrorMsg, nullIndicator), 'show'),'''', 
+                                            '''',strcln(ifNull(ObjectName, dash), 'show'),'''', ',',
+                                            '''',strcln(ifNull(SprocName, dash), 'show'),'''', ',',
+                                            '''',strcln(ifNull(SprocComment, dash), 'show'),'''', ',',
+                                                 SprocReturnCode, ',',
+                                                 SqlErrorCode, ',',
+                                                 SqlStateCode, ',',
+                                            '''',strcln(ifNull(SqlErrorMsg, dash), 'show'),'''', 
                                       ' )'
                          );
                      

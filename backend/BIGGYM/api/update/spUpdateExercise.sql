@@ -28,8 +28,9 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'EXERCISE';
     declare SpName varchar(128) default 'spUpdateExercise';
-    declare SignificantFields varchar(256) default concat('NAME=', vUpdatable_ExerciseName, ',BODY_PART=', vUpdatable_BodyPartName);
-    declare ReferenceFields varchar(256) default concat('ID=', ifNull(ObjectId, 'NULL'));
+    declare SignificantFields varchar(256) default concat('NAME=', saynull(vUpdatable_ExerciseName), 
+                                                          ',BODY_PART=', saynull(vUpdatable_BodyPartName));
+    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId));
     declare TransactionType varchar(16) default 'update';
 
     declare SpComment varchar(512);
@@ -49,68 +50,55 @@ begin
     set ErrorMsg = '-';
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
 
-    -- Only proceed for not null objectId ..
-    if (ObjectId is NOT NULL) then
+    -- Only "good" string input is allowed ..
+    if(strisgood(vUpdatable_ExerciseName) and strisgood(vUpdatable_BodyPartName)) then
     
-        -- Attempt update ..
-        call spGetIdForExercise (vUpdatable_ExerciseName, vUpdatable_BodyPartName, localObjectId, ReturnCode);
- 
-        if (ObjectId = localObjectId) then
-            -- no update required ..
-            set tStatus = 2;
-            
-        elseif (localObjectId is NULL) then
+        -- Only proceed for not null objectId ..
+        if (ObjectId is NOT NULL) then
         
-            -- Can update as no duplicate exists ..
-            update EXERCISE
-               set 
-                   DATE_REGISTERED = current_timestamp(3),
-                   NAME = vUpdatable_ExerciseName,
-                   BODY_PART = vUpdatable_BodyPartName
-             where
-                   ID = ObjectId;
-        
-            -- Verify ..
+            -- Attempt update ..
             call spGetIdForExercise (vUpdatable_ExerciseName, vUpdatable_BodyPartName, localObjectId, ReturnCode);
+     
             if (ObjectId = localObjectId) then
-                -- success ..
-                set tStatus = 0;
+                -- no update required ..
+                set tStatus = 2;
+                
+            elseif (localObjectId is NULL) then
+            
+                -- Can update as no duplicate exists ..
+                update EXERCISE
+                   set 
+                       DATE_REGISTERED = current_timestamp(3),
+                       NAME = vUpdatable_ExerciseName,
+                       BODY_PART = vUpdatable_BodyPartName
+                 where
+                       ID = ObjectId;
+            
+                -- Verify ..
+                call spGetIdForExercise (vUpdatable_ExerciseName, vUpdatable_BodyPartName, localObjectId, ReturnCode);
+                if (ObjectId = localObjectId) then
+                    -- success ..
+                    set tStatus = 0;
+                else
+                    -- unexpected multiple occurrence ..
+                    set tStatus = -2;
+                end if;
             else
-                -- unexpected multiple occurrence ..
-                set tStatus = -2;
+                -- transaction attempt ignored as duplicate exists ..
+                set tStatus = -3;
             end if;
         else
-            -- transaction attempt ignored as duplicate exists ..
-            set tStatus = -3;
+            -- unexpected NULL value for Object Id
+            set tStatus = -7;
         end if;
     else
-        -- unexpected NULL value for Object Id
-        set tStatus = -7;
+        -- illegal or null characters found ..
+        set tStatus = -1;
     end if;
-    
+
     -- Log ..
     set ReturnCode = tStatus;
     call spActionOnEnd (ObjectName, SpName, ObjectId, tStatus, SpComment, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
 
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-set @exerciseId=7;
-call spUpdateExercise ('Dips', 'Chest', @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select  @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-set @exerciseId=10;
-call spUpdateExercise ('Pullups', 'Back', @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select  @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-set @exerciseId = NULL;
-call spUpdateExercise ('Pullups', 'Back', @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select  @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-set @exerciseId=9;
-call spUpdateExercise ('Pullups-Speziale', 'Back', @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select  @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg;
-*/

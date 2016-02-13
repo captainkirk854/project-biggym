@@ -30,11 +30,11 @@ begin
                        ObjectName, 
                        '] object field(s) ', 
                        '[', 
-                       fnprettylist(SignificantFields, delim), 
+                       prettify(SignificantFields, delim), 
                        '] ', 
                        'using reference field(s) ', 
                        '[', 
-                       fnprettylist(ReferenceFields, delim), 
+                       prettify(ReferenceFields, delim), 
                        ']');
 end$$
 delimiter ;
