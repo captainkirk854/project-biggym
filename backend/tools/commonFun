@@ -1,0 +1,79 @@
+#!/bin/bash
+#---------------------------------------------------------------------------------------------------------------------
+# Purpose : Convenience tool to quickly run unit test for MYSQL programmatic entities
+#
+# Author      Date         Version     Comments
+# ------      ----------   -------     --------
+# Fraioli     2016-02-13       1.0     Created
+#---------------------------------------------------------------------------------------------------------------------
+
+
+#-----------------------------------------------
+# FUNCTIONS #
+#-----------------------------------------------
+
+#----------------------------------------------------------
+fnDefineColourCodes()
+#----------------------------------------------------------
+{
+ # Define some colour codes to use ..
+ fgRed=31
+ fgYellow=32
+ fgCyan=36
+ fgLightyellow=93
+ bgBlack=40
+ bgWhite=47
+ bgDefault=49
+ bgLightred=101
+}
+#----------------------------------------------------------
+
+#----------------------------------------------------------
+fnDefineConditionsForGREPCOLOR()
+#----------------------------------------------------------
+{
+ # Set colour for test failure result ..
+ fg=$fgLightyellow
+ bg=$bgLightred
+ colourTestFail="01;$fg;$bg"
+ grepTestFail='\b(not ok|Failed|Looks like you failed)\b|$'
+
+ # Set colour for test pass result ..
+ fg=$fgCyan
+ bg=$bgBlack
+ colourTestPass="01;$fg;$bg"
+ grepTestPass='\b(ok)\b|$'
+
+ # Set colour for test warnings ..
+ fg=$fgRed
+ bg=$bgBlack
+ colourTestWarning="01;$fg;$bg"
+ grepTestWarning='\b(Looks like you planned|test but ran)\b|$'
+
+ # Set colour for core errors ..
+ fg=$fgRed
+ bg=$bgWhite
+ colourCoreErrors="01;$fg;$bg"
+ grepCoreErrors='\b(ERROR|does not exist)\b|$'
+
+ # Other things ..
+ fg=$fgLightyellow
+ bg=$bgDefault
+ colourOtherThings="01;$fg;$bg"
+ grepOtherThings='\b(PROCESSING|__completed)\b|$'
+}
+#----------------------------------------------------------
+
+#----------------------------------------------------------
+fnDefineDisplayThings()
+#----------------------------------------------------------
+{
+ sep="-------------------------------------------------------------------------------------------------------------"
+}
+#----------------------------------------------------------
+
+
+#Run ..
+fnDefineColourCodes
+fnDefineConditionsForGREPCOLOR
+fnDefineDisplayThings
