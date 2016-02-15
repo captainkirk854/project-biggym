@@ -19,7 +19,7 @@ delimiter $$
 create procedure spUpdatePerson(in vUpdatable_FirstName varchar(32),
                                 in vUpdatable_LastName varchar(32),
                                 in vUpdatable_BirthDate date,
-                                in ObjectId mediumint unsigned,
+                             inout ObjectId mediumint unsigned,
                                out ReturnCode int,
                                out ErrorCode int,
                                out ErrorState int,
@@ -51,37 +51,60 @@ begin
     set ErrorState = 0;
     set ErrorMsg = '-';
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
-    
-    -- Attempt update ..
-    call spGetIdForPerson (vUpdatable_FirstName, vUpdatable_LastName, vUpdatable_BirthDate, localObjectId, ReturnCode);
-    if (ObjectId = localObjectId) then
-        -- no update required ..
-        set tStatus = 2;
+
+    -- Only "good" string input is allowed ..
+    if(strisgood(vUpdatable_FirstName) and strisgood(vUpdatable_LastName) and strisgood(vUpdatable_BirthDate)) then
+
+        -- Only proceed for not null objectId ..
+        if (ObjectId is NOT NULL) then
         
-    elseif (ObjectId is NOT NULL) then
-        
-        -- Update ..
-        update PERSON
-           set 
-               DATE_REGISTERED = current_timestamp(3),
-               FIRST_NAME = vUpdatable_FirstName,
-               LAST_NAME = vUpdatable_LastName,
-               BIRTH_DATE = vUpdatable_BirthDate
-         where
-               ID = ObjectId;
-    
-        -- Verify ..
-        call spGetIdForPerson (vUpdatable_FirstName, vUpdatable_LastName, vUpdatable_BirthDate, localObjectId, ReturnCode);
-        if (ObjectId = localObjectId) then
-            -- success ..
-            set tStatus = 0;
-        else
-            -- unexpected multiple occurrence ..
-            set tStatus = -2;
-        end if;
+            -- Check if date uses valid format (YY-mm-dd) ..
+            if (date(vUpdatable_BirthDate) is NOT NULL and (vUpdatable_BirthDate != '0000-00-00')) then
+            
+                -- Attempt update ..
+                call spGetIdForPerson (vUpdatable_FirstName, vUpdatable_LastName, vUpdatable_BirthDate, localObjectId, ReturnCode);
+                
+                if (ObjectId = localObjectId) then
+                    -- no update required ..
+                    set tStatus = 2;
+                    
+                elseif (localObjectId is NULL) then
+                    
+                    -- Can update as no duplicate exists ..
+                    update PERSON
+                       set 
+                           DATE_REGISTERED = current_timestamp(3),
+                           FIRST_NAME = vUpdatable_FirstName,
+                           LAST_NAME = vUpdatable_LastName,
+                           BIRTH_DATE = vUpdatable_BirthDate
+                     where
+                           ID = ObjectId;
+                
+                    -- Verify ..
+                    call spGetIdForPerson (vUpdatable_FirstName, vUpdatable_LastName, vUpdatable_BirthDate, localObjectId, ReturnCode);
+                    if (ObjectId = localObjectId) then
+                        -- success ..
+                        set tStatus = 0;
+                    else
+                        -- transaction attempt made no change or caused duplicate ..
+                        set tStatus = -2;
+                        rollback;
+                    end if;
+                else
+                    -- transaction attempt ignored as duplicate exists ..
+                    set tStatus = -3;
+                end if;
+            else
+                -- invalid date format used ..
+                set tStatus = -6;
+            end if;
+         else
+            -- unexpected NULL value for Object and/or reference Id ..
+            set tStatus = -7;
+        end if;       
     else
-        -- transaction ignored ..
-        set tStatus = -3;
+        -- illegal or null characters found ..
+        set tStatus = -1;
     end if;
     
     -- Log ..
@@ -90,24 +113,3 @@ begin
 
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-
-set @personId=10;
-call spUpdatePerson ('Dirk', 'Benedict', '1945-03-01', @personId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @personId, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-set @personId=11;
-call spUpdatePerson ('Dirk', 'Benedict', '1945-03-01', @personId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @personId, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-set @personId=NULL;
-call spUpdatePerson ('Dirk', 'Benedict', '1945-03-01', @personId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @personId, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-set @personId=10;
-call spUpdatePerson ('Dirkus', 'Benedictus', '1945-03-01', @personId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @personId, @returnCode, @errorCode, @stateCode, @errorMsg;
-*/

@@ -1,0 +1,82 @@
+use BIGGYM;
+
+-- ----------------------------------------------------------
+-- Start test run ..
+-- ----------------------------------------------------------
+begin;
+
+-- ----------------------------------------------------------
+-- Initialise ..
+-- ----------------------------------------------------------
+set @NUM_TESTS=7;
+set @SPROC_NAME='spUpdateProfile';
+
+-- ----------------------------------------------------------
+-- Set number of tests in this plan ..
+-- ----------------------------------------------------------
+select tap.plan(@NUM_TESTS);
+set @TEST_COMMENT_PREFIX=concat('TESTING [', @SPROC_NAME, '] ');
+
+-- ----------------------------------------------------------
+-- Prerequisite operation(s) ..
+-- ----------------------------------------------------------
+set @firstname='Sylvester';
+set @lastname='McCoy';
+set @dob='1943-08-20';
+call spCreatePerson (@firstname, @lastname, @dob, @personId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @ProfileName='The worst doctor';
+call spCreateProfile (@ProfileName, @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+-- ----------------------------------------------------------
+-- Run Tests ..
+-- ----------------------------------------------------------
+set @TEST_COMMENT='update existing person and profile with identical new profile';
+set @ProfileName='The worst doctor';
+call spUpdateProfile (@ProfileName, @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='update existing person with different profile';
+set @ProfileName='This doctor is not Tom Baker ';
+call spUpdateProfile (@ProfileName, @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@profileId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='update existing person with profile using illegal characters';
+set @ProfileName='*******************';
+call spUpdateProfile (@ProfileName, @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@profileId is NOT NULL and @returnCode = -1 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='update existing person with profile using NULL';
+set @ProfileName=NULL;
+call spUpdateProfile (@ProfileName, @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@profileId is NOT NULL and @returnCode = -1 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='update existing person with profile using low-strength SQL injection';
+set @ProfileName='AND 1=1 OR (1=1)';
+call spUpdateProfile (@ProfileName, @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@profileId is NOT NULL and @returnCode = 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='update NULL personId reference and existing profileId with profile';
+set @ObjectId=NULL;
+set @ProfileName='The best (simple country) doctor';
+call spUpdateProfile (@ProfileName, @ObjectId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@profileId is NOT NULL and @returnCode = -7 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='update existing personId reference and NULL profileId with profile';
+set @ObjectId=NULL;
+set @ProfileName='The best (simple country) doctor';
+call spUpdateProfile (@ProfileName, @personId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@profileId is NOT NULL and @returnCode = -7 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+-- ----------------------------------------------------------
+-- Finish tests and clean up.
+-- ----------------------------------------------------------
+call tap.finish();
+rollback;

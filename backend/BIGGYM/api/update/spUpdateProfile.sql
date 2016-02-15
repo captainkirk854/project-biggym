@@ -19,7 +19,7 @@ drop procedure if exists spUpdateProfile;
 delimiter $$
 create procedure spUpdateProfile(in vUpdatable_ProfileName varchar(32),
                                  in vPersonId mediumint unsigned,
-                                 in ObjectId mediumint unsigned,
+                              inout ObjectId mediumint unsigned,
                                 out ReturnCode int,
                                 out ErrorCode int,
                                 out ErrorState int,
@@ -51,36 +51,52 @@ begin
     set ErrorMsg = '-';
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     
-    -- Attempt update ..
-    call spGetIdForProfile (vUpdatable_ProfileName, vPersonId, localObjectId, ReturnCode);
-    if (ObjectId = localObjectId) then
-        -- no update required ..
-        set tStatus = 2;
-        
-    elseif (ObjectId is NOT NULL) then
     
-        -- Update ..
-        update PROFILE
-           set 
-               DATE_REGISTERED = current_timestamp(3),
-               NAME = vUpdatable_ProfileName
-         where
-               ID = ObjectId
-           and
-               PERSONid = vPersonId;
-    
-        -- Verify ..
-        call spGetIdForProfile (vUpdatable_ProfileName, vPersonId, localObjectId, ReturnCode);
-        if (ObjectId = localObjectId) then
-            -- success ..
-            set tStatus = 0;
-        else
-            -- unexpected multiple occurrence ..
-            set tStatus = -2;
-        end if;
+    -- Only "good" string input is allowed ..
+    if(strisgood(vUpdatable_ProfileName)) then
+
+        -- Only proceed for not null objectId and reference Id(s)..
+        if (ObjectId is NOT NULL and vPersonId is NOT NULL) then
+ 
+            -- Attempt update ..
+            call spGetIdForProfile (vUpdatable_ProfileName, vPersonId, localObjectId, ReturnCode);
+            if (ObjectId = localObjectId) then
+                -- no update required ..
+                set tStatus = 2;
+                
+            elseif (localObjectId is NULL) then
+            
+                -- Can update as no duplicate exists ..
+                update PROFILE
+                   set 
+                       DATE_REGISTERED = current_timestamp(3),
+                       NAME = vUpdatable_ProfileName
+                 where
+                       ID = ObjectId
+                   and
+                       PERSONid = vPersonId;
+            
+                -- Verify ..
+                call spGetIdForProfile (vUpdatable_ProfileName, vPersonId, localObjectId, ReturnCode);
+                if (ObjectId = localObjectId) then
+                    -- success ..
+                    set tStatus = 0;
+                else
+                    -- transaction attempt made no change or caused duplicate ..
+                    set tStatus = -2;
+                    rollback;
+                end if;
+            else
+                -- transaction attempt ignored as duplicate exists ..
+                set tStatus = -3;
+            end if;
+         else
+            -- unexpected NULL value for Object and/or reference Id ..
+            set tStatus = -7;
+        end if;       
     else
-        -- transaction ignored ..
-        set tStatus = -3;
+        -- illegal or null characters found ..
+        set tStatus = -1;
     end if;
     
     -- Log ..
@@ -89,25 +105,3 @@ begin
 
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-
-
-set @personId=10;
-set @profileId=11;
-call spUpdateProfile ('Faceman', @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-
-set @personId=10;
-set @profileId=11;
-call spUpdateProfile ('cara di hombre', @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg;
-
-set @personId=10;
-set @profileId=99;
-call spUpdateProfile ('cara di hombre', @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg;
-*/

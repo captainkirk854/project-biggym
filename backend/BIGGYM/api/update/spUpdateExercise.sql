@@ -80,15 +80,16 @@ begin
                     -- success ..
                     set tStatus = 0;
                 else
-                    -- unexpected multiple occurrence ..
+                    -- transaction attempt made no change or caused duplicate ..
                     set tStatus = -2;
+                    rollback;
                 end if;
             else
                 -- transaction attempt ignored as duplicate exists ..
                 set tStatus = -3;
             end if;
         else
-            -- unexpected NULL value for Object Id
+            -- unexpected NULL value for Object and/or reference Id ..
             set tStatus = -7;
         end if;
     else
