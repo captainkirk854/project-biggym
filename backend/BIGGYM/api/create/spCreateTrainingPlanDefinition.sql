@@ -19,8 +19,8 @@ use BIGGYM;
 
 drop procedure if exists spCreateTrainingPlanDefinition;
 delimiter $$
-create procedure spCreateTrainingPlanDefinition(in vExerciseId mediumint unsigned,
-                                                in vPlanId mediumint unsigned,
+create procedure spCreateTrainingPlanDefinition(in vPlanId mediumint unsigned,
+                                                in vExerciseId mediumint unsigned,
                                                 in vNew_ExerciseWeek tinyint unsigned,
                                                 in vNew_ExerciseDay tinyint unsigned,
                                                 in vNew_ExerciseOrdinality tinyint unsigned,

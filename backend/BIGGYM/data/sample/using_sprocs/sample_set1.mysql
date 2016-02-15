@@ -53,9 +53,22 @@ call spRegisterTrainingPlan ('I aint gettin on no plane sucka workout', 'Mr.T', 
 
 
 -- Training Plan Definition ..
-call spRegisterTrainingPlanDefinition ('Bench Press', 'Chest', 'Ultimate Predator-beating training plan', 1, 1, 1, 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterTrainingPlanDefinition ('Squats', 'Legs', 'Ultimate Predator-beating training plan', 1, 1, 2, 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterTrainingPlanDefinition ('Deadlift', 'All', 'Heavy Lifting - Maximum Contraction',1, 1, 1, 'Muscular Mike', 'Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @exerciseWeek=1;
+set @exerciseDay=1;
+set @exerciseOrdinality=1;
+call spRegisterTrainingPlanDefinition ('Bench Press', 'Chest', 'Ultimate Predator-beating training plan', @exerciseWeek, @exerciseDay, @exerciseOrdinality, 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+
+set @exerciseWeek=1;
+set @exerciseDay=1;
+set @exerciseOrdinality=2;
+call spRegisterTrainingPlanDefinition ('Squats', 'Legs', 'Ultimate Predator-beating training plan',@exerciseWeek, @exerciseDay, @exerciseOrdinality, 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+
+set @exerciseWeek=1;
+set @exerciseDay=1;
+set @exerciseOrdinality=1;
+call spRegisterTrainingPlanDefinition ('Deadlift', 'All', 'Heavy Lifting - Maximum Contraction',@exerciseWeek, @exerciseDay, @exerciseOrdinality, 'Muscular Mike', 'Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
 -- Object Updates ...
@@ -65,13 +78,24 @@ call spUpdateExercise ('Pullups', 'Back', @exerciseId, @returnCode, @errorCode, 
 call spUpdateExercise ('Pullups-Speziale', 'Back', @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 -- Person ..
-call spUpdatePerson ('Dirkus', 'Benedictus', '1945-03-01', 10, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @personId=10;
+call spUpdatePerson ('Dirkus', 'Benedictus', '1945-03-01', @personId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 -- Profile ..
-call spUpdateProfile ('cara di hombre', 10, 11, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @personId=10;
+set @profileId=11;
+call spUpdateProfile ('cara di hombre', @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 -- Training Plan ..
-call spUpdateTrainingPlan ('Get Bigger Scam Workout', 11, 6, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @profileId=11;
+set @trainingPlanId=6;
+call spUpdateTrainingPlan ('Get Bigger Scam Workout', @profileId, @trainingPlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 -- Training Plan Definition ..
-call spUpdateTrainingPlanDefinition (2, 1, 2, 5, 2, 1, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @trainingPlanId=2;
+set @exerciseId=5;
+set @exerciseWeek=2;
+set @exerciseDay=1;
+set @exerciseOrdinality=2;
+set @trainingPlanDefinitionId=1;
+call spUpdateTrainingPlanDefinition (@trainingPlanId, @exerciseId, @exerciseWeek, @exerciseDay, @exerciseOrdinality, @trainingPlanDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);

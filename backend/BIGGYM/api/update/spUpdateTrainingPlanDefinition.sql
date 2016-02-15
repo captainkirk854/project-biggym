@@ -19,12 +19,12 @@ use BIGGYM;
 
 drop procedure if exists spUpdateTrainingPlanDefinition;
 delimiter $$
-create procedure spUpdateTrainingPlanDefinition(in vUpdatable_ExerciseWeek tinyint unsigned,
+create procedure spUpdateTrainingPlanDefinition(in vPlanId mediumint unsigned,
+                                                in vUpdatable_ExerciseId mediumint unsigned,
+                                                in vUpdatable_ExerciseWeek tinyint unsigned,
                                                 in vUpdatable_ExerciseDay tinyint unsigned,
                                                 in vUpdatable_ExerciseOrdinality tinyint unsigned,
-                                                in vUpdatable_ExerciseId mediumint unsigned,
-                                                in vPlanId mediumint unsigned,
-                                                in ObjectId mediumint unsigned,
+                                             inout ObjectId mediumint unsigned,
                                                out ReturnCode int,
                                                out ErrorCode int,
                                                out ErrorState int,
@@ -59,40 +59,48 @@ begin
     set ErrorMsg = '-';
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     
-    -- Attempt update ..
-    call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, localObjectId, ReturnCode);
-    if (ObjectId = localObjectId) then
-        -- no update required ..
-        set tStatus = 2;
-        
-    elseif (ObjectId is NOT NULL) then
-        
-        -- Update ..
-        update TRAINING_PLAN_DEFINITION
-           set 
-               DATE_REGISTERED = current_timestamp(3),
-               EXERCISEid = vUpdatable_ExerciseId,
-               EXERCISE_WEEK = vUpdatable_ExerciseWeek,
-               EXERCISE_DAY = vUpdatable_ExerciseDay,
-               EXERCISE_ORDINALITY = vUpdatable_ExerciseOrdinality
-         where
-               ID = ObjectId
-           and
-               PLANid = vPlanId;
+    -- Only proceed for not null objectId and reference Id(s)..
+    if (ObjectId is NOT NULL and vPlanId is NOT NULL) then
     
-        -- Verify ..
+        -- Attempt update ..
         call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, localObjectId, ReturnCode);
         if (ObjectId = localObjectId) then
-            -- success ..
-            set tStatus = 0;
+            -- no update required ..
+            set tStatus = 2;
+            
+        elseif (localObjectId is NULL) then
+            
+            -- Can update as no duplicate exists ..
+            update TRAINING_PLAN_DEFINITION
+               set 
+                   DATE_REGISTERED = current_timestamp(3),
+                   EXERCISEid = vUpdatable_ExerciseId,
+                   EXERCISE_WEEK = vUpdatable_ExerciseWeek,
+                   EXERCISE_DAY = vUpdatable_ExerciseDay,
+                   EXERCISE_ORDINALITY = vUpdatable_ExerciseOrdinality
+             where
+                   ID = ObjectId
+               and
+                   PLANid = vPlanId;
+        
+            -- Verify ..
+            call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, localObjectId, ReturnCode);
+            if (ObjectId = localObjectId) then
+                -- success ..
+                set tStatus = 0;
+            else
+                -- transaction attempt made no change or caused duplicate ..
+                set tStatus = -2;
+            end if;
         else
-            -- unexpected multiple occurrence ..
-            set tStatus = -2;
-        end if;
+            -- transaction attempt ignored as duplicate exists ..
+            set tStatus = -3;
+        end if;    
     else
-        -- transaction ignored ..
-        set tStatus = -3;
-    end if;
+        -- unexpected NULL value for Object and/or reference Id ..
+        set tStatus = -7;
+    end if;    
+    
     
     -- Log ..
     set ReturnCode = tStatus;

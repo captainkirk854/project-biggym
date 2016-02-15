@@ -82,8 +82,8 @@ begin
     call spRegisterTrainingPlan (vTrainingPlanName, vProfileName, vFirstName, vLastName, vBirthDate, vPlanId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
  
     -- Attempt create: Training Plan Definition ..
-    if (vExerciseId is NOT NULL and vPlanId is NOT NULL) then
-        call spCreateTrainingPlanDefinition (vExerciseId, vPlanId, vNew_ExerciseWeek, vNew_ExerciseDay, vNew_ExerciseOrdinality, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    if (vPlanId is NOT NULL and vExerciseId is NOT NULL) then
+        call spCreateTrainingPlanDefinition (vPlanId, vExerciseId, vNew_ExerciseWeek, vNew_ExerciseDay, vNew_ExerciseOrdinality, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         if(ErrorCode != 0) then
             -- unexpected database transaction problem encountered
             set tStatus = -5;

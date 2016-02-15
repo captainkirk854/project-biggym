@@ -41,7 +41,7 @@ set @TEST_COMMENT='Create new training plan definition';
 set @ExerciseWeek=1;
 set @ExerciseDay=2;
 set @ExerciseOrdinality=3;
-call spCreateTrainingPlanDefinition  (@exerciseId, @planId, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateTrainingPlanDefinition  (@planId, @exerciseId, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 

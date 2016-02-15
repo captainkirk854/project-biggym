@@ -88,7 +88,6 @@ begin
                     else
                         -- transaction attempt made no change or caused duplicate ..
                         set tStatus = -2;
-                        rollback;
                     end if;
                 else
                     -- transaction attempt ignored as duplicate exists ..

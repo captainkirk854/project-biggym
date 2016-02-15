@@ -1,0 +1,97 @@
+use BIGGYM;
+
+-- ----------------------------------------------------------
+-- Start test run ..
+-- ----------------------------------------------------------
+begin;
+
+-- ----------------------------------------------------------
+-- Initialise ..
+-- ----------------------------------------------------------
+set @NUM_TESTS=5;
+set @SPROC_NAME='spUpdateTrainingPlanDefinition';
+
+-- ----------------------------------------------------------
+-- Set number of tests in this plan ..
+-- ----------------------------------------------------------
+select tap.plan(@NUM_TESTS);
+set @TEST_COMMENT_PREFIX=concat('TESTING [', @SPROC_NAME, '] ');
+
+-- ----------------------------------------------------------
+-- Prerequisite operation(s) ..
+-- ----------------------------------------------------------
+set @exerciseName='A brand new exercise';
+set @bodypartName='brand new body part';
+call spCreateExercise (@exerciseName, @bodypartName, @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @exerciseName='A brand new exercise2';
+set @bodypartName='brand new body part2';
+call spCreateExercise (@exerciseName, @bodypartName, @exerciseId2, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @firstname='Sylvester';
+set @lastname='McCoy';
+set @dob='1943-08-20';
+call spCreatePerson (@firstname, @lastname, @dob, @personId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @profileName='The worst doctor and cannot lift weights';
+call spCreateProfile (@profileName, @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @planName='Maximum Power required';
+call spCreateTrainingPlan (@planName, @profileId, @planId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @ExerciseWeek=1;
+set @ExerciseDay=2;
+set @ExerciseOrdinality=3;
+call spCreateTrainingPlanDefinition  (@planId, @exerciseId, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @DefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+
+-- ----------------------------------------------------------
+-- Run Tests ..
+-- ----------------------------------------------------------
+set @TEST_COMMENT='Update existing training plan definition with same values';
+set @ExerciseWeek=1;
+set @ExerciseDay=2;
+set @ExerciseOrdinality=3;
+call spUpdateTrainingPlanDefinition  (@planId, @exerciseId, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @DefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@DefinitionId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Update existing training plan definition with new values';
+set @ExerciseWeek=2;
+set @ExerciseDay=7;
+set @ExerciseOrdinality=1;
+call spUpdateTrainingPlanDefinition  (@planId, @exerciseId, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @DefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@DefinitionId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Update existing training plan definition with NULL values';
+set @ExerciseWeek=NULL;
+set @ExerciseDay=NULL;
+set @ExerciseOrdinality=NULL;
+call spUpdateTrainingPlanDefinition  (@planId, @exerciseId, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @DefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@DefinitionId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Update existing training plan definition with new exercise id';
+set @ExerciseWeek=1;
+set @ExerciseDay=2;
+set @ExerciseOrdinality=3;
+call spUpdateTrainingPlanDefinition  (@planId, @exerciseId2, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @DefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@DefinitionId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Update non-existent training plan definition';
+set @planIdInvalid=1;
+set @ExerciseWeek=1;
+set @ExerciseDay=2;
+set @ExerciseOrdinality=3;
+call spUpdateTrainingPlanDefinition  (@planIdInvalid, @exerciseId, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @DefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@DefinitionId is NOT NULL and @returnCode = -2 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+
+-- ----------------------------------------------------------
+-- Finish tests and clean up.
+-- ----------------------------------------------------------
+call tap.finish();
+rollback;

@@ -38,7 +38,7 @@ call spCreateTrainingPlan (@planName, @profileId, @planId, @returnCode, @errorCo
 set @exerciseWeek=1;
 set @exerciseDay=1;
 set @exerciseOrder=1;
-call spCreateTrainingPlanDefinition  (@exerciseId, @planId, @exerciseWeek, @exerciseDay, @exerciseOrder, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateTrainingPlanDefinition  (@planId, @exerciseId, @exerciseWeek, @exerciseDay, @exerciseOrder, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 -- ----------------------------------------------------------
 -- Run Tests ..
