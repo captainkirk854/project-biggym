@@ -55,7 +55,7 @@ tput clear
 
 # Customisable persistent variables ..
 cfgProjectRoot="$HOME/code/github/captainkirk854/project-BigGym/backend/BIGGYM"
-cfgTEST="$cfgProjectRoot/tests"
+cfgTEST="$cfgProjectRoot"
 cfgAPI="$cfgTEST/api"
 cfgUnitTestSuffix=ut
 
