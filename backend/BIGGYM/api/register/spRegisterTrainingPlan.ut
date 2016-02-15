@@ -8,7 +8,7 @@ begin;
 -- ----------------------------------------------------------
 -- Initialise ..
 -- ----------------------------------------------------------
-set @NUM_TESTS=1;
+set @NUM_TESTS=2;
 set @SPROC_NAME='spRegisterTrainingPlan';
 
 -- ----------------------------------------------------------
@@ -30,6 +30,17 @@ set @Lastname='McCoy';
 set @DOB='1943-08-20';
 set @ProfileName='The worst doctor and could never lift weights';
 set @PlanName='Maximum Power required';
+set @ObjectId=NULL;
+call spRegisterTrainingPlan (@PlanName, @ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Update existing training plan';
+set @Firstname='Sylvester';
+set @Lastname='McCoy';
+set @DOB='1943-08-20';
+set @ProfileName='The worst doctor and could never lift weights';
+set @PlanName='Just do not bother';
 call spRegisterTrainingPlan (@PlanName, @ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));

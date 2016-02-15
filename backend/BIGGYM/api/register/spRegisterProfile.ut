@@ -8,7 +8,7 @@ begin;
 -- ----------------------------------------------------------
 -- Initialise ..
 -- ----------------------------------------------------------
-set @NUM_TESTS=5;
+set @NUM_TESTS=6;
 set @SPROC_NAME='spRegisterProfile';
 
 -- ----------------------------------------------------------
@@ -25,28 +25,31 @@ set @TEST_COMMENT_PREFIX=concat('TESTING [', @SPROC_NAME, '] ');
 -- Run Tests ..
 -- ----------------------------------------------------------
 set @TEST_COMMENT='Create new profile';
-set @ProfileName='The worst doctor';
+set @ProfileName='WorstDoctor';
 set @Firstname='Sylvester';
 set @Lastname='McCoy';
 set @DOB='1943-08-20';
+set @ObjectId=NULL;
 call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Create another new profile';
-set @ProfileName='This doctor is not Tom Baker';
+set @ProfileName='DoctorNotTomBaker';
 set @Firstname='Sylvester';
 set @Lastname='McCoy';
 set @DOB='1943-08-20';
+set @ObjectId=NULL;
 call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Create another new profile using illegal characters';
-set @ProfileName='*******************';
+set @ProfileName='****************';
 set @Firstname='Sylvester';
 set @Lastname='McCoy';
 set @DOB='1943-08-20';
+set @ObjectId=NULL;
 call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
@@ -56,6 +59,7 @@ set @ProfileName=NULL;
 set @Firstname='Sylvester';
 set @Lastname='McCoy';
 set @DOB='1943-08-20';
+set @ObjectId=NULL;
 call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
@@ -65,9 +69,24 @@ set @ProfileName='%% AND 1=1 (OR 1=1)';
 set @Firstname='Sylvester';
 set @Lastname='McCoy';
 set @DOB='1943-08-20';
+set @ObjectId=NULL;
 call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='update existing profile';
+set @ProfileName='BestDoctor';
+set @Firstname='Sylvester';
+set @Lastname='McCoy';
+set @DOB='1943-08-20';
+set @ObjectId=NULL;
+call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @ProfileName='NotTomBaker';
+call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
 
 -- ----------------------------------------------------------
 -- Finish tests and clean up.

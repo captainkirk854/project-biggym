@@ -15,6 +15,7 @@ Dependency :
                 - spCreateExercise
                 - spRegisterTrainingPlan
                 - spCreateTrainingPlanDefinition
+                - spUpdateTrainingPlanDefinition
 */
 
 use BIGGYM;
@@ -24,14 +25,14 @@ delimiter $$
 create procedure spRegisterTrainingPlanDefinition(in vExerciseName varchar(128),
                                                   in vBodyPartName varchar(128),   
                                                   in vTrainingPlanName varchar(128),
-                                                  in vNew_ExerciseWeek tinyint unsigned,
-                                                  in vNew_ExerciseDay tinyint unsigned,
-                                                  in vNew_ExerciseOrdinality tinyint unsigned,               
+                                                  in vNewOrUpdatable_ExerciseWeek tinyint unsigned,
+                                                  in vNewOrUpdatable_ExerciseDay tinyint unsigned,
+                                                  in vNewOrUpdatable_ExerciseOrdinality tinyint unsigned,               
                                                   in vProfileName varchar(32),
                                                   in vFirstName varchar(32),
                                                   in vLastName varchar(32),
                                                   in vBirthDate date,
-                                                 out ObjectId mediumint unsigned,
+                                               inout ObjectId mediumint unsigned,
                                                  out ReturnCode int,
                                                  out ErrorCode int,
                                                  out ErrorState int,
@@ -41,9 +42,10 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterTrainingPlanDefinition';
-    declare SignificantFields varchar(256) default concat('PLANid, EXERCISEid, EXERCISE_WEEK=', saynull(vNew_ExerciseWeek), 
-                                                          ',EXERCISE_DAY=', saynull(vNew_ExerciseDay),
-                                                          ',EXERCISE_ORDINALITY=', saynull(vNew_ExerciseOrdinality));
+    declare SignificantFields varchar(256) default concat('PLANid, EXERCISEid', 
+                                                          ',EXERCISE_WEEK=', saynull(vNewOrUpdatable_ExerciseWeek), 
+                                                          ',EXERCISE_DAY=', saynull(vNewOrUpdatable_ExerciseDay),
+                                                          ',EXERCISE_ORDINALITY=', saynull(vNewOrUpdatable_ExerciseOrdinality));
     declare ReferenceFields varchar(256) default concat('EXERCISEid(', 
                                                                      'NAME=', saynull(vExerciseName),
                                                                      ',BODY_PART=', saynull(vBodyPartName),
@@ -83,7 +85,15 @@ begin
  
     -- Attempt create: Training Plan Definition ..
     if (vPlanId is NOT NULL and vExerciseId is NOT NULL) then
-        call spCreateTrainingPlanDefinition (vPlanId, vExerciseId, vNew_ExerciseWeek, vNew_ExerciseDay, vNew_ExerciseOrdinality, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    
+        if (ObjectId is NULL) then
+            -- create ..    
+            call spCreateTrainingPlanDefinition (vPlanId, vExerciseId, vNewOrUpdatable_ExerciseWeek, vNewOrUpdatable_ExerciseDay, vNewOrUpdatable_ExerciseOrdinality, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+        else
+            -- update
+            call spUpdateTrainingPlanDefinition (vPlanId, vExerciseId, vNewOrUpdatable_ExerciseWeek, vNewOrUpdatable_ExerciseDay, vNewOrUpdatable_ExerciseOrdinality, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+        end if;
+
         if(ErrorCode != 0) then
             -- unexpected database transaction problem encountered
             set tStatus = -5;

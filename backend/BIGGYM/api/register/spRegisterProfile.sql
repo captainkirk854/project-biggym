@@ -12,17 +12,18 @@ Dependency :
                 - spSimpleLog
                 - spCreatePerson
                 - spCreateProfile
+                - spUpdateProfile
 */
 
 use BIGGYM;
 
 drop procedure if exists spRegisterProfile;
 delimiter $$
-create procedure spRegisterProfile(in vNew_ProfileName varchar(32),
+create procedure spRegisterProfile(in vNewOrUpdatable_ProfileName varchar(32),
                                    in vFirstName varchar(32),
                                    in vLastName varchar(32),
                                    in vBirthDate date,      
-                                  out ObjectId mediumint unsigned,
+                                inout ObjectId mediumint unsigned,
                                   out ReturnCode int,
                                   out ErrorCode int,
                                   out ErrorState int,
@@ -32,11 +33,11 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterProfile';
-    declare SignificantFields varchar(256) default concat('NAME=', saynull(vNew_ProfileName));
+    declare SignificantFields varchar(256) default concat('NAME=', saynull(vNewOrUpdatable_ProfileName));
     declare ReferenceFields varchar(256) default concat('FIRST_NAME=', saynull(vFirstName), 
                                                         ',LAST_NAME =', saynull(vLastName), 
                                                         ',BIRTH_DATE =', saynull(vBirthDate));
-    declare TransactionType varchar(16) default 'insert';
+    declare TransactionType varchar(16) default 'insert-update';
 
     declare SpComment varchar(512);
     declare tStatus varchar(64) default 0;
@@ -62,7 +63,15 @@ begin
   
     -- Attempt create: Profile ..
     if (vPersonId is NOT NULL) then
-        call spCreateProfile (vNew_ProfileName, vPersonId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+            
+        if (ObjectId is NULL) then
+            -- create ..
+            call spCreateProfile (vNewOrUpdatable_ProfileName, vPersonId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+        else
+            -- update ..
+            call spUpdateProfile (vNewOrUpdatable_ProfileName, vPersonID, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+        end if;
+        
         if(ErrorCode != 0) then
             -- unexpected database transaction problem encountered
             set tStatus = -5;

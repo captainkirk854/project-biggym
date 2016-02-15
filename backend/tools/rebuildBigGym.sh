@@ -86,11 +86,12 @@ fnIngest $cfgDDL sql
 # Functions and Stored Procedures ..
 #--------------------------
 echo "Building: Functions and Stored Procedures .."
-fnIngest $cfgAPI/create sql
-fnIngest $cfgAPI/delete sql
 fnIngest $cfgAPI/get sql
-fnIngest $cfgAPI/update sql
 fnIngest $cfgAPI/util sql
+fnIngest $cfgAPI/create sql
+fnIngest $cfgAPI/update sql
+fnIngest $cfgAPI/register sql
+fnIngest $cfgAPI/delete sql
 
 #--------------------------
 # Sample Data ..
