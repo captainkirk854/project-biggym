@@ -46,7 +46,8 @@ begin
                                                           ',EXERCISE_WEEK=', saynull(vNewOrUpdatable_ExerciseWeek), 
                                                           ',EXERCISE_DAY=', saynull(vNewOrUpdatable_ExerciseDay),
                                                           ',EXERCISE_ORDINALITY=', saynull(vNewOrUpdatable_ExerciseOrdinality));
-    declare ReferenceFields varchar(256) default concat('EXERCISEid(', 
+    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
+                                                        ',EXERCISEid(', 
                                                                      'NAME=', saynull(vExerciseName),
                                                                      ',BODY_PART=', saynull(vBodyPartName),
                                                                   ') and ' ,
@@ -61,7 +62,7 @@ begin
                                                                     ',LAST_NAME =', saynull(vLastName), 
                                                                     ',BIRTH_DATE =', saynull(vBirthDate), 
                                                                 ')');
-    declare TransactionType varchar(16) default 'insert'; 
+    declare TransactionType varchar(16) default 'insert-update'; 
     
     declare SpComment varchar(512);
     declare tStatus varchar(64) default 0;

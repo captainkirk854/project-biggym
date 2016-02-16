@@ -36,7 +36,8 @@ begin
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterTrainingPlan';
     declare SignificantFields varchar(256) default  concat('NAME=', saynull(vNewOrUpdatable_TrainingPlanName));
-    declare ReferenceFields varchar(256) default concat('PROFILEId(', 
+    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
+                                                        ',PROFILEId(', 
                                                                     'NAME=', saynull(vProfileName),
                                                                  ') and ' ,
                                                         'PERSONid(', 

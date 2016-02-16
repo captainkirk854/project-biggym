@@ -50,7 +50,8 @@ begin
                                                           ',SET_REPS=', saynull(vNew_SetReps),
                                                           ',SET_WEIGHT=', saynull(vNew_SetWeight),
                                                           ',DATE_PHYSICAL=', saynull(vNew_DatePhysical));
-    declare ReferenceFields varchar(256) default concat('DEFINITIONid(', 
+    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
+                                                        ',DEFINITIONid(', 
                                                                       'EXERCISE_WEEK=', saynull(vExerciseWeek), 
                                                                       ',EXERCISE_DAY=', saynull(vExerciseDay),
                                                                       ',EXERCISE_ORDINALITY=', saynull(vExerciseOrdinality),

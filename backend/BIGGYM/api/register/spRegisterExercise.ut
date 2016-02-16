@@ -1,0 +1,106 @@
+use BIGGYM;
+
+-- ----------------------------------------------------------
+-- Start test run ..
+-- ----------------------------------------------------------
+begin;
+
+-- ----------------------------------------------------------
+-- Initialise ..
+-- ----------------------------------------------------------
+set @NUM_TESTS=9;
+set @SPROC_NAME='spRegisterExercise';
+
+-- ----------------------------------------------------------
+-- Set number of tests in this plan ..
+-- ----------------------------------------------------------
+select tap.plan(@NUM_TESTS);
+set @TEST_COMMENT_PREFIX=concat('TESTING [', @SPROC_NAME, '] ');
+
+-- ----------------------------------------------------------
+-- Prerequisite operation(s) ..
+-- ----------------------------------------------------------
+
+-- ----------------------------------------------------------
+-- Run Tests ..
+-- ----------------------------------------------------------
+set @TEST_COMMENT='Create new exercise';
+set @ExerciseName='A brand new exercise';
+set @BodyPartName='Back';
+set @ObjectId=NULL;
+call spRegisterExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Create same exercise for different body part';
+set @ExerciseName='A brand new exercise';
+set @BodyPartName='Front';
+set @ObjectId=NULL;
+call spRegisterExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Create an exercise that may already exist';
+set @ExerciseName='Pullups';
+set @BodyPartName='Back';
+set @ObjectId=NULL;
+call spRegisterExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Create an exercise with name using illegal characters';
+set @ExerciseName='@@@@***';
+set @BodyPartName='Back';
+set @ObjectId=NULL;
+call spRegisterExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Create an exercise with an invalid name using partially invalid string';
+set @ExerciseName='T,bar';
+set @BodyPartName='Back';
+set @ObjectId=NULL;
+call spRegisterExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Simultaneous creation of new exercise, new body part ';
+set @ExerciseName='ABCDEFGH';
+set @BodyPartName='ZYX';
+set @ObjectId=NULL;
+call spRegisterExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is not NULL and @returnCode = 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='NULL exercise, new body part ';
+set @ExerciseName=NULL;
+set @BodyPartName='ZYX';
+set @ObjectId=NULL;
+call spRegisterExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='NULL exercise, NULL body part ';
+set @ExerciseName=NULL;
+set @BodyPartName=NULL;
+set @ObjectId=NULL;
+call spRegisterExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Update an existing exercise';
+set @ExerciseName='Pullups';
+set @BodyPartName='Back';
+set @ObjectId=NULL;
+call spRegisterExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @ExerciseName='Wide-Pullups';
+call spRegisterExercise (@ExerciseName, @BodyPartName, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+-- ----------------------------------------------------------
+-- Finish tests and clean up.
+-- ----------------------------------------------------------
+call tap.finish();
+rollback;
