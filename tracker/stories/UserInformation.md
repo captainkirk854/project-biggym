@@ -1,14 +1,17 @@
-**Storage of: Pertinent User Information**
-- Forename
-- Surname
-- DOB
-- Training Profile Name (multiple names are possible)
+# User Information
 
-##Implementation Overview
-###Backend
+## Implementation Overview
+### Back End
 
-- *PERSON* table: 
-    user personal details
+- **PERSON** (table):
+ - Supporting stored procedures for creation, modification and deletion.
+ - user personal details
+   - Forename
+   - Surname
+   - DOB
 
-- *PROFILE* table: 
-    profile name and links to PERSON (1<-n)
+
+- **PROFILE** (table):
+ - Supporting stored procedures for creation, modification and deletion.
+ - Training Profile Name (one user can have multiple profiles)
+ - profile name and links to PERSON (1<-n)
