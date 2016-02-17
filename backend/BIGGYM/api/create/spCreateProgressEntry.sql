@@ -53,7 +53,6 @@ begin
     set ErrorMsg = '-';
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
 
-
     -- Check if date uses valid format (YY-mm-dd) ..
     if (date(vNew_DatePhysical) is NOT NULL and (vNew_DatePhysical != '0000-00-00')) then
 

@@ -71,7 +71,7 @@ begin
                                                                     ',LAST_NAME =', saynull(vLastName), 
                                                                     ',BIRTH_DATE =', saynull(vBirthDate), 
                                                                 ')');
-    declare TransactionType varchar(16) default 'insert'; 
+    declare TransactionType varchar(16) default 'insert-update'; 
     
     declare SpComment varchar(512);
     declare tStatus varchar(64) default 0;
@@ -159,7 +159,7 @@ begin
                                         ErrorState, 
                                         ErrorMsg);
         end if;
-        
+
         if(ErrorCode != 0) then
             -- unexpected database transaction problem encountered
             set tStatus = -5;
