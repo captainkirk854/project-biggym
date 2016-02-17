@@ -56,28 +56,34 @@ begin
     -- Check if date uses valid format (YY-mm-dd) ..
     if (date(vNew_DatePhysical) is NOT NULL and (vNew_DatePhysical != '0000-00-00')) then
 
-        -- Attempt create ..  
-        insert into 
-                PROGRESS
-                ( 
-                 SET_ORDINALITY, 
-                 SET_REPS, 
-                 SET_WEIGHT, 
-                 DATE_PHYSICAL,
-                 DEFINITIONid
-                )
-                values
-                (
-                 vNew_SetOrdinality,
-                 vNew_SetReps,
-                 vNew_SetWeight,
-                 vNew_DatePhysical,
-                 vPlanDefinitionId
-                );
-
-        -- success ..
-        set tStatus = 0;
+        -- Attempt create ..
         call spGetIdForProgressEntry (vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_DatePhysical, vPlanDefinitionId, ObjectId, ReturnCode);
+        if (ObjectId is NULL) then
+            insert into 
+                    PROGRESS
+                    ( 
+                     SET_ORDINALITY, 
+                     SET_REPS, 
+                     SET_WEIGHT, 
+                     DATE_PHYSICAL,
+                     DEFINITIONid
+                    )
+                    values
+                    (
+                     vNew_SetOrdinality,
+                     vNew_SetReps,
+                     vNew_SetWeight,
+                     vNew_DatePhysical,
+                     vPlanDefinitionId
+                    );
+
+            -- success ..
+            set tStatus = 0;
+            call spGetIdForProgressEntry (vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_DatePhysical, vPlanDefinitionId, ObjectId, ReturnCode);
+        else
+            -- already exists ..
+            set tStatus = 1;
+        end if;
     else
         -- invalid date format used ..
         set tStatus = -6;  
