@@ -29,7 +29,6 @@ fnRunMyTapUnitTest()
    echo $sep
    echo "USING [$fullPath] FILE .."
    echo $sep
-   cd $dir > /dev/null 2>&1
    # Run test and colour the output stream with different colour formats according to string ..
    mysqlb.sh $userName $userPass $fullPath -suppress \
                                                       | GREP_COLOR=$colourTestFail    egrep --colour=always "$grepTestFail" \
