@@ -2,6 +2,7 @@
 
 ## Implementation Overview
 ### Back End
+
 - **EXERCISE** (table): list of exercises and their associated body part
 - Supporting stored procedures for creation, modification and deletion.
 - Exercises will be tied to user training plan definitions

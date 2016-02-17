@@ -32,4 +32,5 @@
   - *spGetIdForTrainingPlan*
   - *spGetIdForTrainingPlanDefinition*
 - delete
-  - none yet
+  - need to decide whether data gets deleted or masked from views
+  - delete has cascade option so that a delete from root object will auto-clean referential data

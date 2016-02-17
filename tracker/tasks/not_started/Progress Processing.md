@@ -9,3 +9,4 @@
    - aggregations
    - predictives
    - suggestions
+   - delta over time to find most effective plan(s)

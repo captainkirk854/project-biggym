@@ -33,6 +33,7 @@ select
       vwPePrPl.AGE,
       vwPePrPl.PROFILE_NAME,
       vwPePrPl.PLAN_NAME,
+      vwPlPr.DATE_PHYSICAL,
       vwPlPr.EXERCISE_WEEK,
       vwPlPr.EXERCISE_DAY,
       vwPlPr.EXERCISE_ORDINALITY,
@@ -47,6 +48,7 @@ select
 	  vwPePrPl.PLANid = vwPlPr.PLANid
 order by
       vwPePrPl.PERSONid,
+      vwPePrPl.PLAN_NAME,
 	  vwPlPr.DATE_PHYSICAL,
       vwPlPr.EXERCISEid,
       vwPlPr.SET_ORDINALITY

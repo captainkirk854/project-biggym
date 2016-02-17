@@ -11,6 +11,7 @@
 - *StrCln*
 - *StrIsGood*
 - *StrIsNumeric*
+- *StatusCode*
 
 
 ## List of Utility Stored Procedures
