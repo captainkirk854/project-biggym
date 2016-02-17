@@ -25,7 +25,7 @@ set @TEST_COMMENT_PREFIX=concat('TESTING [', @SPROC_NAME, '] ');
 -- Run Tests ..
 -- ----------------------------------------------------------
 set @TEST_COMMENT='Create new progress entry AND create all references where needed';
-set @OperationalMode='REFERENCES_EXISTENCE_CREATE';
+set @OperationalMode='REFERENCE_CREATE';
 set @SetOrdinality = 3;
 set @SetReps = 10;
 set @SetWeight = 65.5;
@@ -45,7 +45,7 @@ set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode =
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Create new progress entry BUT assume all references exist when they do not';
-set @OperationalMode='REFERENCES_EXISTENCE_ASSUME';
+set @OperationalMode='REFERENCE_ASSUME';
 set @SetOrdinality = 4;
 set @SetReps = 10;
 set @SetWeight = 65.5;
@@ -65,7 +65,7 @@ set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Create new progress entry BUT assume all references exist AND THEY DO';
-set @OperationalMode='REFERENCES_EXISTENCE_ASSUME';
+set @OperationalMode='REFERENCE_ASSUME';
 set @SetOrdinality = 5;
 set @SetReps = 10;
 set @SetWeight = 65.5;
@@ -85,7 +85,7 @@ set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode =
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Create new progress entry with bad-format physical date';
-set @OperationalMode='REFERENCES_EXISTENCE_CREATE';
+set @OperationalMode='REFERENCE_CREATE';
 set @SetOrdinality = 6;
 set @SetReps = 10;
 set @SetWeight = 65.5;

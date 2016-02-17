@@ -21,7 +21,7 @@ use BIGGYM;
 
 drop procedure if exists spRegisterProgressEntry;
 delimiter $$
-create procedure spRegisterProgressEntry(in opMode varchar(64),                  -- REFERENCES_EXISTENCE_CREATE|REFERENCES_EXISTENCE_ASSUME
+create procedure spRegisterProgressEntry(in opMode varchar(64),                  -- REFERENCE_CREATE|REFERENCE_ASSUME
                                          in vNew_SetOrdinality tinyint unsigned,
                                          in vNew_SetReps tinyint unsigned,
                                          in vNew_SetWeight float,
@@ -93,11 +93,11 @@ begin
 
     -- Set operational mode if NULL or blank ..
     if(length(trim(opMode)) = 0 or (opMode is NULL)) then
-      set opMode = "REFERENCES_EXISTENCE_CREATE";
+      set opMode = "REFERENCE_CREATE";
     end if;
 
     -- Get TrainingPlanDefinition Id one way or another ..
-    if (opMode = "REFERENCES_EXISTENCE_ASSUME") then
+    if (opMode = "REFERENCE_ASSUME") then
         call spGetIdForTrainingPlanDefinitionFromAll (vExerciseWeek,
                                                       vExerciseDay, 
                                                       vExerciseOrdinality, 
@@ -112,7 +112,7 @@ begin
                                                       vPlanDefinitionId, 
                                                       ReturnCode);
 
-    elseif (opMode = "REFERENCES_EXISTENCE_CREATE") then
+    elseif (opMode = "REFERENCE_CREATE") then
         call spRegisterTrainingPlanDefinition  (vExerciseName, 
                                                 vBodyPartName, 
                                                 vTrainingPlanName, 
