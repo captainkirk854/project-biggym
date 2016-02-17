@@ -59,10 +59,10 @@ begin
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
-    -- Attempt create: Person ..
-    call spCreatePerson (vFirstName, vLastName, vBirthDate, vPersonId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
-  
-    -- Attempt create: Profile ..
+    -- Get PersonId ..
+    call spRegisterPerson (vFirstName, vLastName, vBirthDate, vPersonId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    
+    -- Register ..
     if (vPersonId is NOT NULL) then
             
         if (ObjectId is NULL) then

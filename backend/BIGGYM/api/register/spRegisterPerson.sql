@@ -53,7 +53,7 @@ begin
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
-    -- Action ..
+    -- Register ..
     if (ObjectId is NULL) then
         -- create ..
         call spCreatePerson (vNewOrUpdatableFirstName, vNewOrUpdatableLastName, vNewOrUpdatableBirthDate, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);

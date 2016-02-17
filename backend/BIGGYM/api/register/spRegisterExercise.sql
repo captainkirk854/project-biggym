@@ -45,7 +45,7 @@ begin
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
  
-    -- Action ..
+    -- Register ..
     if (ObjectId is NULL) then
         -- create ..    
         call spCreateExercise (vNewOrUpdatable_ExerciseName, vNewOrUpdatable_BodyPartName, ObjectId, ReturnCode, ErrorCode,ErrorState, ErrorMsg);

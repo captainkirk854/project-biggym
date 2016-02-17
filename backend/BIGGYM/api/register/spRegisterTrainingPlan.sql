@@ -66,10 +66,10 @@ begin
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
-    -- Attempt create: Profile ..
+    -- Get ProfileId ..
     call spRegisterProfile (vProfileName, vFirstName, vLastName, vBirthDate, vProfileId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
      
-    -- Attempt create: Training Plan ..
+    -- Register ..
     if (vProfileId is NOT NULL) then
             
         if (ObjectId is NULL) then
