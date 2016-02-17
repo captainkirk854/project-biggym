@@ -8,7 +8,7 @@ begin;
 -- ----------------------------------------------------------
 -- Initialise ..
 -- ----------------------------------------------------------
-set @NUM_TESTS=5;
+set @NUM_TESTS=6;
 set @SPROC_NAME='spRegisterProgressEntry';
 
 -- ----------------------------------------------------------
@@ -44,8 +44,9 @@ call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWe
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
-set @TEST_COMMENT='Create new progress entry BUT assume all references exist when they do not';
+set @TEST_COMMENT='Create new progress entry, assume all references exist when they do not';
 set @OperationalMode='REFERENCE_ASSUME';
+set @ObjectId=NULL;
 set @SetOrdinality = 4;
 set @SetReps = 10;
 set @SetWeight = 65.5;
@@ -61,11 +62,12 @@ set @FirstName = 'Arnold Alois';
 set @LastName = 'Schwarzenegger';
 set @BirthDate = '1947-07-30';
 call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @DatePhysical, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @ProfileName, @FirstName, @LastName, @BirthDate, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
-set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
+set @CONDITION_PASS=(@ObjectId is NULL and @returnCode = -4 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
-set @TEST_COMMENT='Create new progress entry BUT assume all references exist AND THEY DO';
+set @TEST_COMMENT='Create new progress entry, assume all references exist AND THEY DO';
 set @OperationalMode='REFERENCE_ASSUME';
+set @ObjectId=NULL;
 set @SetOrdinality = 5;
 set @SetReps = 10;
 set @SetWeight = 65.5;
@@ -86,6 +88,7 @@ select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Create new progress entry with bad-format physical date';
 set @OperationalMode='REFERENCE_CREATE';
+set @ObjectId=NULL;
 set @SetOrdinality = 6;
 set @SetReps = 10;
 set @SetWeight = 65.5;
@@ -101,11 +104,12 @@ set @FirstName = 'Arnold Alois';
 set @LastName = 'Schwarzenegger';
 set @BirthDate = '1947-07-30';
 call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @DatePhysical, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @ProfileName, @FirstName, @LastName, @BirthDate, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
-set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
+set @CONDITION_PASS=(@ObjectId is NULL and @returnCode =-6 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Create new progress entry AND create all references where needed but use irrelevant operational mode keyword';
 set @OperationalMode='BLAHBLAHBLAHBLAHBLAHBLAHBLA';
+set @ObjectId=NULL;
 set @SetOrdinality = 3;
 set @SetReps = 10;
 set @SetWeight = 65.5;
@@ -124,6 +128,32 @@ call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWe
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
+set @TEST_COMMENT='Update progress entry AND create all references where needed but use irrelevant operational mode keyword';
+set @SetOrdinality = 3;
+set @SetReps = 10;
+set @SetWeight = 65.5;
+set @DatePhysical = '1974-03-25';
+set @ExerciseWeek = 2;
+set @ExerciseDay = 1;
+set @ExerciseOrdinality = 2;
+set @ExerciseName = 'Bicep Barbell Curls';
+set @BodyPartName = 'Arms';
+set @TrainingPlanName = 'Ultimate Predator-beating training plan';
+set @ProfileName = 'Dutch Schaefer';
+set @FirstName = 'Arnold Alois';
+set @LastName = 'Schwarzenegger';
+set @BirthDate = '1947-07-30';
+
+set @ObjectId=NULL;
+set @OperationalMode='REFERENCE_ASSUME';
+call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @DatePhysical, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @ProfileName, @FirstName, @LastName, @BirthDate, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @SetOrdinality = 4;
+set @SetReps = 99;
+set @SetWeight = 5.5;
+call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @DatePhysical, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @ProfileName, @FirstName, @LastName, @BirthDate, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is not NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 -- ----------------------------------------------------------
 -- Finish tests and clean up.

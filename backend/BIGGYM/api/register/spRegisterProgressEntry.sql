@@ -22,10 +22,10 @@ use BIGGYM;
 drop procedure if exists spRegisterProgressEntry;
 delimiter $$
 create procedure spRegisterProgressEntry(in opMode varchar(64),                  -- REFERENCE_CREATE|REFERENCE_ASSUME
-                                         in vNew_SetOrdinality tinyint unsigned,
-                                         in vNew_SetReps tinyint unsigned,
-                                         in vNew_SetWeight float,
-                                         in vNew_DatePhysical datetime,
+                                         in vNewOrUpdatable_SetOrdinality tinyint unsigned,
+                                         in vNewOrUpdatable_SetReps tinyint unsigned,
+                                         in vNewOrUpdatable_SetWeight float,
+                                         in vNewOrUpdatable_DatePhysical datetime,
                                          in vExerciseWeek tinyint unsigned,
                                          in vExerciseDay tinyint unsigned,
                                          in vExerciseOrdinality tinyint unsigned,
@@ -36,7 +36,7 @@ create procedure spRegisterProgressEntry(in opMode varchar(64),                 
                                          in vFirstName varchar(32),
                                          in vLastName varchar(32),
                                          in vBirthDate date,
-                                        out ObjectId mediumint unsigned,
+                                      inout ObjectId mediumint unsigned,
                                         out ReturnCode int,
                                         out ErrorCode int,
                                         out ErrorState int,
@@ -46,10 +46,10 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterProgressEntry';
-    declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', saynull(vNew_SetOrdinality), 
-                                                          ',SET_REPS=', saynull(vNew_SetReps),
-                                                          ',SET_WEIGHT=', saynull(vNew_SetWeight),
-                                                          ',DATE_PHYSICAL=', saynull(vNew_DatePhysical));
+    declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', saynull(vNewOrUpdatable_SetOrdinality), 
+                                                          ',SET_REPS=', saynull(vNewOrUpdatable_SetReps),
+                                                          ',SET_WEIGHT=', saynull(vNewOrUpdatable_SetWeight),
+                                                          ',DATE_PHYSICAL=', saynull(vNewOrUpdatable_DatePhysical));
     declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
                                                         ',DEFINITIONid(', 
                                                                       'EXERCISE_WEEK=', saynull(vExerciseWeek), 
@@ -96,7 +96,7 @@ begin
       set opMode = "REFERENCE_CREATE";
     end if;
 
-    -- Get TrainingPlanDefinition Id one way or another ..
+    -- Get TrainingPlanDefinition Id  ..
     if (opMode = "REFERENCE_ASSUME") then
         call spGetIdForTrainingPlanDefinitionFromAll (vExerciseWeek,
                                                       vExerciseDay, 
@@ -132,17 +132,34 @@ begin
         set vPlanDefinitionId = NULL;
     end if;
 
+    -- Register ..
     if (vPlanDefinitionId is NOT NULL) then
-        call spCreateProgressEntry (vNew_SetOrdinality, 
-                                    vNew_SetReps, 
-                                    vNew_SetWeight, 
-                                    vNew_DatePhysical, 
-                                    vPlanDefinitionId, 
-                                    ObjectId, 
-                                    ReturnCode, 
-                                    ErrorCode, 
-                                    ErrorState, 
-                                    ErrorMsg);
+        if (ObjectId is NULL) then
+            -- create ..
+            call spCreateProgressEntry (vNewOrUpdatable_SetOrdinality, 
+                                        vNewOrUpdatable_SetReps, 
+                                        vNewOrUpdatable_SetWeight, 
+                                        vNewOrUpdatable_DatePhysical, 
+                                        vPlanDefinitionId, 
+                                        ObjectId, 
+                                        ReturnCode, 
+                                        ErrorCode, 
+                                        ErrorState, 
+                                        ErrorMsg);
+        else
+            -- update ..
+            call spUpdateProgressEntry (vNewOrUpdatable_SetOrdinality, 
+                                        vNewOrUpdatable_SetReps, 
+                                        vNewOrUpdatable_SetWeight, 
+                                        vNewOrUpdatable_DatePhysical, 
+                                        vPlanDefinitionId, 
+                                        ObjectId, 
+                                        ReturnCode, 
+                                        ErrorCode, 
+                                        ErrorState, 
+                                        ErrorMsg);
+        end if;
+        
         if(ErrorCode != 0) then
             -- unexpected database transaction problem encountered
             set tStatus = -5;
