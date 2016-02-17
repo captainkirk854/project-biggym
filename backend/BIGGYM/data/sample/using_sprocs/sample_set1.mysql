@@ -1,7 +1,8 @@
 use BIGGYM;
 
-
+-- -----------------------------------------------------------------------
 -- Exercise ..
+-- -----------------------------------------------------------------------
 call spCreateExercise ('Bench Press', 'Chest', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spCreateExercise ('Dips', 'Chest', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spCreateExercise ('Squats', 'Legs', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
@@ -14,7 +15,9 @@ call spCreateExercise ('Pullup', 'Back', @id, @returnCode, @errorCode, @stateCod
 call spCreateExercise ('Lateral Raises', 'Shoulders', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
+-- -----------------------------------------------------------------------
 -- Person ..
+-- -----------------------------------------------------------------------
 call spCreatePerson ('Jim', 'Nasium', '3000-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spCreatePerson ('Luke', 'Skywalker', '1951-09-25', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spCreatePerson ('William', 'Shatner', '1931-03-22', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
@@ -27,7 +30,9 @@ call spCreatePerson ('Sylvester', 'Stallone', '1946-07-06', @id, @returnCode, @e
 call spCreatePerson ('Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
+-- -----------------------------------------------------------------------
 -- Profile ..
+-- -----------------------------------------------------------------------
 call spRegisterProfile ('Big Jim', 'Jim', 'Nasium', '3000-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterProfile ('Lucky Luke', 'Luke', 'Skywalker', '1951-09-25', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterProfile ('Captain Kirk', 'William', 'Shatner', '1931-03-22', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
@@ -42,7 +47,9 @@ call spRegisterProfile ('Faceman', 'Dirk', 'Benedict', '1945-03-01', @id, @retur
 call spRegisterProfile ('StarBuck', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
+-- -----------------------------------------------------------------------
 -- Training Plan ..
+-- -----------------------------------------------------------------------
 call spRegisterTrainingPlan ('My winter training for big big gains - trust me', 'Numero Uno', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterTrainingPlan ('Ultimate Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 call spRegisterTrainingPlan ('Big Jims Big Gym mass gaining', 'Big Jim', 'Jim', 'Nasium', '3000-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
@@ -52,26 +59,31 @@ call spRegisterTrainingPlan ('Get Bigger Scam Workout', 'Faceman', 'Dirk', 'Bene
 call spRegisterTrainingPlan ('I aint gettin on no plane sucka workout', 'Mr.T', 'Lawrence', 'Tureaud', '1952-05-21', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
+-- -----------------------------------------------------------------------
 -- Training Plan Definition ..
+-- -----------------------------------------------------------------------
+set @id=NULL;
 set @exerciseWeek=1;
 set @exerciseDay=1;
 set @exerciseOrdinality=1;
 call spRegisterTrainingPlanDefinition ('Bench Press', 'Chest', 'Ultimate Predator-beating training plan', @exerciseWeek, @exerciseDay, @exerciseOrdinality, 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
-
+set @id=NULL;
 set @exerciseWeek=1;
 set @exerciseDay=1;
 set @exerciseOrdinality=2;
 call spRegisterTrainingPlanDefinition ('Squats', 'Legs', 'Ultimate Predator-beating training plan',@exerciseWeek, @exerciseDay, @exerciseOrdinality, 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
-
+set @id=NULL;
 set @exerciseWeek=1;
 set @exerciseDay=1;
 set @exerciseOrdinality=1;
 call spRegisterTrainingPlanDefinition ('Deadlift', 'All', 'Heavy Lifting - Maximum Contraction',@exerciseWeek, @exerciseDay, @exerciseOrdinality, 'Muscular Mike', 'Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
+-- -----------------------------------------------------------------------
 -- Object Updates ...
+-- -----------------------------------------------------------------------
 -- Exercise ..
 set @exerciseId=9;
 call spUpdateExercise ('Pullups', 'Back', @exerciseId, @returnCode, @errorCode, @stateCode, @errorMsg);
