@@ -33,7 +33,7 @@ select
       vwPePrPl.AGE,
       vwPePrPl.PROFILE_NAME,
       vwPePrPl.PLAN_NAME,
-      vwPlPr.DATE_PHYSICAL,
+      vwPlPr.SET_DATE,
       vwPlPr.EXERCISE_WEEK,
       vwPlPr.EXERCISE_DAY,
       vwPlPr.EXERCISE_ORDINALITY,
@@ -49,7 +49,7 @@ select
 order by
       vwPePrPl.PERSONid,
       vwPePrPl.PLAN_NAME,
-	  vwPlPr.DATE_PHYSICAL,
+	  vwPlPr.SET_DATE,
       vwPlPr.EXERCISEid,
       vwPlPr.SET_ORDINALITY
      ;

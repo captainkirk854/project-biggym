@@ -47,17 +47,17 @@ set @TEST_COMMENT='Create new progress entry';
 set @SetOrdinality=1;
 set @SetReps=10;
 set @SetWeight=65.5;
-set @DatePhysical='1995-01-25';
-call spCreateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @DatePhysical, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @DateOfSet='1995-01-25';
+call spCreateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @DateOfSet, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
-set @TEST_COMMENT='Create new progress entry with bad-format physical date';
+set @TEST_COMMENT='Create new progress entry with bad-format set date';
 set @SetOrdinality=2;
 set @SetReps=10;
 set @SetWeight=65.5;
-set @DatePhysical='25-01-1995';
-call spCreateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @DatePhysical, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @DateOfSet='25-01-1995';
+call spCreateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @DateOfSet, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 

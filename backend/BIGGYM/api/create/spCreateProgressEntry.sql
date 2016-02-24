@@ -18,7 +18,7 @@ delimiter $$
 create procedure spCreateProgressEntry(in vNew_SetOrdinality tinyint unsigned,
                                        in vNew_SetReps tinyint unsigned,
                                        in vNew_SetWeight float,
-                                       in vNew_DatePhysical datetime,
+                                       in vNew_DateOfSet datetime,
                                        in vPlanDefinitionId mediumint unsigned,
                                       out ObjectId mediumint unsigned,
                                       out ReturnCode int,
@@ -33,7 +33,7 @@ begin
     declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', saynull(vNew_SetOrdinality), 
                                                           ',SET_REPS=', saynull(vNew_SetReps), 
                                                           ',SET_WEIGHT=', saynull(vNew_SetWeight), 
-                                                          ',DATE_PHYSICAL=', saynull(vNew_DatePhysical));
+                                                          ',SET_DATE=', saynull(vNew_DateOfSet));
     declare ReferenceFields varchar(256) default concat('DEFINITIONid=', saynull(vPlanDefinitionId));
     declare TransactionType varchar(16) default 'insert';
 
@@ -54,10 +54,10 @@ begin
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
 
     -- Check if date uses valid format (YY-mm-dd) ..
-    if (date(vNew_DatePhysical) is NOT NULL and (vNew_DatePhysical != '0000-00-00')) then
+    if (date(vNew_DateOfSet) is NOT NULL and (vNew_DateOfSet != '0000-00-00')) then
 
         -- Attempt create ..
-        call spGetIdForProgressEntry (vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_DatePhysical, vPlanDefinitionId, ObjectId, ReturnCode);
+        call spGetIdForProgressEntry (vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_DateOfSet, vPlanDefinitionId, ObjectId, ReturnCode);
         if (ObjectId is NULL) then
             insert into 
                     PROGRESS
@@ -65,7 +65,7 @@ begin
                      SET_ORDINALITY, 
                      SET_REPS, 
                      SET_WEIGHT, 
-                     DATE_PHYSICAL,
+                     SET_DATE,
                      DEFINITIONid
                     )
                     values
@@ -73,13 +73,13 @@ begin
                      vNew_SetOrdinality,
                      vNew_SetReps,
                      vNew_SetWeight,
-                     vNew_DatePhysical,
+                     vNew_DateOfSet,
                      vPlanDefinitionId
                     );
 
             -- success ..
             set tStatus = 0;
-            call spGetIdForProgressEntry (vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_DatePhysical, vPlanDefinitionId, ObjectId, ReturnCode);
+            call spGetIdForProgressEntry (vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_DateOfSet, vPlanDefinitionId, ObjectId, ReturnCode);
         else
             -- already exists ..
             set tStatus = 1;

@@ -46,5 +46,5 @@ alter table PROGRESS
   SET_ORDINALITY asc, 
   SET_REPS asc, 
   SET_WEIGHT asc, 
-  DATE_PHYSICAL asc 
+  SET_DATE asc 
  );
