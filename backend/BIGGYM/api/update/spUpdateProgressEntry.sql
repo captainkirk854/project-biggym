@@ -19,7 +19,7 @@ delimiter $$
 create procedure spUpdateProgressEntry(in vUpdatable_SetOrdinality tinyint unsigned,
                                        in vUpdatable_SetReps tinyint unsigned,
                                        in vUpdatable_SetWeight float,
-                                       in vUpdatable_DateOfSet datetime,
+                                       in vUpdatable_SetDatestamp datetime,
                                        in vPlanDefinitionId mediumint unsigned,
                                     inout ObjectId mediumint unsigned,
                                       out ReturnCode int,
@@ -34,7 +34,7 @@ begin
     declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', saynull(vUpdatable_SetOrdinality), 
                                                           ',SET_REPS=', saynull(vUpdatable_SetReps), 
                                                           ',SET_WEIGHT=', saynull(vUpdatable_SetWeight), 
-                                                          ',SET_DATE=', saynull(vUpdatable_DateOfSet));
+                                                          ',SET_DATE=', saynull(vUpdatable_SetDatestamp));
     declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
                                                         ',DEFINITIONid=', saynull(vPlanDefinitionId));
     declare TransactionType varchar(16) default 'update';
@@ -60,8 +60,8 @@ begin
     if (ObjectId is NOT NULL and vPlanDefinitionId is NOT NULL) then
 
         -- Check if date uses valid format (YY-mm-dd) ..
-        if (date(vUpdatable_DateOfSet) is NOT NULL and (vUpdatable_DateOfSet != '0000-00-00')) then
-            call spGetIdForProgressEntry (vUpdatable_SetOrdinality, vUpdatable_SetReps, vUpdatable_SetWeight, vUpdatable_DateOfSet, vPlanDefinitionId, localObjectId, ReturnCode);
+        if (date(vUpdatable_SetDatestamp) is NOT NULL and (vUpdatable_SetDatestamp != '0000-00-00')) then
+            call spGetIdForProgressEntry (vUpdatable_SetOrdinality, vUpdatable_SetReps, vUpdatable_SetWeight, vUpdatable_SetDatestamp, vPlanDefinitionId, localObjectId, ReturnCode);
             
             if (ObjectId = localObjectId) then
                 -- no update required ..
@@ -74,7 +74,7 @@ begin
                        SET_ORDINALITY = vUpdatable_SetOrdinality, 
                        SET_REPS = vUpdatable_SetReps, 
                        SET_WEIGHT = vUpdatable_SetWeight, 
-                       SET_DATE = vUpdatable_DateOfSet
+                       SET_DATE = vUpdatable_SetDatestamp
                 where   
                        ID = ObjectId
                   and
@@ -82,7 +82,7 @@ begin
 
                 -- Verify ..
                 set tStatus = 0;
-                call spGetIdForProgressEntry (vUpdatable_SetOrdinality, vUpdatable_SetReps, vUpdatable_SetWeight, vUpdatable_DateOfSet, vPlanDefinitionId, localObjectId, ReturnCode);
+                call spGetIdForProgressEntry (vUpdatable_SetOrdinality, vUpdatable_SetReps, vUpdatable_SetWeight, vUpdatable_SetDatestamp, vPlanDefinitionId, localObjectId, ReturnCode);
                 if (ObjectId = localObjectId) then
                     -- success ..
                     set tStatus = 0;
