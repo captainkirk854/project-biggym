@@ -25,6 +25,8 @@ create procedure spRegisterTrainingPlan(in vNewOrUpdatable_TrainingPlanName varc
                                         in vFirstName varchar(32),
                                         in vLastName varchar(32),
                                         in vBirthDate date,
+                                        in vGender char(1),
+                                        in vBodyHeight float,
                                      inout ObjectId mediumint unsigned,
                                        out ReturnCode int,
                                        out ErrorCode int,
@@ -42,15 +44,17 @@ begin
                                                                  ') and ' ,
                                                         'PERSONid(', 
                                                                     'FIRST_NAME=', saynull(vFirstName), 
-                                                                    ',LAST_NAME =', saynull(vLastName), 
-                                                                    ',BIRTH_DATE =', saynull(vBirthDate), 
+                                                                    ',LAST_NAME=', saynull(vLastName), 
+                                                                    ',BIRTH_DATE=', saynull(vBirthDate),
+                                                                    ',GENDER=', saynull(vGender),
+                                                                    ',HEIGHT=', saynull(vBodyHeight),
                                                                 ')');
     declare TransactionType varchar(16) default 'insert-update';   
     
     declare SpComment varchar(512);
     declare tStatus varchar(64) default 0;
     
-    declare vProfileId mediumint unsigned default NULL;    
+    declare oProfileId mediumint unsigned default NULL;    
     
     declare EXIT handler for SQLEXCEPTION
     begin
@@ -67,17 +71,17 @@ begin
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
     -- Get ProfileId ..
-    call spRegisterProfile (vProfileName, vFirstName, vLastName, vBirthDate, vProfileId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    call spRegisterProfile (vProfileName, vFirstName, vLastName, vBirthDate, vGender, vBodyHeight, oProfileId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
      
     -- Register ..
-    if (vProfileId is NOT NULL) then
+    if (oProfileId is NOT NULL) then
             
         if (ObjectId is NULL) then
             -- create .. 
-            call spCreateTrainingPlan (vNewOrUpdatable_TrainingPlanName, vProfileId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+            call spCreateTrainingPlan (vNewOrUpdatable_TrainingPlanName, oProfileId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         else
             -- update ..
-            call spUpdateTrainingPlan (vNewOrUpdatable_TrainingPlanName, vProfileId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+            call spUpdateTrainingPlan (vNewOrUpdatable_TrainingPlanName, oProfileId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         end if;
 
         if(ErrorCode != 0) then

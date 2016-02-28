@@ -23,7 +23,10 @@ set @TEST_COMMENT_PREFIX=concat('TESTING [', @SPROC_NAME, '] ');
 set @FirstName='Sylvester';
 set @LastName='McCoy';
 set @DOB='1943-08-20';
-call spCreatePerson (@FirstName, @LastName, @DOB, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @gender='M';
+set @height=1.75;
+call spCreatePerson (@firstname, @lastname, @dob, @gender, @height, @personId, @returnCode, @errorCode, @stateCode, @errorMsg);
+
 
 -- ----------------------------------------------------------
 -- Run Tests ..

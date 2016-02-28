@@ -19,6 +19,8 @@ delimiter $$
 create procedure spCreatePerson(in vNew_FirstName varchar(32),
                                 in vNew_LastName varchar(32),
                                 in vNew_BirthDate date,
+                                in vNew_Gender char(1),
+                                in vNew_BodyHeight float,
                                out ObjectId mediumint unsigned,
                                out ReturnCode int,
                                out ErrorCode int,
@@ -30,8 +32,10 @@ begin
     declare ObjectName varchar(128) default 'PERSON';
     declare SpName varchar(128) default 'spCreatePerson';
     declare SignificantFields varchar(256) default concat('FIRST_NAME=', saynull(vNew_FirstName), 
-                                                          ',LAST_NAME =', saynull(vNew_LastName), 
-                                                          ',BIRTH_DATE =', saynull(vNew_BirthDate));
+                                                          ',LAST_NAME=', saynull(vNew_LastName), 
+                                                          ',BIRTH_DATE=', saynull(vNew_BirthDate),
+                                                          ',GENDER=', saynull(vNew_Gender),
+                                                          ',HEIGHT=', saynull(vNew_BodyHeight));
     declare ReferenceFields varchar(256) default concat('na');
     declare TransactionType varchar(16) default 'insert';
     
@@ -65,13 +69,17 @@ begin
                         (
                          FIRST_NAME,
                          LAST_NAME,
-                         BIRTH_DATE
+                         BIRTH_DATE,
+                         gender,
+                         body_height
                         )
                         values
                         (
                          vNew_FirstName,
                          vNew_LastName,
-                         vNew_BirthDate
+                         vNew_BirthDate,
+                         ifNull(vNew_Gender, '-'),
+                         ifNull(vNew_BodyHeight, 0)
                         );
                 -- success ..
                 set tStatus = 0;

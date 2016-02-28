@@ -5,7 +5,7 @@ drop function if exists prettify;
 delimiter $$ 
 
 create function prettify (inputStringList varchar(1024), 
-                              inputDelimiter varchar(10)) 
+                          inputDelimiter varchar(10)) 
 returns varchar(2048)
 begin
 

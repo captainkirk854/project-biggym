@@ -11,7 +11,7 @@ select
     plan.ID PLANid,
     vwPP.*,
     plan.NAME PLAN_NAME,
-    plan.PRIVATE,
+    plan.private,
     plan.DATE_REGISTERED PLAN_REGISTRATION,
     round(datediff(curdate(), plan.DATE_REGISTERED), 1) PLAN_AGE
   from 

@@ -8,7 +8,7 @@ begin;
 -- ----------------------------------------------------------
 -- Initialise ..
 -- ----------------------------------------------------------
-set @NUM_TESTS=8;
+set @NUM_TESTS=10;
 set @SPROC_NAME='spCreatePerson';
 
 -- ----------------------------------------------------------
@@ -28,7 +28,9 @@ set @TEST_COMMENT='Create new person';
 set @FirstName='Sylvester';
 set @LastName='McCoy';
 set @DOB='1943-08-20';
-call spCreatePerson (@FirstName, @LastName, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height='1.75';
+call spCreatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -36,7 +38,9 @@ set @TEST_COMMENT='Create new person name using illegal characters';
 set @FirstName='*********';
 set @LastName='McCoy';
 set @DOB='1943-08-20';
-call spCreatePerson (@FirstName, @LastName, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height='1.75';
+call spCreatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -44,7 +48,9 @@ set @TEST_COMMENT='Create new person name using partially illegal characters';
 set @FirstName='Syl***t*r';
 set @LastName='McCoy';
 set @DOB='1943-08-20';
-call spCreatePerson (@FirstName, @LastName, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height='1.75';
+call spCreatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -52,7 +58,9 @@ set @TEST_COMMENT='Create new Person with same name but different DOB';
 set @FirstName='Sylvester';
 set @LastName='McCoy';
 set @DOB='1843-08-20';
-call spCreatePerson (@FirstName, @LastName, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height='1.75';
+call spCreatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -60,7 +68,9 @@ set @TEST_COMMENT='Create new person with some low SQL-injection';
 set @FirstName='Sylvester';
 set @LastName='McCoy (OR 1=1)';
 set @DOB='1943-08-20';
-call spCreatePerson (@FirstName, @LastName, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height='1.75';
+call spCreatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -68,7 +78,9 @@ set @TEST_COMMENT='Create new person with some mid SQL-injection';
 set @FirstName='Sylvester';
 set @LastName='McCoy ''(OR 1=1)';
 set @DOB='1943-08-20';
-call spCreatePerson (@FirstName, @LastName, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height='1.75';
+call spCreatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -76,7 +88,9 @@ set @TEST_COMMENT='Create new person with NULLs';
 set @FirstName=NULL;
 set @LastName=NULL;
 set @DOB=NULL;
-call spCreatePerson (@FirstName, @LastName, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height='1.75';
+call spCreatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -84,8 +98,33 @@ set @TEST_COMMENT='Create new person with bad DOB date format';
 set @FirstName='Sylvester';
 set @LastName='McCoy';
 set @DOB='20-08-1943';
-call spCreatePerson (@FirstName, @LastName, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height='1.75';
+call spCreatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Create new person with NULL height and NULL gender';
+set @FirstName='Leonard Bones';
+set @LastName='McCoy';
+set @DOB='1943-08-20';
+set @Gender=NULL;
+set @Height=NULL;
+call spCreatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Create new person and then attempt to reset height and gender';
+set @FirstName='Hank';
+set @LastName='McCoy';
+set @DOB='1943-08-20';
+set @Gender='M';
+set @Height=2.1;
+call spCreatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height='1.75';
+call spCreatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 -- ----------------------------------------------------------

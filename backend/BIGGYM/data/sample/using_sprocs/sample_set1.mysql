@@ -1,62 +1,169 @@
 use BIGGYM;
 
+set @d=',';
 -- -----------------------------------------------------------------------
 -- Exercise ..
 -- -----------------------------------------------------------------------
-call spCreateExercise ('Bench Press', 'Chest', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreateExercise ('Dips', 'Chest', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreateExercise ('Squats', 'Legs', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreateExercise ('Deadlift', 'All', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreateExercise ('Bicep Barbell Curls', 'Arms', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreateExercise ('Tricep Press', 'Arms', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreateExercise ('Dips', 'Arms', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreateExercise ('PullDown', 'Back', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreateExercise ('Pullup', 'Back', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreateExercise ('Lateral Raises', 'Shoulders', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @benchpress='Bench Press,Chest';
+set @dipschest='Dips,Chest';
+set @squats='Squats,Legs';
+set @dead='Deadlift,All';
+set @curls='Bicep Barbell Curls,Arms';
+set @tripress='Tricep Press,Arms';
+set @dipsarms='Dips,Arms';
+set @pulldowns='Pulldown,Back';
+set @pullups='Pullup,Back';
+set @latraise='Lateral Raises,Shoulders';
+
+call spCreateExercise (strindex(@benchpress, @d, 1), strindex(@benchpress, @d, 2), 
+                       @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise (strindex(@dipschest, @d, 1), strindex(@dipschest, @d, 2), 
+                       @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise (strindex(@squats, @d, 1), strindex(@squats, @d, 2), 
+                       @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise (strindex(@dead, @d, 1), strindex(@dead, @d, 2), 
+                       @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise (strindex(@curls, @d, 1), strindex(@curls, @d, 2), 
+                       @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise (strindex(@tripress, @d, 1), strindex(@tripress, @d, 2), 
+                       @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise (strindex(@dipsarms, @d, 1), strindex(@dipsarms, @d, 2), 
+                       @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise (strindex(@pulldowns, @d, 1), strindex(@pulldowns, @d, 2), 
+                       @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise (strindex(@pullups, @d, 1), strindex(@pullups, @d, 2), 
+                       @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreateExercise (strindex(@latraise, @d, 1), strindex(@latraise, @d, 2), 
+                       @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
 -- -----------------------------------------------------------------------
 -- Person ..
 -- -----------------------------------------------------------------------
-call spCreatePerson ('Jim', 'Nasium', '3000-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreatePerson ('Luke', 'Skywalker', '1951-09-25', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreatePerson ('William', 'Shatner', '1931-03-22', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreatePerson ('John', 'Little', '1420-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreatePerson ('Michael', 'Ironside', '1950-02-12', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreatePerson ('Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreatePerson ('Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreatePerson ('Jean-Claude', 'Van Damme', '1960-10-18', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreatePerson ('Sylvester', 'Stallone', '1946-07-06', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spCreatePerson ('Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @jimn='Jim,Nasium,3000-01-01,M,4.3';
+set @luke='Luke,Skywalker,1951-09-25,M,1.7';
+set @bill='William,Shatner,1931-03-22,M,1.8';
+set @ljon='John,Little,1420-01-01,M,2.1';
+set @mirn='Michael,Ironside,1950-02-12,M,1.8';
+set @mmtz='Mike,Mentzer,1951-11-15,M,1.8';
+set @arne='Arnold,Schwarzenegger,1947-07-30,M,1.99';
+set @jcvd='Jean-Claude,Van Damme,1960-10-18,M,1.7';
+set @slys='Sylvester,Stallone,1946-07-06,M,1.7';
+set @dirk='Dirk,Benedict,1945-03-01,M,1.8';
+
+
+call spCreatePerson (strindex(@jimn, @d, 1), strindex(@jimn, @d, 2), strindex(@jimn, @d, 3), strindex(@jimn, @d, 4), strindex(@jimn, @d, 5), 
+                     @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson (strindex(@luke, @d, 1), strindex(@luke, @d, 2), strindex(@luke, @d, 3), strindex(@luke, @d, 4), strindex(@luke, @d, 5), 
+                     @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson (strindex(@bill, @d, 1), strindex(@bill, @d, 2), strindex(@bill, @d, 3), strindex(@bill, @d, 4), strindex(@bill, @d, 5), 
+                     @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson (strindex(@ljon, @d, 1), strindex(@ljon, @d, 2), strindex(@ljon, @d, 3), strindex(@ljon, @d, 4), strindex(@ljon, @d, 5), 
+                     @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson (strindex(@mirn, @d, 1), strindex(@mirn, @d, 2), strindex(@mirn, @d, 3), strindex(@mirn, @d, 4), strindex(@mirn, @d, 5), 
+                     @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson (strindex(@mmtz, @d, 1), strindex(@mmtz, @d, 2), strindex(@mmtz, @d, 3), strindex(@mmtz, @d, 4), strindex(@mmtz, @d, 5), 
+                     @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson (strindex(@arne, @d, 1), strindex(@arne, @d, 2), strindex(@arne, @d, 3), strindex(@arne, @d, 4), strindex(@arne, @d, 5), 
+                     @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson (strindex(@jcvd, @d, 1), strindex(@jcvd, @d, 2), strindex(@jcvd, @d, 3), strindex(@jcvd, @d, 4), strindex(@jcvd, @d, 5), 
+                     @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson (strindex(@slys, @d, 1), strindex(@slys, @d, 2), strindex(@slys, @d, 3), strindex(@slys, @d, 4), strindex(@slys, @d, 5), 
+                     @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson (strindex(@dirk, @d, 1), strindex(@dirk, @d, 2), strindex(@dirk, @d, 3), strindex(@dirk, @d, 4), strindex(@dirk, @d, 5), 
+                     @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
 
 
 -- -----------------------------------------------------------------------
 -- Profile ..
 -- -----------------------------------------------------------------------
-call spRegisterProfile ('Big Jim', 'Jim', 'Nasium', '3000-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterProfile ('Lucky Luke', 'Luke', 'Skywalker', '1951-09-25', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterProfile ('Captain Kirk', 'William', 'Shatner', '1931-03-22', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterProfile ('Little John', 'John', 'Little', '1420-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterProfile ('Muscular Mike', 'Michael', 'Ironside', '1950-02-12', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterProfile ('Muscular Mike', 'Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterProfile ('Numero Uno', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterProfile ('Col. John Matrix', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterProfile ('Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterProfile ('Muscles from Brussels', 'Jean-Claude', 'Van Damme', '1960-10-18', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterProfile ('Faceman', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterProfile ('StarBuck', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @id=NULL;
+call spRegisterProfile ('Big Jim', strindex(@jimn, @d, 1), strindex(@jimn, @d, 2), strindex(@jimn, @d, 3), strindex(@jimn, @d, 4), strindex(@jimn, @d, 5), 
+                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterProfile ('Lucky Luke', strindex(@luke, @d, 1), strindex(@luke, @d, 2), strindex(@luke, @d, 3), strindex(@luke, @d, 4), strindex(@luke, @d, 5), 
+                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterProfile ('Captain Kirk', strindex(@bill, @d, 1), strindex(@bill, @d, 2), strindex(@bill, @d, 3), strindex(@bill, @d, 4), strindex(@bill, @d, 5), 
+                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterProfile ('Little John', strindex(@ljon, @d, 1), strindex(@ljon, @d, 2), strindex(@ljon, @d, 3), strindex(@ljon, @d, 4), strindex(@ljon, @d, 5), 
+                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterProfile ('Muscular Mike', strindex(@mirn, @d, 1), strindex(@mirn, @d, 2), strindex(@mirn, @d, 3), strindex(@mirn, @d, 4), strindex(@mirn, @d, 5) , 
+                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterProfile ('Muscular Mike', strindex(@mmtz, @d, 1), strindex(@mmtz, @d, 2), strindex(@mmtz, @d, 3), strindex(@mmtz, @d, 4), strindex(@mmtz, @d, 5), 
+                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterProfile ('Numero Uno', strindex(@arne, @d, 1), strindex(@arne, @d, 2), strindex(@arne, @d, 3), strindex(@arne, @d, 4), strindex(@arne, @d, 5), 
+                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterProfile ('Col. John Matrix', strindex(@arne, @d, 1), strindex(@arne, @d, 2), strindex(@arne, @d, 3), strindex(@arne, @d, 4), strindex(@arne, @d, 5), 
+                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterProfile ('Dutch Schaefer', strindex(@arne, @d, 1), strindex(@arne, @d, 2), strindex(@arne, @d, 3), strindex(@arne, @d, 4), strindex(@arne, @d, 5), 
+                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterProfile ('Muscles from Brussels', strindex(@jcvd, @d, 1), strindex(@jcvd, @d, 2), strindex(@jcvd, @d, 3), strindex(@jcvd, @d, 4), strindex(@jcvd, @d, 5), 
+                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterProfile ('Faceman', strindex(@dirk, @d, 1), strindex(@dirk, @d, 2), strindex(@dirk, @d, 3), strindex(@dirk, @d, 4), strindex(@dirk, @d, 5) , 
+                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterProfile ('StarBuck', strindex(@dirk, @d, 1), strindex(@dirk, @d, 2), strindex(@dirk, @d, 3), strindex(@dirk, @d, 4), strindex(@dirk, @d, 5), 
+                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
 -- -----------------------------------------------------------------------
 -- Training Plan ..
 -- -----------------------------------------------------------------------
-call spRegisterTrainingPlan ('My winter training for big big gains - trust me', 'Numero Uno', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterTrainingPlan ('Ultimate Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterTrainingPlan ('Big Jims Big Gym mass gaining', 'Big Jim', 'Jim', 'Nasium', '3000-01-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterTrainingPlan ('High Rep Piggy Backs as instructed by Yoda on Dagobah.', 'Lucky Luke', 'Luke', 'Skywalker', '1951-09-25', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterTrainingPlan ('Heavy Lifting - Maximum Contraction', 'Muscular Mike', 'Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterTrainingPlan ('Get Bigger Scam Workout', 'Faceman', 'Dirk', 'Benedict', '1945-03-01', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
-call spRegisterTrainingPlan ('I aint gettin on no plane sucka workout', 'Mr.T', 'Lawrence', 'Tureaud', '1952-05-21', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @id=NULL;
+call spRegisterTrainingPlan ('My winter training for big big gains - trust me', 
+                             'Numero Uno', strindex(@arne, @d, 1), strindex(@arne, @d, 2), strindex(@arne, @d, 3), strindex(@arne, @d, 4), strindex(@arne, @d, 5) , 
+                             @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterTrainingPlan ('Ultimate Predator-beating training plan', 
+                             'Dutch Schaefer', strindex(@arne, @d, 1), strindex(@arne, @d, 2), strindex(@arne, @d, 3), strindex(@arne, @d, 4), strindex(@arne, @d, 5), 
+                             @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterTrainingPlan ('Big Jims Big Gym mass gaining', 
+                             'Big Jim', strindex(@jimn, @d, 1), strindex(@jimn, @d, 2), strindex(@jimn, @d, 3), strindex(@jimn, @d, 4), strindex(@jimn, @d, 5), 
+                             @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterTrainingPlan ('High Rep Piggy Backs as instructed by Yoda on Dagobah.', 
+                             'Lucky Luke', strindex(@luke, @d, 1), strindex(@luke, @d, 2), strindex(@luke, @d, 3), strindex(@luke, @d, 4), strindex(@luke, @d, 5), 
+                             @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterTrainingPlan ('Heavy Lifting - Maximum Contraction', 
+                             'Muscular Mike', strindex(@mmtz, @d, 1), strindex(@mmtz, @d, 2), strindex(@mmtz, @d, 3), strindex(@mmtz, @d, 4), strindex(@mmtz, @d, 5), 
+                             @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterTrainingPlan ('Get Bigger Scam Workout', 
+                             'Faceman', strindex(@dirk, @d, 1), strindex(@dirk, @d, 2), strindex(@dirk, @d, 3), strindex(@dirk, @d, 4), strindex(@dirk, @d, 5), 
+                             @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+
+set @id=NULL;
+call spRegisterTrainingPlan ('I aint gettin on no plane sucka workout', 
+                             'Mr.T', 'Lawrence', 'Tureaud', '1952-05-21', 'M', '1.9', 
+                             @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
 -- -----------------------------------------------------------------------
@@ -66,19 +173,31 @@ set @id=NULL;
 set @exerciseWeek=1;
 set @exerciseDay=1;
 set @exerciseOrdinality=1;
-call spRegisterTrainingPlanDefinition ('Bench Press', 'Chest', 'Ultimate Predator-beating training plan', @exerciseWeek, @exerciseDay, @exerciseOrdinality, 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlanDefinition (strindex(@benchpress, @d, 1), strindex(@benchpress, @d, 2), 
+                                       'Ultimate Predator-beating training plan', 
+                                       @exerciseWeek, @exerciseDay, @exerciseOrdinality, 
+                                       'Dutch Schaefer', strindex(@arne, @d, 1), strindex(@arne, @d, 2), strindex(@arne, @d, 3), strindex(@arne, @d, 4), strindex(@arne, @d, 5), 
+                                       @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 set @id=NULL;
 set @exerciseWeek=1;
 set @exerciseDay=1;
 set @exerciseOrdinality=2;
-call spRegisterTrainingPlanDefinition ('Squats', 'Legs', 'Ultimate Predator-beating training plan',@exerciseWeek, @exerciseDay, @exerciseOrdinality, 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlanDefinition (strindex(@squats, @d, 1), strindex(@squats, @d, 2),
+                                       'Ultimate Predator-beating training plan',
+                                       @exerciseWeek, @exerciseDay, @exerciseOrdinality, 
+                                       'Dutch Schaefer', strindex(@arne, @d, 1), strindex(@arne, @d, 2), strindex(@arne, @d, 3), strindex(@arne, @d, 4), strindex(@arne, @d, 5),
+                                       @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 set @id=NULL;
 set @exerciseWeek=1;
 set @exerciseDay=1;
 set @exerciseOrdinality=1;
-call spRegisterTrainingPlanDefinition ('Deadlift', 'All', 'Heavy Lifting - Maximum Contraction',@exerciseWeek, @exerciseDay, @exerciseOrdinality, 'Muscular Mike', 'Mike', 'Mentzer', '1951-11-15', @id, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlanDefinition (strindex(@dead, @d, 1), strindex(@dead, @d, 2),
+                                       'Heavy Lifting - Maximum Contraction',
+                                       @exerciseWeek, @exerciseDay, @exerciseOrdinality, 
+                                       'Muscular Mike', strindex(@mmtz, @d, 1), strindex(@mmtz, @d, 2), strindex(@mmtz, @d, 3), strindex(@mmtz, @d, 4), strindex(@mmtz, @d, 5),
+                                       @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
 -- -----------------------------------------------------------------------
@@ -91,7 +210,7 @@ call spUpdateExercise ('Pullups-Speziale', 'Back', @exerciseId, @returnCode, @er
 
 -- Person ..
 set @personId=10;
-call spUpdatePerson ('Dirkus', 'Benedictus', '1945-03-01', @personId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdatePerson ('Dirkus', 'Benedictus', '1945-03-01', 'M', '1.78', @personId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 -- Profile ..
 set @personId=10;

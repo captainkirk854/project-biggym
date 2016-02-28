@@ -100,6 +100,7 @@ do
   fnRunMyTapUnitTests $cfgAPI/delete $cfgUnitTestSuffix | morepause $pauseTime
   fnRunMyTapUnitTests $cfgAPI/get $cfgUnitTestSuffix | morepause $pauseTime
   fnRunMyTapUnitTests $cfgAPI/update $cfgUnitTestSuffix | morepause $pauseTime
+  fnRunMyTapUnitTests $cfgAPI/register $cfgUnitTestSuffix | morepause $pauseTime
   fnRunMyTapUnitTests $cfgAPI/util $cfgUnitTestSuffix | morepause $pauseTime
   if [[ "$loopMode" != [yY] ]];then
     loopBreaker=1

@@ -22,7 +22,9 @@ delimiter $$
 create procedure spRegisterProfile(in vNewOrUpdatable_ProfileName varchar(32),
                                    in vFirstName varchar(32),
                                    in vLastName varchar(32),
-                                   in vBirthDate date,      
+                                   in vBirthDate date,
+                                   in vGender char(1),
+                                   in vBodyHeight float,
                                 inout ObjectId mediumint unsigned,
                                   out ReturnCode int,
                                   out ErrorCode int,
@@ -36,14 +38,16 @@ begin
     declare SignificantFields varchar(256) default concat('NAME=', saynull(vNewOrUpdatable_ProfileName));
     declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
                                                         ',FIRST_NAME=', saynull(vFirstName), 
-                                                        ',LAST_NAME =', saynull(vLastName), 
-                                                        ',BIRTH_DATE =', saynull(vBirthDate));
+                                                        ',LAST_NAME=', saynull(vLastName), 
+                                                        ',BIRTH_DATE=', saynull(vBirthDate),
+                                                        ',GENDER=', saynull(vGender),
+                                                        ',HEIGHT=', saynull(vBodyHeight));
     declare TransactionType varchar(16) default 'insert-update';
 
     declare SpComment varchar(512);
     declare tStatus varchar(64) default 0;
     
-    declare vPersonId mediumint unsigned default NULL;
+    declare oPersonId mediumint unsigned default NULL;
     
     declare EXIT handler for SQLEXCEPTION
     begin
@@ -60,17 +64,17 @@ begin
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
     -- Get PersonId ..
-    call spRegisterPerson (vFirstName, vLastName, vBirthDate, vPersonId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    call spRegisterPerson (vFirstName, vLastName, vBirthDate, vGender, vBodyHeight, oPersonId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
     
     -- Register ..
-    if (vPersonId is NOT NULL) then
+    if (oPersonId is NOT NULL) then
             
         if (ObjectId is NULL) then
             -- create ..
-            call spCreateProfile (vNewOrUpdatable_ProfileName, vPersonId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+            call spCreateProfile (vNewOrUpdatable_ProfileName, oPersonId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         else
             -- update ..
-            call spUpdateProfile (vNewOrUpdatable_ProfileName, vPersonID, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+            call spUpdateProfile (vNewOrUpdatable_ProfileName, oPersonId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         end if;
         
         if(ErrorCode != 0) then

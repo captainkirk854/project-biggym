@@ -36,6 +36,8 @@ create procedure spRegisterProgressEntry(in opMode varchar(64),                 
                                          in vFirstName varchar(32),
                                          in vLastName varchar(32),
                                          in vBirthDate date,
+                                         in vGender char(1),
+                                         in vBodyHeight float,
                                       inout ObjectId mediumint unsigned,
                                         out ReturnCode int,
                                         out ErrorCode int,
@@ -68,8 +70,10 @@ begin
                                                                  ') and ' ,
                                                         'PERSONid(', 
                                                                     'FIRST_NAME=', saynull(vFirstName), 
-                                                                    ',LAST_NAME =', saynull(vLastName), 
-                                                                    ',BIRTH_DATE =', saynull(vBirthDate), 
+                                                                    ',LAST_NAME=', saynull(vLastName), 
+                                                                    ',BIRTH_DATE=', saynull(vBirthDate),
+                                                                    ',GENDER=', saynull(vGender),
+                                                                    ',HEIGHT=', saynull(vBodyHeight),
                                                                 ')');
     declare TransactionType varchar(16) default 'insert-update'; 
     
@@ -77,11 +81,11 @@ begin
     declare tStatus varchar(64) default 0;
     declare IdNullCode int default 0;
     
-    declare vExerciseId mediumint unsigned;
-    declare vPersonId mediumint unsigned default NULL;
-    declare vProfileId mediumint unsigned default NULL;
-    declare vPlanId mediumint unsigned default NULL;
-    declare vPlanDefinitionId mediumint unsigned default NULL;
+    declare oExerciseId mediumint unsigned;
+    declare oPersonId mediumint unsigned default NULL;
+    declare oProfileId mediumint unsigned default NULL;
+    declare oPlanId mediumint unsigned default NULL;
+    declare oPlanDefinitionId mediumint unsigned default NULL;
        
     -- Initialise ..
     set ReturnCode = 0;
@@ -109,7 +113,7 @@ begin
                                                       vLastName, 
                                                       vBirthDate,
                                                       IdNullCode,
-                                                      vPlanDefinitionId, 
+                                                      oPlanDefinitionId, 
                                                       ReturnCode);
 
     elseif (opMode = "REFERENCE_CREATE") then
@@ -122,25 +126,27 @@ begin
                                                 vProfileName, 
                                                 vFirstName, 
                                                 vLastName, 
-                                                vBirthDate, 
-                                                vPlanDefinitionId, 
+                                                vBirthDate,
+                                                vGender,
+                                                vBodyHeight,
+                                                oPlanDefinitionId, 
                                                 ReturnCode, 
                                                 ErrorCode, 
                                                 ErrorState, 
                                                 ErrorMsg);
     else
-        set vPlanDefinitionId = NULL;
+        set oPlanDefinitionId = NULL;
     end if;
 
     -- Register ..
-    if (vPlanDefinitionId is NOT NULL) then
+    if (oPlanDefinitionId is NOT NULL) then
         if (ObjectId is NULL) then
             -- create ..
             call spCreateProgressEntry (vNewOrUpdatable_SetOrdinality, 
                                         vNewOrUpdatable_SetReps, 
                                         vNewOrUpdatable_SetWeight, 
                                         vNewOrUpdatable_SetDatestamp, 
-                                        vPlanDefinitionId, 
+                                        oPlanDefinitionId, 
                                         ObjectId, 
                                         ReturnCode, 
                                         ErrorCode, 
@@ -152,7 +158,7 @@ begin
                                         vNewOrUpdatable_SetReps, 
                                         vNewOrUpdatable_SetWeight, 
                                         vNewOrUpdatable_SetDatestamp, 
-                                        vPlanDefinitionId, 
+                                        oPlanDefinitionId, 
                                         ObjectId, 
                                         ReturnCode, 
                                         ErrorCode, 

@@ -17,8 +17,8 @@ create table if not exists PERSON
   FIRST_NAME varchar(32) not null,
   LAST_NAME varchar(32) not null,
   BIRTH_DATE date not null,
-  GENDER enum('M','F','-') not null default '-',
-  BODY_HEIGHT float null,
+  gender enum('M','F','-') null,
+  body_height float null,
   DATE_REGISTERED datetime(3) default current_timestamp(3) not null,
   primary key (ID)
  );
@@ -38,8 +38,8 @@ create table if not exists TRAINING_PLAN
  (
   ID mediumint unsigned not null auto_increment,
   NAME varchar(128) not null,
-  OBJECTIVE enum('Gain Muscle', 'Lose Weight', 'General Fitness', 'Toning', 'Other') not null default 'Other',
-  PRIVATE enum('YES','NO') default 'NO' not null,
+  objective enum('Gain Muscle', 'Lose Weight', 'General Fitness', 'Toning', 'Other') not null default 'Other',
+  private enum('YES','NO') default 'NO' not null,
   PROFILEid mediumint unsigned not null,
   DATE_REGISTERED datetime(3) default current_timestamp(3) not null,
   primary key (ID)
@@ -65,7 +65,7 @@ create table if not exists PROGRESS
   SET_ORDINALITY tinyint unsigned default 1 null,
   SET_REPS tinyint unsigned default 0 not null,
   SET_WEIGHT float default 0 not null,
-  SET_COMMENT varchar(256) default '-' not null,
+  set_comment varchar(256) default '-' not null,
   SET_DATE datetime not null,
   BODY_WEIGHT float,
   DEFINITIONid mediumint unsigned not null,

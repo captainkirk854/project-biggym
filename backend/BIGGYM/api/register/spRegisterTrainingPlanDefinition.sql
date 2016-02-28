@@ -32,6 +32,8 @@ create procedure spRegisterTrainingPlanDefinition(in vExerciseName varchar(128),
                                                   in vFirstName varchar(32),
                                                   in vLastName varchar(32),
                                                   in vBirthDate date,
+                                                  in vGender char(1),
+                                                  in vBodyHeight float,
                                                inout ObjectId mediumint unsigned,
                                                  out ReturnCode int,
                                                  out ErrorCode int,
@@ -59,16 +61,18 @@ begin
                                                                  ') and ' ,
                                                         'PERSONid(', 
                                                                     'FIRST_NAME=', saynull(vFirstName), 
-                                                                    ',LAST_NAME =', saynull(vLastName), 
-                                                                    ',BIRTH_DATE =', saynull(vBirthDate), 
+                                                                    ',LAST_NAME=', saynull(vLastName), 
+                                                                    ',BIRTH_DATE=', saynull(vBirthDate),
+                                                                    ',GENDER=', saynull(vGender),
+                                                                    ',HEIGHT=', saynull(vBodyHeight),
                                                                 ')');
     declare TransactionType varchar(16) default 'insert-update'; 
     
     declare SpComment varchar(512);
     declare tStatus varchar(64) default 0;
     
-    declare vPlanId mediumint unsigned default NULL;
-    declare vExerciseId mediumint unsigned default NULL;
+    declare oPlanId mediumint unsigned default NULL;
+    declare oExerciseId mediumint unsigned default NULL;
    
     -- Initialise ..
     set ReturnCode = 0;
@@ -79,20 +83,20 @@ begin
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
     -- Get ExerciseId ..
-    call spCreateExercise (vExerciseName, vBodyPartName, vExerciseId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    call spCreateExercise (vExerciseName, vBodyPartName, oExerciseId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
 
     -- Get PlanId ..
-    call spRegisterTrainingPlan (vTrainingPlanName, vProfileName, vFirstName, vLastName, vBirthDate, vPlanId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    call spRegisterTrainingPlan (vTrainingPlanName, vProfileName, vFirstName, vLastName, vBirthDate, vGender, vBodyHeight, oPlanId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
  
     -- Register ..
-    if (vPlanId is NOT NULL and vExerciseId is NOT NULL) then
+    if (oPlanId is NOT NULL and oExerciseId is NOT NULL) then
     
         if (ObjectId is NULL) then
             -- create ..    
-            call spCreateTrainingPlanDefinition (vPlanId, vExerciseId, vNewOrUpdatable_ExerciseWeek, vNewOrUpdatable_ExerciseDay, vNewOrUpdatable_ExerciseOrdinality, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+            call spCreateTrainingPlanDefinition (oPlanId, oExerciseId, vNewOrUpdatable_ExerciseWeek, vNewOrUpdatable_ExerciseDay, vNewOrUpdatable_ExerciseOrdinality, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         else
             -- update
-            call spUpdateTrainingPlanDefinition (vPlanId, vExerciseId, vNewOrUpdatable_ExerciseWeek, vNewOrUpdatable_ExerciseDay, vNewOrUpdatable_ExerciseOrdinality, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+            call spUpdateTrainingPlanDefinition (oPlanId, oExerciseId, vNewOrUpdatable_ExerciseWeek, vNewOrUpdatable_ExerciseDay, vNewOrUpdatable_ExerciseOrdinality, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         end if;
 
         if(ErrorCode != 0) then

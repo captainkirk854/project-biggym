@@ -29,8 +29,10 @@ set @ProfileName='WorstDoctor';
 set @Firstname='Sylvester';
 set @Lastname='McCoy';
 set @DOB='1943-08-20';
+set @Gender='M';
+set @Height='1.75';
 set @ObjectId=NULL;
-call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -39,8 +41,10 @@ set @ProfileName='DoctorNotTomBaker';
 set @Firstname='Sylvester';
 set @Lastname='McCoy';
 set @DOB='1943-08-20';
+set @Gender='M';
+set @Height='1.75';
 set @ObjectId=NULL;
-call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -49,8 +53,10 @@ set @ProfileName='****************';
 set @Firstname='Sylvester';
 set @Lastname='McCoy';
 set @DOB='1943-08-20';
+set @Gender='M';
+set @Height='1.75';
 set @ObjectId=NULL;
-call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -59,8 +65,10 @@ set @ProfileName=NULL;
 set @Firstname='Sylvester';
 set @Lastname='McCoy';
 set @DOB='1943-08-20';
+set @Gender='M';
+set @Height='1.75';
 set @ObjectId=NULL;
-call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -69,8 +77,10 @@ set @ProfileName='%% AND 1=1 (OR 1=1)';
 set @Firstname='Sylvester';
 set @Lastname='McCoy';
 set @DOB='1943-08-20';
+set @Gender='M';
+set @Height='1.75';
 set @ObjectId=NULL;
-call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -79,11 +89,13 @@ set @ProfileName='BestDoctor';
 set @Firstname='Sylvester';
 set @Lastname='McCoy';
 set @DOB='1943-08-20';
+set @Gender='M';
+set @Height='1.75';
 set @ObjectId=NULL;
-call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 set @ProfileName='NotTomBaker';
-call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProfile (@ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 

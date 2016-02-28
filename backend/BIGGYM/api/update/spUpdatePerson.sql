@@ -19,6 +19,8 @@ delimiter $$
 create procedure spUpdatePerson(in vUpdatable_FirstName varchar(32),
                                 in vUpdatable_LastName varchar(32),
                                 in vUpdatable_BirthDate date,
+                                in vUpdatable_Gender char(1),
+                                in vUpdatable_BodyHeight float,
                              inout ObjectId mediumint unsigned,
                                out ReturnCode int,
                                out ErrorCode int,
@@ -30,8 +32,10 @@ begin
     declare ObjectName varchar(128) default 'PERSON';
     declare SpName varchar(128) default 'spUpdatePerson';
     declare SignificantFields varchar(256) default concat('FIRST_NAME=', saynull(vUpdatable_FirstName), 
-                                                          ',LAST_NAME =', saynull(vUpdatable_LastName), 
-                                                          ',BIRTH_DATE =', saynull(vUpdatable_BirthDate));
+                                                          ',LAST_NAME=', saynull(vUpdatable_LastName), 
+                                                          ',BIRTH_DATE=', saynull(vUpdatable_BirthDate),
+                                                          ',GENDER=', saynull(vUpdatable_Gender),
+                                                          ',HEIGHT=', saynull(vUpdatable_BodyHeight));
     declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId));
     declare TransactionType varchar(16) default 'update';
     
@@ -76,7 +80,9 @@ begin
                            DATE_REGISTERED = current_timestamp(3),
                            FIRST_NAME = vUpdatable_FirstName,
                            LAST_NAME = vUpdatable_LastName,
-                           BIRTH_DATE = vUpdatable_BirthDate
+                           BIRTH_DATE = vUpdatable_BirthDate,
+                           gender = vUpdatable_Gender,
+                           body_height = vUpdatable_BodyHeight
                      where
                            ID = ObjectId;
                 

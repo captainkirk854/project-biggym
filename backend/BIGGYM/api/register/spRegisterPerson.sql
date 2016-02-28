@@ -17,9 +17,11 @@ use BIGGYM;
 
 drop procedure if exists spRegisterPerson;
 delimiter $$
-create procedure spRegisterPerson(in vNewOrUpdatableFirstName varchar(32),
-                                  in vNewOrUpdatableLastName varchar(32),
-                                  in vNewOrUpdatableBirthDate date,      
+create procedure spRegisterPerson(in vNewOrUpdatable_FirstName varchar(32),
+                                  in vNewOrUpdatable_LastName varchar(32),
+                                  in vNewOrUpdatable_BirthDate date,
+                                  in vNewOrUpdatable_Gender char(1),
+                                  in vNewOrUpdatable_BodyHeight float,
                                inout ObjectId mediumint unsigned,
                                  out ReturnCode int,
                                  out ErrorCode int,
@@ -30,9 +32,11 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterPerson';
-    declare SignificantFields varchar(256) default concat('FIRST_NAME=', saynull(vNewOrUpdatableFirstName), 
-                                                        ',LAST_NAME =', saynull(vNewOrUpdatableLastName), 
-                                                        ',BIRTH_DATE =', saynull(vNewOrUpdatableBirthDate));
+    declare SignificantFields varchar(256) default concat('FIRST_NAME=', saynull(vNewOrUpdatable_FirstName), 
+                                                        ',LAST_NAME=', saynull(vNewOrUpdatable_LastName), 
+                                                        ',BIRTH_DATE=', saynull(vNewOrUpdatable_BirthDate),
+                                                        ',GENDER=', saynull(vNewOrUpdatable_Gender),
+                                                        ',HEIGHT=', saynull(vNewOrUpdatable_BodyHeight));
     declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId));
     declare TransactionType varchar(16) default 'insert-update';
 
@@ -56,10 +60,10 @@ begin
     -- Register ..
     if (ObjectId is NULL) then
         -- create ..
-        call spCreatePerson (vNewOrUpdatableFirstName, vNewOrUpdatableLastName, vNewOrUpdatableBirthDate, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+        call spCreatePerson (vNewOrUpdatable_FirstName, vNewOrUpdatable_LastName, vNewOrUpdatable_BirthDate, vNewOrUpdatable_Gender, vNewOrUpdatable_BodyHeight, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
     else
         -- update ..
-        call spUpdatePerson (vNewOrUpdatableFirstName, vNewOrUpdatableLastName, vNewOrUpdatableBirthDate, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+        call spUpdatePerson (vNewOrUpdatable_FirstName, vNewOrUpdatable_LastName, vNewOrUpdatable_BirthDate, vNewOrUpdatable_Gender, vNewOrUpdatable_BodyHeight, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
     end if;
     
     if(ErrorCode != 0) then
@@ -68,7 +72,6 @@ begin
     else
         set tStatus = ReturnCode;
     end if;
-
 
     -- Log ..
     call spActionOnEnd (ObjectName, SpName, ObjectId, tStatus, '----[END]', ReturnCode, ErrorCode, ErrorState, ErrorMsg);
