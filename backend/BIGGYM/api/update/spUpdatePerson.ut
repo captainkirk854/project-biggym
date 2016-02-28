@@ -8,7 +8,7 @@ begin;
 -- ----------------------------------------------------------
 -- Initialise ..
 -- ----------------------------------------------------------
-set @NUM_TESTS=7;
+set @NUM_TESTS=8;
 set @SPROC_NAME='spUpdatePerson';
 
 -- ----------------------------------------------------------
@@ -25,7 +25,7 @@ set @LastName='McCoy';
 set @DOB='1943-08-20';
 set @gender='M';
 set @height=1.75;
-call spCreatePerson (@firstname, @lastname, @dob, @gender, @height, @personId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spCreatePerson (@firstname, @lastname, @dob, @gender, @height, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 
 -- ----------------------------------------------------------
@@ -35,7 +35,9 @@ set @TEST_COMMENT='Update existing person with identical info';
 set @FirstName='Sylvester';
 set @LastName='McCoy';
 set @DOB='1943-08-20';
-call spUpdatePerson (@FirstName, @LastName, @DOB, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height=1.75;
+call spUpdatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@PersonId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -43,7 +45,9 @@ set @TEST_COMMENT='Update existing person with a new identity';
 set @FirstName='Leonard';
 set @LastName='McCoy';
 set @DOB='1943-08-20';
-call spUpdatePerson (@FirstName, @LastName, @DOB, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height=1.75;
+call spUpdatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@PersonId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -51,7 +55,7 @@ set @TEST_COMMENT='Update existing person with new identity using bad date forma
 set @FirstName='Leonard';
 set @LastName='McCoy';
 set @DOB='20-08-1943';
-call spUpdatePerson (@FirstName, @LastName, @DOB, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@PersonId is NOT NULL and @returnCode = -6 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -60,7 +64,9 @@ set @ObjectId=100000;
 set @FirstName='Leonard';
 set @LastName='McCoy';
 set @DOB='1943-08-20';
-call spUpdatePerson (@FirstName, @LastName, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height=1.75;
+call spUpdatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode = -3 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -69,7 +75,9 @@ set @ObjectId=NULL;
 set @FirstName='Leonard';
 set @LastName='McCoy';
 set @DOB='1943-08-20';
-call spUpdatePerson (@FirstName, @LastName, @DOB, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height=1.75;
+call spUpdatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode = -7 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -77,7 +85,9 @@ set @TEST_COMMENT='Update existing person with NULL identity (attempt to create 
 set @FirstName=NULL;
 set @LastName='McCoy';
 set @DOB='1943-08-20';
-call spUpdatePerson (@FirstName, @LastName, @DOB, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height=1.75;
+call spUpdatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode = -1 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -85,9 +95,23 @@ set @TEST_COMMENT='Update existing person with illegal character identity (attem
 set @FirstName='Leonard';
 set @LastName='***!!*!*';
 set @DOB='1943-08-20';
-call spUpdatePerson (@FirstName, @LastName, @DOB, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @Gender='M';
+set @Height=1.75;
+call spUpdatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@PersonId is not NULL and @returnCode = -1 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Update existing person with illegal Gender Value (not in enumeration)';
+set @FirstName='Sylvester';
+set @LastName='McCoy';
+set @DOB='1943-08-20';
+set @Gender='X';
+set @Height=1.75;
+call spUpdatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
+select gender into @actualGender from PERSON where ID = @PersonId;
+set @CONDITION_PASS=(@PersonId is not NULL and @returnCode = 0 and @errorCode = 0 and trim(@actualGender) = '');
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
 
 -- ----------------------------------------------------------
 -- Finish tests and clean up.
