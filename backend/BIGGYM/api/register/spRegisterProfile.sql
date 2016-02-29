@@ -35,8 +35,8 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterProfile';
-    declare SignificantFields varchar(256) default concat('NAME=', saynull(vNewOrUpdatable_ProfileName));
-    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
+    declare SignificantFields varchar(512) default concat('NAME=', saynull(vNewOrUpdatable_ProfileName));
+    declare ReferenceFields varchar(512) default concat('ID=', saynull(ObjectId),
                                                         ',FIRST_NAME=', saynull(vPerson_FirstName), 
                                                         ',LAST_NAME=', saynull(vPerson_LastName), 
                                                         ',BIRTH_DATE=', saynull(vPerson_BirthDate),
@@ -44,7 +44,7 @@ begin
                                                         ',HEIGHT=', saynull(vPerson_BodyHeight));
     declare TransactionType varchar(16) default 'insert-update';
 
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default 0;
     
     declare oPersonId mediumint unsigned default NULL;

@@ -33,17 +33,17 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'PROGRESS';
     declare SpName varchar(128) default 'spUpdateProgressEntry';
-    declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', saynull(vUpdatable_SetOrdinality), 
+    declare SignificantFields varchar(512) default concat('SET_ORDINALITY=', saynull(vUpdatable_SetOrdinality), 
                                                           ',SET_REPS=', saynull(vUpdatable_SetReps), 
                                                           ',SET_WEIGHT=', saynull(vUpdatable_SetWeight), 
                                                           ',SET_DATE=', saynull(vUpdatable_SetDatestamp),
                                                           ',SET_COMMENT=', saynull(vUpdatable_SetComment),
                                                           ',BODY_WEIGHT=', saynull(vUpdatable_BodyWeight));
-    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
+    declare ReferenceFields varchar(512) default concat('ID=', saynull(ObjectId),
                                                         ',DEFINITIONid=', saynull(vPlanDefinitionId));
     declare TransactionType varchar(16) default 'update';
 
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default '-';
     declare localObjectId mediumint unsigned; 
     

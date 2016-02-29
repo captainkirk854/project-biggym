@@ -32,13 +32,13 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN';
     declare SpName varchar(128) default 'spCreateTrainingPlan';
-    declare SignificantFields varchar(256) default concat('NAME=', saynull(vNew_TrainingPlanName),
+    declare SignificantFields varchar(512) default concat('NAME=', saynull(vNew_TrainingPlanName),
                                                           ',OBJECTIVE=', saynull(vNew_Objective),
                                                           ',PRIVATE=', saynull(vNew_Private));
-    declare ReferenceFields varchar(256) default concat('PROFILEid=', saynull(vProfileId));
+    declare ReferenceFields varchar(512) default concat('PROFILEid=', saynull(vProfileId));
     declare TransactionType varchar(16) default 'insert';
 
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default '-';
     
     declare EXIT handler for SQLEXCEPTION

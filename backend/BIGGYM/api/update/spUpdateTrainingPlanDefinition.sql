@@ -34,15 +34,15 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN_DEFINITION';
     declare SpName varchar(128) default 'spUpdateTrainingPlanDefinition';
-    declare SignificantFields varchar(256) default concat('EXERCISE_WEEK=', saynull(vUpdatable_ExerciseWeek), 
+    declare SignificantFields varchar(512) default concat('EXERCISE_WEEK=', saynull(vUpdatable_ExerciseWeek), 
                                                           ',EXERCISE_DAY=', saynull(vUpdatable_ExerciseDay), 
                                                           ',EXERCISE_ORDINALITY=', saynull(vUpdatable_ExerciseOrdinality), 
                                                           ',EXERCISEid=', saynull(vUpdatable_ExerciseId));
-    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId), 
+    declare ReferenceFields varchar(512) default concat('ID=', saynull(ObjectId), 
                                                         ',PLANid=', saynull(vPlanId));
     declare TransactionType varchar(16) default 'update';    
     
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default '-';
     declare localObjectId mediumint unsigned;    
     

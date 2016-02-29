@@ -32,16 +32,16 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'PROGRESS';
     declare SpName varchar(128) default 'spCreateProgressEntry';
-    declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', saynull(vNew_SetOrdinality), 
+    declare SignificantFields varchar(512) default concat('SET_ORDINALITY=', saynull(vNew_SetOrdinality), 
                                                           ',SET_REPS=', saynull(vNew_SetReps), 
                                                           ',SET_WEIGHT=', saynull(vNew_SetWeight), 
                                                           ',SET_DATE=', saynull(vNew_SetDatestamp),
                                                           ',SET_COMMENT=', saynull(vNew_SetComment),
                                                           ',BODY_WEIGHT=', saynull(vNew_BodyWeight));
-    declare ReferenceFields varchar(256) default concat('DEFINITIONid=', saynull(vPlanDefinitionId));
+    declare ReferenceFields varchar(512) default concat('DEFINITIONid=', saynull(vPlanDefinitionId));
     declare TransactionType varchar(16) default 'insert';
 
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default '-';
     
     declare EXIT handler for SQLEXCEPTION

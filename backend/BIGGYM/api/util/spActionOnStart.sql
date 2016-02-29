@@ -17,9 +17,9 @@ drop procedure if exists spActionOnStart;
 delimiter $$
 create procedure spActionOnStart(in TransactionType varchar(16),
                                  in ObjectName varchar(128),
-                                 in SignificantFields varchar(256),
-                                 in ReferenceFields varchar(256),
-                                out FinalComment varchar(512))
+                                 in SignificantFields varchar(512),
+                                 in ReferenceFields varchar(512),
+                                out FinalComment varchar(1024))
 begin
     
     -- Initialise ..

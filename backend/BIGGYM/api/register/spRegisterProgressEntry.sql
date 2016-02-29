@@ -52,13 +52,13 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterProgressEntry';
-    declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', saynull(vNewOrUpdatable_SetOrdinality), 
+    declare SignificantFields varchar(512) default concat('SET_ORDINALITY=', saynull(vNewOrUpdatable_SetOrdinality), 
                                                           ',SET_REPS=', saynull(vNewOrUpdatable_SetReps),
                                                           ',SET_WEIGHT=', saynull(vNewOrUpdatable_SetWeight),
                                                           ',SET_DATE=', saynull(vNewOrUpdatable_SetDatestamp),
                                                           ',SET_COMMENT=', saynull(vNewOrUpdatable_SetComment),
                                                           ',BODY_WEIGHT=', saynull(vNewOrUpdatable_BodyWeight));
-    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
+    declare ReferenceFields varchar(512) default concat('ID=', saynull(ObjectId),
                                                         ',DEFINITIONid(', 
                                                                       'EXERCISE_WEEK=', saynull(vTrainingPlanDefinition_ExerciseWeek), 
                                                                       ',EXERCISE_DAY=', saynull(vTrainingPlanDefinition_ExerciseDay),
@@ -83,7 +83,7 @@ begin
                                                                 ')');
     declare TransactionType varchar(16) default 'insert-update'; 
     
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default 0;
     declare IdNullCode int default 0;
     

@@ -46,19 +46,19 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterTrainingPlanDefinition';
-    declare SignificantFields varchar(256) default concat('PLANid, EXERCISEid', 
+    declare SignificantFields varchar(512) default concat('PLANid, EXERCISEid', 
                                                           ',EXERCISE_WEEK=', saynull(vNewOrUpdatable_ExerciseWeek), 
                                                           ',EXERCISE_DAY=', saynull(vNewOrUpdatable_ExerciseDay),
                                                           ',EXERCISE_ORDINALITY=', saynull(vNewOrUpdatable_ExerciseOrdinality));
-    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
+    declare ReferenceFields varchar(512) default concat('ID=', saynull(ObjectId),
                                                         ',EXERCISEid(', 
                                                                      'NAME=', saynull(vExercise_Name),
                                                                      ',BODY_PART=', saynull(vExercise_BodyPartName),
                                                                   ') and ' ,
                                                         'PLANId(', 
                                                                 'NAME=', saynull(vTrainingPlan_Name),
-                                                                'OBJECTIVE=', saynull(vTrainingPlan_Objective),
-                                                                'PRIVATE=', saynull(vTrainingPlan_Private),
+                                                                ',OBJECTIVE=', saynull(vTrainingPlan_Objective),
+                                                                ',PRIVATE=', saynull(vTrainingPlan_Private),
                                                               ') and ' ,
                                                         'PROFILEId(', 
                                                                     'NAME=', saynull(vProfile_Name),
@@ -72,7 +72,7 @@ begin
                                                                 ')');
     declare TransactionType varchar(16) default 'insert-update'; 
     
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default 0;
     
     declare oPlanId mediumint unsigned default NULL;

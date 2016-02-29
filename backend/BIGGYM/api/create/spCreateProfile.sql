@@ -29,11 +29,11 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'PROFILE';
     declare SpName varchar(128) default 'spCreateProfile';
-    declare SignificantFields varchar(256) default concat('NAME=', saynull(vNew_ProfileName));
-    declare ReferenceFields varchar(256) default concat('PERSONid=', saynull(vPersonId));
+    declare SignificantFields varchar(512) default concat('NAME=', saynull(vNew_ProfileName));
+    declare ReferenceFields varchar(512) default concat('PERSONid=', saynull(vPersonId));
     declare TransactionType varchar(16) default 'insert';
 
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default '-';
  
     declare EXIT handler for SQLEXCEPTION

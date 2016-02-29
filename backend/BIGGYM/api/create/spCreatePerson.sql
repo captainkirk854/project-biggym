@@ -31,15 +31,15 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'PERSON';
     declare SpName varchar(128) default 'spCreatePerson';
-    declare SignificantFields varchar(256) default concat('FIRST_NAME=', saynull(vNew_FirstName), 
+    declare SignificantFields varchar(512) default concat('FIRST_NAME=', saynull(vNew_FirstName), 
                                                           ',LAST_NAME=', saynull(vNew_LastName), 
                                                           ',BIRTH_DATE=', saynull(vNew_BirthDate),
                                                           ',GENDER=', saynull(vNew_Gender),
                                                           ',HEIGHT=', saynull(vNew_BodyHeight));
-    declare ReferenceFields varchar(256) default concat('na');
+    declare ReferenceFields varchar(512) default concat('na');
     declare TransactionType varchar(16) default 'insert';
     
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default '-';
     
     declare EXIT handler for SQLEXCEPTION

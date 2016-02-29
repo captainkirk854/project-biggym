@@ -31,15 +31,15 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'PERSON';
     declare SpName varchar(128) default 'spUpdatePerson';
-    declare SignificantFields varchar(256) default concat('FIRST_NAME=', saynull(vUpdatable_FirstName), 
+    declare SignificantFields varchar(512) default concat('FIRST_NAME=', saynull(vUpdatable_FirstName), 
                                                           ',LAST_NAME=', saynull(vUpdatable_LastName), 
                                                           ',BIRTH_DATE=', saynull(vUpdatable_BirthDate),
                                                           ',GENDER=', saynull(vUpdatable_Gender),
                                                           ',HEIGHT=', saynull(vUpdatable_BodyHeight));
-    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId));
+    declare ReferenceFields varchar(512) default concat('ID=', saynull(ObjectId));
     declare TransactionType varchar(16) default 'update';
     
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default '-';
     declare localObjectId mediumint unsigned;
     

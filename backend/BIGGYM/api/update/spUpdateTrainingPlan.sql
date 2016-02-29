@@ -32,14 +32,14 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN';
     declare SpName varchar(128) default 'spUpdateTrainingPlan';
-    declare SignificantFields varchar(256) default concat('NAME=', saynull(vUpdatable_TrainingPlanName),
+    declare SignificantFields varchar(512) default concat('NAME=', saynull(vUpdatable_TrainingPlanName),
                                                           ',OBJECTIVE=', saynull(vUpdatable_Objective),
                                                           ',PRIVATE=', saynull(vUpdatable_Private));
-    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId), 
+    declare ReferenceFields varchar(512) default concat('ID=', saynull(ObjectId), 
                                                         ',PROFILEid=', saynull(vProfileId));
     declare TransactionType varchar(16) default 'update';
     
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default '-';
     declare localObjectId mediumint unsigned;    
     

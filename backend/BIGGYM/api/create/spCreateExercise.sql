@@ -28,12 +28,12 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'EXERCISE';
     declare SpName varchar(128) default 'spCreateExercise';
-    declare SignificantFields varchar(256) default concat('NAME=', saynull(vNew_ExerciseName), 
+    declare SignificantFields varchar(512) default concat('NAME=', saynull(vNew_ExerciseName), 
                                                           ',BODY_PART=', saynull(vNew_BodyPartName));
-    declare ReferenceFields varchar(256) default concat('na');
+    declare ReferenceFields varchar(512) default concat('na');
     declare TransactionType varchar(16) default 'insert';
     
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default '-';
  
     declare EXIT handler for SQLEXCEPTION

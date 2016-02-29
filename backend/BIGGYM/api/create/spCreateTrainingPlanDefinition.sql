@@ -34,14 +34,14 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN_DEFINITION';
     declare SpName varchar(128) default 'spCreateTrainingPlanDefinition';
-    declare SignificantFields varchar(256) default concat('EXERCISE_WEEK=', saynull(vNew_ExerciseWeek), 
+    declare SignificantFields varchar(512) default concat('EXERCISE_WEEK=', saynull(vNew_ExerciseWeek), 
                                                           ',EXERCISE_DAY=', saynull(vNew_ExerciseDay),
                                                           ',EXERCISE_ORDINALITY=', saynull(vNew_ExerciseOrdinality));
-    declare ReferenceFields varchar(256) default concat('PLANid=', saynull(vPlanId), 
+    declare ReferenceFields varchar(512) default concat('PLANid=', saynull(vPlanId), 
                                                         ',EXERCISEid=', saynull(vExerciseId));
     declare TransactionType varchar(16) default 'insert';
 
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default '-';
     
     declare EXIT handler for SQLEXCEPTION

@@ -29,9 +29,9 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterExercise';
-    declare SignificantFields varchar(256) default concat('NAME=', saynull(vNewOrUpdatable_ExerciseName),
+    declare SignificantFields varchar(512) default concat('NAME=', saynull(vNewOrUpdatable_ExerciseName),
                                                           ',BODY_PART=', saynull(vNewOrUpdatable_BodyPartName));
-    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId));
+    declare ReferenceFields varchar(512) default concat('ID=', saynull(ObjectId));
     declare TransactionType varchar(16) default 'insert-update'; 
     
     declare SpComment varchar(512);

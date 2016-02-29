@@ -39,8 +39,8 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterTrainingPlan';
-    declare SignificantFields varchar(256) default  concat('NAME=', saynull(vNewOrUpdatable_TrainingPlanName));
-    declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
+    declare SignificantFields varchar(512) default  concat('NAME=', saynull(vNewOrUpdatable_TrainingPlanName));
+    declare ReferenceFields varchar(512) default concat('ID=', saynull(ObjectId),
                                                         ',PROFILEId(', 
                                                                     'NAME=', saynull(vProfile_Name),
                                                                     ',OBJECTIVE=', saynull(vNewOrUpdatable_Objective),
@@ -55,7 +55,7 @@ begin
                                                                 ')');
     declare TransactionType varchar(16) default 'insert-update';   
     
-    declare SpComment varchar(512);
+    declare SpComment varchar(1024);
     declare tStatus varchar(64) default 0;
     
     declare oProfileId mediumint unsigned default NULL;    

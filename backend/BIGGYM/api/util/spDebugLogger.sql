@@ -19,7 +19,7 @@ delimiter $$
 create procedure spDebugLogger(in DebugLoggingDatabase varchar(128),
                                in ObjectName varchar(128),
                                in SprocName varchar(128),
-                               in SprocComment varchar(512),
+                               in SprocComment varchar(1024),
                                in SprocReturnCode int,
                                in SqlErrorCode int,
                                in SqlStateCode int,
