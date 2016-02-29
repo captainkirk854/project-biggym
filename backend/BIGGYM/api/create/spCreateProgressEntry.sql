@@ -19,6 +19,8 @@ create procedure spCreateProgressEntry(in vNew_SetOrdinality tinyint unsigned,
                                        in vNew_SetReps tinyint unsigned,
                                        in vNew_SetWeight float,
                                        in vNew_SetDatestamp datetime,
+                                       in vNew_SetComment varchar(256),
+                                       in vNew_BodyWeight float,
                                        in vPlanDefinitionId mediumint unsigned,
                                       out ObjectId mediumint unsigned,
                                       out ReturnCode int,
@@ -33,7 +35,9 @@ begin
     declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', saynull(vNew_SetOrdinality), 
                                                           ',SET_REPS=', saynull(vNew_SetReps), 
                                                           ',SET_WEIGHT=', saynull(vNew_SetWeight), 
-                                                          ',SET_DATE=', saynull(vNew_SetDatestamp));
+                                                          ',SET_DATE=', saynull(vNew_SetDatestamp),
+                                                          ',SET_COMMENT=', saynull(vNew_SetComment),
+                                                          ',BODY_WEIGHT=', saynull(vNew_BodyWeight));
     declare ReferenceFields varchar(256) default concat('DEFINITIONid=', saynull(vPlanDefinitionId));
     declare TransactionType varchar(16) default 'insert';
 
@@ -66,6 +70,8 @@ begin
                      SET_REPS, 
                      SET_WEIGHT, 
                      SET_DATE,
+                     set_comment,
+                     body_weight,
                      DEFINITIONid
                     )
                     values
@@ -74,6 +80,8 @@ begin
                      vNew_SetReps,
                      vNew_SetWeight,
                      vNew_SetDatestamp,
+                     vNew_SetComment,
+                     vNew_BodyWeight,
                      vPlanDefinitionId
                     );
 

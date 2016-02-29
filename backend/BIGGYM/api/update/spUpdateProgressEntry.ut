@@ -48,7 +48,9 @@ set @SetOrdinality=1;
 set @SetReps=10;
 set @SetWeight=65.5;
 set @SetDatestamp='1995-01-25';
-call spCreateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @SetComment='Breakfast of champions made me strong';
+set @Bodyweight=98;
+call spCreateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @SetComment, @BodyWeight, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 -- ----------------------------------------------------------
 -- Run Tests ..
@@ -58,7 +60,9 @@ set @SetOrdinality=1;
 set @SetReps=10;
 set @SetWeight=65.5;
 set @SetDatestamp='1995-01-25';
-call spUpdateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @SetComment='Breakfast of champions made me strong';
+set @Bodyweight=98;
+call spUpdateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @SetComment, @BodyWeight, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -67,7 +71,9 @@ set @SetOrdinality=2;
 set @SetReps=100;
 set @SetWeight=15.5;
 set @SetDatestamp='2000-12-14';
-call spUpdateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @SetComment='Breakfast of champions made me strong';
+set @Bodyweight=98;
+call spUpdateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @SetComment, @BodyWeight, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -76,7 +82,9 @@ set @SetOrdinality=2;
 set @SetReps=100;
 set @SetWeight=15.5;
 set @SetDatestamp='14-12-2000';
-call spUpdateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @SetComment='Breakfast of champions made me strong';
+set @Bodyweight=98;
+call spUpdateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @SetComment, @BodyWeight, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode = -6 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -86,7 +94,9 @@ set @SetOrdinality=1;
 set @SetReps=10;
 set @SetWeight=65.5;
 set @SetDatestamp='25-01-1995';
-call spUpdateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @SetComment='Breakfast of champions made me strong';
+set @Bodyweight=98;
+call spUpdateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @SetComment, @BodyWeight, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode = -7 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 

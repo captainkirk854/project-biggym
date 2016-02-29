@@ -20,6 +20,8 @@ create procedure spUpdateProgressEntry(in vUpdatable_SetOrdinality tinyint unsig
                                        in vUpdatable_SetReps tinyint unsigned,
                                        in vUpdatable_SetWeight float,
                                        in vUpdatable_SetDatestamp datetime,
+                                       in vUpdatable_SetComment varchar(256),
+                                       in vUpdatable_BodyWeight float,
                                        in vPlanDefinitionId mediumint unsigned,
                                     inout ObjectId mediumint unsigned,
                                       out ReturnCode int,
@@ -34,7 +36,9 @@ begin
     declare SignificantFields varchar(256) default concat('SET_ORDINALITY=', saynull(vUpdatable_SetOrdinality), 
                                                           ',SET_REPS=', saynull(vUpdatable_SetReps), 
                                                           ',SET_WEIGHT=', saynull(vUpdatable_SetWeight), 
-                                                          ',SET_DATE=', saynull(vUpdatable_SetDatestamp));
+                                                          ',SET_DATE=', saynull(vUpdatable_SetDatestamp),
+                                                          ',SET_COMMENT=', saynull(vUpdatable_SetComment),
+                                                          ',BODY_WEIGHT=', saynull(vUpdatable_BodyWeight));
     declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
                                                         ',DEFINITIONid=', saynull(vPlanDefinitionId));
     declare TransactionType varchar(16) default 'update';
@@ -74,7 +78,9 @@ begin
                        SET_ORDINALITY = vUpdatable_SetOrdinality, 
                        SET_REPS = vUpdatable_SetReps, 
                        SET_WEIGHT = vUpdatable_SetWeight, 
-                       SET_DATE = vUpdatable_SetDatestamp
+                       SET_DATE = vUpdatable_SetDatestamp,
+                       set_comment = vUpdatable_SetComment,
+                       body_weight = vUpdatable_BodyWeight
                 where   
                        ID = ObjectId
                   and

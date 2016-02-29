@@ -65,9 +65,9 @@ create table if not exists PROGRESS
   SET_ORDINALITY tinyint unsigned default 1 null,
   SET_REPS tinyint unsigned default 0 not null,
   SET_WEIGHT float default 0 not null,
-  set_comment varchar(256) default '-' not null,
   SET_DATE datetime not null,
-  BODY_WEIGHT float,
+  set_comment varchar(256) default '-' null,
+  body_weight float null,
   DEFINITIONid mediumint unsigned not null,
   DATE_REGISTERED datetime(3) default current_timestamp(3) not null,
   primary key (ID)

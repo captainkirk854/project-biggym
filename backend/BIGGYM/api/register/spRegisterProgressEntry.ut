@@ -30,6 +30,8 @@ set @SetOrdinality = 3;
 set @SetReps = 10;
 set @SetWeight = 65.5;
 set @SetDatestamp = '1974-03-25';
+set @SetComment='Breakfast of champions made me strong';
+set @Bodyweight=120;
 set @ExerciseWeek = 2;
 set @ExerciseDay = 1;
 set @ExerciseOrdinality = 2;
@@ -44,7 +46,7 @@ set @LastName = 'Schwarzenegger';
 set @BirthDate = '1947-07-30';
 set @Gender='M';
 set @Height='1.90';
-call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @SetComment, @Bodyweight, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -55,6 +57,8 @@ set @SetOrdinality = 4;
 set @SetReps = 10;
 set @SetWeight = 65.5;
 set @SetDatestamp = '1974-03-25';
+set @SetComment='Breakfast of champions made me strong';
+set @Bodyweight=120;
 set @ExerciseWeek = 2;
 set @ExerciseDay = 1;
 set @ExerciseOrdinality = 2;
@@ -69,7 +73,7 @@ set @LastName = 'Schwarzenegger';
 set @BirthDate = '1947-07-30';
 set @Gender='M';
 set @Height='1.90';
-call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @SetComment, @Bodyweight, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode = -4 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -80,6 +84,8 @@ set @SetOrdinality = 5;
 set @SetReps = 10;
 set @SetWeight = 65.5;
 set @SetDatestamp = '1974-03-25';
+set @SetComment='Breakfast of champions made me strong';
+set @Bodyweight=120;
 set @ExerciseWeek = 2;
 set @ExerciseDay = 1;
 set @ExerciseOrdinality = 2;
@@ -94,7 +100,7 @@ set @LastName = 'Schwarzenegger';
 set @BirthDate = '1947-07-30';
 set @Gender='M';
 set @Height='1.90';
-call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @SetComment, @Bodyweight, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -105,6 +111,8 @@ set @SetOrdinality = 6;
 set @SetReps = 10;
 set @SetWeight = 65.5;
 set @SetDatestamp='25-01-1995';
+set @SetComment='Breakfast of champions made me strong';
+set @Bodyweight=120;
 set @ExerciseWeek = 2;
 set @ExerciseDay = 1;
 set @ExerciseOrdinality = 2;
@@ -119,7 +127,7 @@ set @LastName = 'Schwarzenegger';
 set @BirthDate = '1947-07-30';
 set @Gender='M';
 set @Height='1.90';
-call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @SetComment, @Bodyweight, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode =-6 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -130,6 +138,8 @@ set @SetOrdinality = 3;
 set @SetReps = 10;
 set @SetWeight = 65.5;
 set @SetDatestamp = '1974-03-25';
+set @SetComment='Breakfast of champions made me strong';
+set @Bodyweight=120;
 set @ExerciseWeek = 2;
 set @ExerciseDay = 1;
 set @ExerciseOrdinality = 2;
@@ -144,7 +154,7 @@ set @LastName = 'Schwarzenegger';
 set @BirthDate = '1947-07-30';
 set @Gender='M';
 set @Height='1.90';
-call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @SetComment, @Bodyweight, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NULL and @returnCode < 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -153,6 +163,8 @@ set @SetOrdinality = 3;
 set @SetReps = 10;
 set @SetWeight = 65.5;
 set @SetDatestamp = '1974-03-25';
+set @SetComment='Breakfast of champions made me strong';
+set @Bodyweight=120;
 set @ExerciseWeek = 2;
 set @ExerciseDay = 1;
 set @ExerciseOrdinality = 2;
@@ -168,14 +180,15 @@ set @Height='1.90';
 
 set @ObjectId=NULL;
 set @OperationalMode='REFERENCE_ASSUME';
-call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @SetComment, @Bodyweight, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 set @SetOrdinality = 4;
 set @SetReps = 99;
 set @SetWeight = 5.5;
-call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterProgressEntry (@OperationalMode, @SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @SetComment, @Bodyweight, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ExerciseName, @BodyPartName, @TrainingPlanName, @PlanObjective, @Private, @ProfileName, @FirstName, @LastName, @BirthDate, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is not NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
 
 -- ----------------------------------------------------------
 -- Finish tests and clean up.
