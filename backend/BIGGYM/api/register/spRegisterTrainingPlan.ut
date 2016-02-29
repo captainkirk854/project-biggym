@@ -32,8 +32,10 @@ set @Gender='M';
 set @Height='1.75';
 set @ProfileName='The worst doctor and could never lift weights';
 set @PlanName='Maximum Power required';
+set @PlanObjective='Gain Muscle';
+set @Private='N';
 set @ObjectId=NULL;
-call spRegisterTrainingPlan (@PlanName, @ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlan (@PlanName, @PlanObjective, @Private, @ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -45,7 +47,9 @@ set @Gender='M';
 set @Height='1.75';
 set @ProfileName='The worst doctor and could never lift weights';
 set @PlanName='Just do not bother';
-call spRegisterTrainingPlan (@PlanName, @ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @PlanObjective='Gain Muscle';
+set @Private='N';
+call spRegisterTrainingPlan (@PlanName, @PlanObjective, @Private, @ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 

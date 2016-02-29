@@ -131,37 +131,37 @@ call spRegisterProfile ('StarBuck', strindex(@dirk, @d, 1), strindex(@dirk, @d, 
 -- Training Plan ..
 -- -----------------------------------------------------------------------
 set @id=NULL;
-call spRegisterTrainingPlan ('My winter training for big big gains - trust me', 
+call spRegisterTrainingPlan ('My winter training for big big gains - trust me', 'Gain Muscle', 'N',
                              'Numero Uno', strindex(@arne, @d, 1), strindex(@arne, @d, 2), strindex(@arne, @d, 3), strindex(@arne, @d, 4), strindex(@arne, @d, 5) , 
                              @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 set @id=NULL;
-call spRegisterTrainingPlan ('Ultimate Predator-beating training plan', 
+call spRegisterTrainingPlan ('Ultimate Predator-beating training plan', 'Gain Muscle', 'N',
                              'Dutch Schaefer', strindex(@arne, @d, 1), strindex(@arne, @d, 2), strindex(@arne, @d, 3), strindex(@arne, @d, 4), strindex(@arne, @d, 5), 
                              @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 set @id=NULL;
-call spRegisterTrainingPlan ('Big Jims Big Gym mass gaining', 
+call spRegisterTrainingPlan ('Big Jims Big Gym mass gaining', 'Gain Muscle', 'N',
                              'Big Jim', strindex(@jimn, @d, 1), strindex(@jimn, @d, 2), strindex(@jimn, @d, 3), strindex(@jimn, @d, 4), strindex(@jimn, @d, 5), 
                              @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 set @id=NULL;
-call spRegisterTrainingPlan ('High Rep Piggy Backs as instructed by Yoda on Dagobah.', 
+call spRegisterTrainingPlan ('High Rep Piggy Backs as instructed by Yoda on Dagobah.', 'Gain Muscle', 'N',
                              'Lucky Luke', strindex(@luke, @d, 1), strindex(@luke, @d, 2), strindex(@luke, @d, 3), strindex(@luke, @d, 4), strindex(@luke, @d, 5), 
                              @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 set @id=NULL;
-call spRegisterTrainingPlan ('Heavy Lifting - Maximum Contraction', 
+call spRegisterTrainingPlan ('Heavy Lifting - Maximum Contraction', 'Gain Muscle', 'N',
                              'Muscular Mike', strindex(@mmtz, @d, 1), strindex(@mmtz, @d, 2), strindex(@mmtz, @d, 3), strindex(@mmtz, @d, 4), strindex(@mmtz, @d, 5), 
                              @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 set @id=NULL;
-call spRegisterTrainingPlan ('Get Bigger Scam Workout', 
+call spRegisterTrainingPlan ('Get Bigger Scam Workout', 'Gain Muscle', 'N',
                              'Faceman', strindex(@dirk, @d, 1), strindex(@dirk, @d, 2), strindex(@dirk, @d, 3), strindex(@dirk, @d, 4), strindex(@dirk, @d, 5), 
                              @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 set @id=NULL;
-call spRegisterTrainingPlan ('I aint gettin on no plane sucka workout', 
+call spRegisterTrainingPlan ('I aint gettin on no plane sucka workout', 'Gain Muscle', 'N',
                              'Mr.T', 'Lawrence', 'Tureaud', '1952-05-21', 'M', '1.9', 
                              @id, @returnCode, @errorCode, @stateCode, @errorMsg);
 
@@ -174,7 +174,7 @@ set @exerciseWeek=1;
 set @exerciseDay=1;
 set @exerciseOrdinality=1;
 call spRegisterTrainingPlanDefinition (strindex(@benchpress, @d, 1), strindex(@benchpress, @d, 2), 
-                                       'Ultimate Predator-beating training plan', 
+                                       'Ultimate Predator-beating training plan', 'Gain Muscle', 'N',
                                        @exerciseWeek, @exerciseDay, @exerciseOrdinality, 
                                        'Dutch Schaefer', strindex(@arne, @d, 1), strindex(@arne, @d, 2), strindex(@arne, @d, 3), strindex(@arne, @d, 4), strindex(@arne, @d, 5), 
                                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
@@ -184,7 +184,7 @@ set @exerciseWeek=1;
 set @exerciseDay=1;
 set @exerciseOrdinality=2;
 call spRegisterTrainingPlanDefinition (strindex(@squats, @d, 1), strindex(@squats, @d, 2),
-                                       'Ultimate Predator-beating training plan',
+                                       'Ultimate Predator-beating training plan','Gain Muscle', 'N',
                                        @exerciseWeek, @exerciseDay, @exerciseOrdinality, 
                                        'Dutch Schaefer', strindex(@arne, @d, 1), strindex(@arne, @d, 2), strindex(@arne, @d, 3), strindex(@arne, @d, 4), strindex(@arne, @d, 5),
                                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
@@ -194,7 +194,7 @@ set @exerciseWeek=1;
 set @exerciseDay=1;
 set @exerciseOrdinality=1;
 call spRegisterTrainingPlanDefinition (strindex(@dead, @d, 1), strindex(@dead, @d, 2),
-                                       'Heavy Lifting - Maximum Contraction',
+                                       'Heavy Lifting - Maximum Contraction','Gain Muscle', 'N',
                                        @exerciseWeek, @exerciseDay, @exerciseOrdinality, 
                                        'Muscular Mike', strindex(@mmtz, @d, 1), strindex(@mmtz, @d, 2), strindex(@mmtz, @d, 3), strindex(@mmtz, @d, 4), strindex(@mmtz, @d, 5),
                                        @id, @returnCode, @errorCode, @stateCode, @errorMsg);
@@ -220,7 +220,7 @@ call spUpdateProfile ('cara di hombre', @personId, @profileId, @returnCode, @err
 -- Training Plan ..
 set @profileId=11;
 set @trainingPlanId=6;
-call spUpdateTrainingPlan ('Get Bigger Scam Workout', @profileId, @trainingPlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdateTrainingPlan ('Workout for the Ladies', 'Toning', 'N', @profileId, @trainingPlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 -- Training Plan Definition ..
 set @trainingPlanId=2;

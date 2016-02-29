@@ -39,7 +39,7 @@ create table if not exists TRAINING_PLAN
   ID mediumint unsigned not null auto_increment,
   NAME varchar(128) not null,
   objective enum('Gain Muscle', 'Lose Weight', 'General Fitness', 'Toning', 'Other') not null default 'Other',
-  private enum('Y','N') default 'N' not null,
+  private enum('Y','N') not null default 'N',
   PROFILEid mediumint unsigned not null,
   DATE_REGISTERED datetime(3) default current_timestamp(3) not null,
   primary key (ID)

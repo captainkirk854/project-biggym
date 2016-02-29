@@ -35,7 +35,9 @@ set @profileName='The worst doctor and cannot lift weights';
 call spCreateProfile (@profileName, @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 set @planName='Maximum Power required';
-call spCreateTrainingPlan (@planName, @profileId, @planId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @planObjective='Gain Muscle';
+set @private='N';
+call spCreateTrainingPlan (@planName, @planObjective, @private, @profileId, @planId, @returnCode, @errorCode, @stateCode, @errorMsg);
 -- ----------------------------------------------------------
 -- Run Tests ..
 -- ----------------------------------------------------------

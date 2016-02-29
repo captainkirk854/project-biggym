@@ -8,7 +8,7 @@ begin;
 -- ----------------------------------------------------------
 -- Initialise ..
 -- ----------------------------------------------------------
-set @NUM_TESTS=1;
+set @NUM_TESTS=4;
 set @SPROC_NAME='spCreateTrainingPlan';
 
 -- ----------------------------------------------------------
@@ -35,9 +35,36 @@ call spCreateProfile (@profileName, @personId, @profileId, @returnCode, @errorCo
 -- ----------------------------------------------------------
 set @TEST_COMMENT='Create new training plan';
 set @PlanName='Maximum Power required';
-call spCreateTrainingPlan (@PlanName, @profileId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @PlanObjective='Gain Muscle';
+set @Private='N';
+call spCreateTrainingPlan (@PlanName, @PlanObjective, @Private, @profileId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Create another new training plan attached to same profile with different valid enum objective';
+set @PlanName='Even more maximum Power required';
+set @PlanObjective='Lose Weight';
+set @Private='Y';
+call spCreateTrainingPlan (@PlanName, @PlanObjective, @Private, @profileId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Create another new training plan attached to same profile with NULL objective and privacy settings';
+set @PlanName='power power power';
+set @PlanObjective=NULL;
+set @Private=NULL;
+call spCreateTrainingPlan (@PlanName, @PlanObjective, @Private, @profileId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
+set @TEST_COMMENT='Create another new training plan attached to same profile with different invalid enum objective';
+set @PlanName='maximum power exceeded';
+set @PlanObjective='Don''t know';
+set @Private='Y';
+call spCreateTrainingPlan (@PlanName, @PlanObjective, @Private, @profileId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
+
 
 -- ----------------------------------------------------------
 -- Finish tests and clean up.

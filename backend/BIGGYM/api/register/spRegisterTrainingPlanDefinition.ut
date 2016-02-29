@@ -21,6 +21,8 @@ set @TEST_COMMENT_PREFIX=concat('TESTING [', @SPROC_NAME, '] ');
 -- Prerequisite operation(s) ..
 -- ----------------------------------------------------------
 set @PlanName='Maximum Power required';
+set @PlanObjective='Gain Muscle';
+set @Private='N';
 set @ProfileName='The worst doctor and could never lift weights';
 set @Firstname='Sylvester';
 set @Lastname='McCoy';
@@ -38,7 +40,7 @@ set @ExerciseWeek=1;
 set @ExerciseDay=1;
 set @ExerciseOrder=1;
 set @ObjectId=NULL;
-call spRegisterTrainingPlanDefinition  (@ExerciseName, @BodypartName, @PlanName, @ExerciseWeek, @ExerciseDay, @ExerciseOrder, @ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlanDefinition  (@ExerciseName, @BodypartName, @PlanName, @PlanObjective, @Private, @ExerciseWeek, @ExerciseDay, @ExerciseOrder, @ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode = 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -49,7 +51,7 @@ set @ExerciseWeek=1;
 set @ExerciseDay=1;
 set @ExerciseOrder=1;
 set @ObjectId=NULL;
-call spRegisterTrainingPlanDefinition  (@ExerciseName, @BodypartName, @PlanName, @ExerciseWeek, @ExerciseDay, @ExerciseOrder, @ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlanDefinition  (@ExerciseName, @BodypartName, @PlanName, @PlanObjective, @Private, @ExerciseWeek, @ExerciseDay, @ExerciseOrder, @ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode = 1 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -60,7 +62,7 @@ set @ExerciseWeek=2;
 set @ExerciseDay=2;
 set @ExerciseOrder=9;
 set @ObjectId=NULL;
-call spRegisterTrainingPlanDefinition  (@ExerciseName, @BodypartName, @PlanName, @ExerciseWeek, @ExerciseDay, @ExerciseOrder, @ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlanDefinition  (@ExerciseName, @BodypartName, @PlanName, @PlanObjective, @Private, @ExerciseWeek, @ExerciseDay, @ExerciseOrder, @ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode = 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
@@ -70,7 +72,7 @@ set @BodypartName='brand new body part';
 set @ExerciseWeek=2;
 set @ExerciseDay=2;
 set @ExerciseOrder=6;
-call spRegisterTrainingPlanDefinition  (@ExerciseName, @BodypartName, @PlanName, @ExerciseWeek, @ExerciseDay, @ExerciseOrder, @ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spRegisterTrainingPlanDefinition  (@ExerciseName, @BodypartName, @PlanName, @PlanObjective, @Private, @ExerciseWeek, @ExerciseDay, @ExerciseOrder, @ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode = 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 

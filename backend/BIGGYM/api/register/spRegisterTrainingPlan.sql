@@ -21,12 +21,14 @@ use BIGGYM;
 drop procedure if exists spRegisterTrainingPlan;
 delimiter $$
 create procedure spRegisterTrainingPlan(in vNewOrUpdatable_TrainingPlanName varchar(128),
-                                        in vProfileName varchar(32),
-                                        in vFirstName varchar(32),
-                                        in vLastName varchar(32),
-                                        in vBirthDate date,
-                                        in vGender char(1),
-                                        in vBodyHeight float,
+                                        in vNewOrUpdatable_Objective varchar(32),
+                                        in vNewOrUpdatable_Private char(1),
+                                        in vProfile_Name varchar(32),
+                                        in vPerson_FirstName varchar(32),
+                                        in vPerson_LastName varchar(32),
+                                        in vPerson_BirthDate date,
+                                        in vPerson_Gender char(1),
+                                        in vPerson_BodyHeight float,
                                      inout ObjectId mediumint unsigned,
                                        out ReturnCode int,
                                        out ErrorCode int,
@@ -40,14 +42,16 @@ begin
     declare SignificantFields varchar(256) default  concat('NAME=', saynull(vNewOrUpdatable_TrainingPlanName));
     declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
                                                         ',PROFILEId(', 
-                                                                    'NAME=', saynull(vProfileName),
+                                                                    'NAME=', saynull(vProfile_Name),
+                                                                    ',OBJECTIVE=', saynull(vNewOrUpdatable_Objective),
+                                                                    ',PRIVATE=', saynull(vNewOrUpdatable_Private),
                                                                  ') and ' ,
                                                         'PERSONid(', 
-                                                                    'FIRST_NAME=', saynull(vFirstName), 
-                                                                    ',LAST_NAME=', saynull(vLastName), 
-                                                                    ',BIRTH_DATE=', saynull(vBirthDate),
-                                                                    ',GENDER=', saynull(vGender),
-                                                                    ',HEIGHT=', saynull(vBodyHeight),
+                                                                    'FIRST_NAME=', saynull(vPerson_FirstName), 
+                                                                    ',LAST_NAME=', saynull(vPerson_LastName), 
+                                                                    ',BIRTH_DATE=', saynull(vPerson_BirthDate),
+                                                                    ',GENDER=', saynull(vPerson_Gender),
+                                                                    ',HEIGHT=', saynull(vPerson_BodyHeight),
                                                                 ')');
     declare TransactionType varchar(16) default 'insert-update';   
     
@@ -71,17 +75,17 @@ begin
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
     -- Get ProfileId ..
-    call spRegisterProfile (vProfileName, vFirstName, vLastName, vBirthDate, vGender, vBodyHeight, oProfileId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    call spRegisterProfile (vProfile_Name, vPerson_FirstName, vPerson_LastName, vPerson_BirthDate, vPerson_Gender, vPerson_BodyHeight, oProfileId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
      
     -- Register ..
     if (oProfileId is NOT NULL) then
             
         if (ObjectId is NULL) then
             -- create .. 
-            call spCreateTrainingPlan (vNewOrUpdatable_TrainingPlanName, oProfileId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+            call spCreateTrainingPlan (vNewOrUpdatable_TrainingPlanName, vNewOrUpdatable_Objective, vNewOrUpdatable_Private, oProfileId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         else
             -- update ..
-            call spUpdateTrainingPlan (vNewOrUpdatable_TrainingPlanName, oProfileId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+            call spUpdateTrainingPlan (vNewOrUpdatable_TrainingPlanName, vNewOrUpdatable_Objective, vNewOrUpdatable_Private, oProfileId, ObjectId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
         end if;
 
         if(ErrorCode != 0) then

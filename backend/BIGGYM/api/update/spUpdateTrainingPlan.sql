@@ -19,6 +19,8 @@ use BIGGYM;
 drop procedure if exists spUpdateTrainingPlan;
 delimiter $$
 create procedure spUpdateTrainingPlan(in vUpdatable_TrainingPlanName varchar(128),
+                                      in vUpdatable_Objective varchar(32),
+                                      in vUpdatable_Private char(1),
                                       in vProfileId mediumint unsigned,
                                    inout ObjectId mediumint unsigned,
                                      out ReturnCode int,
@@ -30,7 +32,9 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN';
     declare SpName varchar(128) default 'spUpdateTrainingPlan';
-    declare SignificantFields varchar(256) default concat('NAME=', saynull(vUpdatable_TrainingPlanName));
+    declare SignificantFields varchar(256) default concat('NAME=', saynull(vUpdatable_TrainingPlanName),
+                                                          ',OBJECTIVE=', saynull(vUpdatable_Objective),
+                                                          ',PRIVATE=', saynull(vUpdatable_Private));
     declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId), 
                                                         ',PROFILEid=', saynull(vProfileId));
     declare TransactionType varchar(16) default 'update';
@@ -70,7 +74,9 @@ begin
                 update TRAINING_PLAN
                    set 
                        DATE_REGISTERED = current_timestamp(3),
-                       NAME = vUpdatable_TrainingPlanName
+                       NAME = vUpdatable_TrainingPlanName,
+                       objective = vUpdatable_Objective,
+                       private = vUpdatable_Private
                  where
                        ID = ObjectId
                    and

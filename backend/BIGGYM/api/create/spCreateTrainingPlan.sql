@@ -19,6 +19,8 @@ use BIGGYM;
 drop procedure if exists spCreateTrainingPlan;
 delimiter $$
 create procedure spCreateTrainingPlan(in vNew_TrainingPlanName varchar(128),
+                                      in vNew_Objective varchar(32),
+                                      in vNew_Private char(1),
                                       in vProfileId mediumint unsigned,
                                      out ObjectId mediumint unsigned,
                                      out ReturnCode int,
@@ -30,7 +32,9 @@ begin
     -- Declare ..
     declare ObjectName varchar(128) default 'TRAINING_PLAN';
     declare SpName varchar(128) default 'spCreateTrainingPlan';
-    declare SignificantFields varchar(256) default concat('NAME=', saynull(vNew_TrainingPlanName));
+    declare SignificantFields varchar(256) default concat('NAME=', saynull(vNew_TrainingPlanName),
+                                                          ',OBJECTIVE=', saynull(vNew_Objective),
+                                                          ',PRIVATE=', saynull(vNew_Private));
     declare ReferenceFields varchar(256) default concat('PROFILEid=', saynull(vProfileId));
     declare TransactionType varchar(16) default 'insert';
 
@@ -60,11 +64,15 @@ begin
                     TRAINING_PLAN
                     (
                      NAME,
+                     objective,
+                     private,
                      PROFILEid
                     )
                     values
                     (
                      vNew_TrainingPlanName,
+                     ifNull(vNew_Objective, 'Other'),
+                     ifNull(vNew_Private, 'N'),
                      vProfileId
                     );
             -- success ..

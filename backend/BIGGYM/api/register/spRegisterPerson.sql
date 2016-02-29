@@ -33,10 +33,10 @@ begin
     declare ObjectName varchar(128) default '-various-';
     declare SpName varchar(128) default 'spRegisterPerson';
     declare SignificantFields varchar(256) default concat('FIRST_NAME=', saynull(vNewOrUpdatable_FirstName), 
-                                                        ',LAST_NAME=', saynull(vNewOrUpdatable_LastName), 
-                                                        ',BIRTH_DATE=', saynull(vNewOrUpdatable_BirthDate),
-                                                        ',GENDER=', saynull(vNewOrUpdatable_Gender),
-                                                        ',HEIGHT=', saynull(vNewOrUpdatable_BodyHeight));
+                                                          ',LAST_NAME=', saynull(vNewOrUpdatable_LastName), 
+                                                          ',BIRTH_DATE=', saynull(vNewOrUpdatable_BirthDate),
+                                                          ',GENDER=', saynull(vNewOrUpdatable_Gender),
+                                                          ',HEIGHT=', saynull(vNewOrUpdatable_BodyHeight));
     declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId));
     declare TransactionType varchar(16) default 'insert-update';
 

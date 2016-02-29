@@ -31,46 +31,60 @@ set @profileName='The worst doctor and cannot lift weights';
 call spCreateProfile (@profileName, @personId, @profileId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 set @PlanName='Maximum Power required';
-call spCreateTrainingPlan (@PlanName, @profileId, @PlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @PlanObjective='Gain Muscle';
+set @Private='N';
+call spCreateTrainingPlan (@PlanName, @PlanObjective, @Private, @profileId, @PlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
 
 -- ----------------------------------------------------------
 -- Run Tests ..
 -- ----------------------------------------------------------
 set @TEST_COMMENT='Update existing training plan with same value';
 set @PlanName='Maximum Power required';
-call spUpdateTrainingPlan (@PlanName, @profileId, @PlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @PlanObjective='Gain Muscle';
+set @Private='N';
+call spUpdateTrainingPlan (@PlanName, @PlanObjective, @Private, @profileId, @PlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@PlanId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Update existing training plan with new value';
 set @PlanName='Maximum Power IS DEFINITELY required';
-call spUpdateTrainingPlan (@PlanName, @profileId, @PlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @PlanObjective='Gain Muscle';
+set @Private='N';
+call spUpdateTrainingPlan (@PlanName, @PlanObjective, @Private, @profileId, @PlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@PlanId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Update training plan to a null ProfileId and existing PlanId';
 set @PlanName='Maximum Power IS DEFINITELY required';
+set @PlanObjective='Gain Muscle';
+set @Private='N';
 set @nullId=NULL;
-call spUpdateTrainingPlan (@PlanName, @nullId, @PlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdateTrainingPlan (@PlanName, @PlanObjective, @Private, @profileId, @nullId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@PlanId is NOT NULL and @returnCode = -7 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Update training plan to a null ProfileId and existing PlanId';
 set @PlanName='Maximum Power IS DEFINITELY required';
+set @PlanObjective='Gain Muscle';
+set @Private='N';
 set @nullId=NULL;
-call spUpdateTrainingPlan (@PlanName, @nullId, @nullId, @returnCode, @errorCode, @stateCode, @errorMsg);
+call spUpdateTrainingPlan (@PlanName, @PlanObjective, @Private, @profileId, @nullId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@returnCode = -7 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Update existing training plan with illegal characters';
 set @PlanName='Maximum Power IS DE!!!!!*!* required';
-call spUpdateTrainingPlan (@PlanName, @profileId, @PlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @PlanObjective='Gain Muscle';
+set @Private='N';
+call spUpdateTrainingPlan (@PlanName, @PlanObjective, @Private, @profileId, @PlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@PlanId is NOT NULL and @returnCode = -1 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Update existing training plan with NULL';
 set @PlanName=NULL;
-call spUpdateTrainingPlan (@PlanName, @profileId, @PlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
+set @PlanObjective='Gain Muscle';
+set @Private='N';
+call spUpdateTrainingPlan (@PlanName, @PlanObjective, @Private, @profileId, @PlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@PlanId is NOT NULL and @returnCode = -1 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 

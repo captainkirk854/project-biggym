@@ -22,18 +22,20 @@ use BIGGYM;
 
 drop procedure if exists spRegisterTrainingPlanDefinition;
 delimiter $$
-create procedure spRegisterTrainingPlanDefinition(in vExerciseName varchar(128),
-                                                  in vBodyPartName varchar(128),   
-                                                  in vTrainingPlanName varchar(128),
+create procedure spRegisterTrainingPlanDefinition(in vExercise_Name varchar(128),
+                                                  in vExercise_BodyPartName varchar(128),   
+                                                  in vTrainingPlan_Name varchar(128),
+                                                  in vTrainingPlan_Objective varchar(32),
+                                                  in vTrainingPlan_Private char(1),
                                                   in vNewOrUpdatable_ExerciseWeek tinyint unsigned,
                                                   in vNewOrUpdatable_ExerciseDay tinyint unsigned,
                                                   in vNewOrUpdatable_ExerciseOrdinality tinyint unsigned,               
-                                                  in vProfileName varchar(32),
-                                                  in vFirstName varchar(32),
-                                                  in vLastName varchar(32),
-                                                  in vBirthDate date,
-                                                  in vGender char(1),
-                                                  in vBodyHeight float,
+                                                  in vProfile_Name varchar(32),
+                                                  in vPerson_FirstName varchar(32),
+                                                  in vPerson_LastName varchar(32),
+                                                  in vPerson_BirthDate date,
+                                                  in vPerson_Gender char(1),
+                                                  in vPerson_BodyHeight float,
                                                inout ObjectId mediumint unsigned,
                                                  out ReturnCode int,
                                                  out ErrorCode int,
@@ -50,21 +52,23 @@ begin
                                                           ',EXERCISE_ORDINALITY=', saynull(vNewOrUpdatable_ExerciseOrdinality));
     declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
                                                         ',EXERCISEid(', 
-                                                                     'NAME=', saynull(vExerciseName),
-                                                                     ',BODY_PART=', saynull(vBodyPartName),
+                                                                     'NAME=', saynull(vExercise_Name),
+                                                                     ',BODY_PART=', saynull(vExercise_BodyPartName),
                                                                   ') and ' ,
                                                         'PLANId(', 
-                                                                'NAME=', saynull(vTrainingPlanName),
+                                                                'NAME=', saynull(vTrainingPlan_Name),
+                                                                'OBJECTIVE=', saynull(vTrainingPlan_Objective),
+                                                                'PRIVATE=', saynull(vTrainingPlan_Private),
                                                               ') and ' ,
                                                         'PROFILEId(', 
-                                                                    'NAME=', saynull(vProfileName),
+                                                                    'NAME=', saynull(vProfile_Name),
                                                                  ') and ' ,
                                                         'PERSONid(', 
-                                                                    'FIRST_NAME=', saynull(vFirstName), 
-                                                                    ',LAST_NAME=', saynull(vLastName), 
-                                                                    ',BIRTH_DATE=', saynull(vBirthDate),
-                                                                    ',GENDER=', saynull(vGender),
-                                                                    ',HEIGHT=', saynull(vBodyHeight),
+                                                                    'FIRST_NAME=', saynull(vPerson_FirstName), 
+                                                                    ',LAST_NAME=', saynull(vPerson_LastName), 
+                                                                    ',BIRTH_DATE=', saynull(vPerson_BirthDate),
+                                                                    ',GENDER=', saynull(vPerson_Gender),
+                                                                    ',HEIGHT=', saynull(vPerson_BodyHeight),
                                                                 ')');
     declare TransactionType varchar(16) default 'insert-update'; 
     
@@ -83,10 +87,10 @@ begin
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
     -- Get ExerciseId ..
-    call spCreateExercise (vExerciseName, vBodyPartName, oExerciseId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    call spCreateExercise (vExercise_Name, vExercise_BodyPartName, oExerciseId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
 
     -- Get PlanId ..
-    call spRegisterTrainingPlan (vTrainingPlanName, vProfileName, vFirstName, vLastName, vBirthDate, vGender, vBodyHeight, oPlanId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    call spRegisterTrainingPlan (vTrainingPlan_Name, vTrainingPlan_Objective, vTrainingPlan_Private, vProfile_Name, vPerson_FirstName, vPerson_LastName, vPerson_BirthDate, vPerson_Gender, vPerson_BodyHeight, oPlanId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
  
     -- Register ..
     if (oPlanId is NOT NULL and oExerciseId is NOT NULL) then

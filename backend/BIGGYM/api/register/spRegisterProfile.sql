@@ -20,11 +20,11 @@ use BIGGYM;
 drop procedure if exists spRegisterProfile;
 delimiter $$
 create procedure spRegisterProfile(in vNewOrUpdatable_ProfileName varchar(32),
-                                   in vFirstName varchar(32),
-                                   in vLastName varchar(32),
-                                   in vBirthDate date,
-                                   in vGender char(1),
-                                   in vBodyHeight float,
+                                   in vPerson_FirstName varchar(32),
+                                   in vPerson_LastName varchar(32),
+                                   in vPerson_BirthDate date,
+                                   in vPerson_Gender char(1),
+                                   in vPerson_BodyHeight float,
                                 inout ObjectId mediumint unsigned,
                                   out ReturnCode int,
                                   out ErrorCode int,
@@ -37,11 +37,11 @@ begin
     declare SpName varchar(128) default 'spRegisterProfile';
     declare SignificantFields varchar(256) default concat('NAME=', saynull(vNewOrUpdatable_ProfileName));
     declare ReferenceFields varchar(256) default concat('ID=', saynull(ObjectId),
-                                                        ',FIRST_NAME=', saynull(vFirstName), 
-                                                        ',LAST_NAME=', saynull(vLastName), 
-                                                        ',BIRTH_DATE=', saynull(vBirthDate),
-                                                        ',GENDER=', saynull(vGender),
-                                                        ',HEIGHT=', saynull(vBodyHeight));
+                                                        ',FIRST_NAME=', saynull(vPerson_FirstName), 
+                                                        ',LAST_NAME=', saynull(vPerson_LastName), 
+                                                        ',BIRTH_DATE=', saynull(vPerson_BirthDate),
+                                                        ',GENDER=', saynull(vPerson_Gender),
+                                                        ',HEIGHT=', saynull(vPerson_BodyHeight));
     declare TransactionType varchar(16) default 'insert-update';
 
     declare SpComment varchar(512);
@@ -64,7 +64,7 @@ begin
     call spSimpleLog (ObjectName, SpName, concat('--[START] parameters: ', SpComment), ReturnCode, ErrorCode, ErrorState, ErrorMsg); 
 
     -- Get PersonId ..
-    call spRegisterPerson (vFirstName, vLastName, vBirthDate, vGender, vBodyHeight, oPersonId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
+    call spRegisterPerson (vPerson_FirstName, vPerson_LastName, vPerson_BirthDate, vPerson_Gender, vPerson_BodyHeight, oPersonId, ReturnCode, ErrorCode, ErrorState, ErrorMsg);
     
     -- Register ..
     if (oPersonId is NOT NULL) then
