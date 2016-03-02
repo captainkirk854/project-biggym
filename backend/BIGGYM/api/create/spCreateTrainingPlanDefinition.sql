@@ -83,6 +83,14 @@ begin
     else
         -- already exists ..
         set tStatus = 1;
+        
+        -- verify input exerciseId matches Reference Id value for EXERCISE already present ..
+        call spGetIdForExerciseFromTrainingPlanDefinitionId (vExerciseId, ObjectId, ReturnCode);
+        if (ObjectId is NULL) then
+            -- conflicting Id for EXERCISE present - transaction aborted
+            set tStatus = -8;
+        end if;
+        
     end if;
     
     -- Log ..

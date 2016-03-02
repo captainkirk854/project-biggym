@@ -88,6 +88,7 @@ begin
             -- success ..
             set tStatus = 0;
             call spGetIdForProgressEntry (vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_SetDatestamp, vPlanDefinitionId, ObjectId, ReturnCode);
+select vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_SetDatestamp, vPlanDefinitionId, ObjectId, ReturnCode;
         else
             -- already exists ..
             set tStatus = 1;

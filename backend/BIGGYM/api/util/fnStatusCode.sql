@@ -28,6 +28,7 @@ begin
                     when finalStatusCode = -5 then 'database transaction problem'
                     when finalStatusCode = -6 then 'invalid date format used'
                     when finalStatusCode = -7 then 'unexpected NULL value for ObjectId and-or Reference Id(s)'
+                    when finalStatusCode = -8 then 'conflicting Id for EXERCISE present - transaction aborted'
                                                 --  +--------+--------+--------+--------+--------+--------+----
                 else
                     concat('status code number of [', saynull(finalStatusCode), '] undefined')
