@@ -53,12 +53,12 @@ call spCreateTrainingPlanDefinition  (@planId, @exerciseId, @ExerciseWeek, @Exer
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
-set @TEST_COMMENT='create new training plan definition with same values apart from Exercise';
+set @TEST_COMMENT='create new training plan definition with same values apart from Exercise (disallowed)';
 set @ExerciseWeek=1;
 set @ExerciseDay=2;
 set @ExerciseOrdinality=3;
 call spCreateTrainingPlanDefinition  (@planId, @exerciseId2, @ExerciseWeek, @ExerciseDay, @ExerciseOrdinality, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
-set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode = 1 and @errorCode = 0);
+set @CONDITION_PASS=(@ObjectId is NULL and @returnCode = -8 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 -- ----------------------------------------------------------
