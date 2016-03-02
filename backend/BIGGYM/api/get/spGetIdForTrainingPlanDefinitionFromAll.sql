@@ -55,7 +55,7 @@ begin
             if (vProfileId is NOT NULL) then
                 call spGetIdForTrainingPlan (vTrainingPlanName, vProfileId, vPlanId, ReturnCode);
                 if (vPlanId is NOT NULL) then
-                    call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseId, vExerciseWeek, vExerciseDay, vExerciseOrdinality, ObjectId, ReturnCode);
+                    call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseWeek, vExerciseDay, vExerciseOrdinality, ObjectId, ReturnCode);
                     if(ObjectId is NULL) then
                         set IdNullCode = -14; -- ObjectId is NULL
                     end if;
@@ -74,14 +74,3 @@ begin
     
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-
-call spGetIdForTrainingPlanDefinitionFromAll (2, 1, 2, 'Bicep Barbell Curls','Arms', 'Ultimate Predator-beating training plan', 'Dutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @IdNullCode, @id, @returnCode);
-select @id, @IdNullCode;
-
-call spGetIdForTrainingPlanDefinitionFromAll (2, 1, 2, 'Bicep Barbell Curls','Arms', 'Ultimate Predator-beating training plan', 'XDutch Schaefer', 'Arnold', 'Schwarzenegger', '1947-07-30', @IdNullCode, @id, @returnCode);
-select @id, @IdNullCode;
-*/

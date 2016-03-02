@@ -16,13 +16,13 @@ begin
             when (strisnumeric(finalStatusCode)) then
                 case
                                                 --  +--------+--------+--------+--------+--------+--------+----
-                    when finalStatusCode = 2  then 'input field value(s) already match - no update required'
-                    when finalStatusCode = 1  then 'field values(s) already present in object'
+                    when finalStatusCode = 2  then 'unique key field value(s) already match - no update required'
+                    when finalStatusCode = 1  then 'unique key field values(s) already present in object'
                     
                     when finalStatusCode = 0  then 'success'
 
                     when finalStatusCode = -1 then 'illegal or null character(s) in one or more field value(s)'
-                    when finalStatusCode = -2 then 'transaction made no change or caused duplicate field value(s)'
+                    when finalStatusCode = -2 then 'no change or attempted duplicate of unique key field value(s)'
                     when finalStatusCode = -3 then 'anomalous data (likely duplicate) - transaction ignored'
                     when finalStatusCode = -4 then 'unexpected NULL value for one or more REFERENCEid(s)'
                     when finalStatusCode = -5 then 'database transaction problem'

@@ -10,7 +10,7 @@ create or replace view vwPlanDefinition as
 select 
     def.ID DEFINITIONid,
     def.PLANid,
-    def.EXERCISEid,
+    def.exerciseId,
     plan.PROFILEid PLANPROFILEid,
     plan.NAME PLAN_NAME,
     plan.objective,
@@ -28,7 +28,7 @@ select
  where
     plan.ID = def.PLANid
    and
-    def.EXERCISEid = exc.ID
+    def.exerciseId = exc.ID
      ;
      
 select * from vwPlanDefinition limit 10;

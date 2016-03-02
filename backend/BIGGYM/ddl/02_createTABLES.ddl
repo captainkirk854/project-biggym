@@ -56,8 +56,8 @@ create table if not exists TRAINING_PLAN_DEFINITION
   EXERCISE_WEEK tinyint unsigned default 1 null,
   EXERCISE_DAY enum('1','2','3','4','5','6','7') null,
   EXERCISE_ORDINALITY tinyint unsigned null,
-  EXERCISEid mediumint unsigned not null,
   PLANid mediumint unsigned not null,
+  exerciseId mediumint unsigned not null,
   C_CREATE datetime(3) default current_timestamp(3) not null,
   C_LASTMOD datetime(3) default current_timestamp(3) not null,
   primary key (ID)

@@ -63,7 +63,7 @@ begin
     if (ObjectId is NOT NULL and vPlanId is NOT NULL) then
     
         -- Attempt update ..
-        call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, localObjectId, ReturnCode);
+        call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, localObjectId, ReturnCode);
         if (ObjectId = localObjectId) then
             -- No update of significant fields required ..
             set tStatus = 2;
@@ -74,17 +74,17 @@ begin
             update TRAINING_PLAN_DEFINITION
                set 
                    C_LASTMOD = current_timestamp(3),
-                   EXERCISEid = vUpdatable_ExerciseId,
                    EXERCISE_WEEK = vUpdatable_ExerciseWeek,
                    EXERCISE_DAY = vUpdatable_ExerciseDay,
-                   EXERCISE_ORDINALITY = vUpdatable_ExerciseOrdinality
+                   EXERCISE_ORDINALITY = vUpdatable_ExerciseOrdinality,
+                   EXERCISEid = vUpdatable_ExerciseId
              where
                    ID = ObjectId
                and
                    PLANid = vPlanId;
         
             -- Verify ..
-            call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, localObjectId, ReturnCode);
+            call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, localObjectId, ReturnCode);
             if (ObjectId = localObjectId) then
                 -- success ..
                 set tStatus = 0;

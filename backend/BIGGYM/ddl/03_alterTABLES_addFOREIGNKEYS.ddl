@@ -19,7 +19,7 @@ on delete cascade
 on update cascade;
 
 alter table TRAINING_PLAN_DEFINITION
-add foreign key FK_EXERCISEID(EXERCISEid)
+add foreign key FK_EXERCISEID(exerciseId)
 references EXERCISE(ID)
 on delete cascade
 on update cascade;

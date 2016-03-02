@@ -58,28 +58,28 @@ begin
     call spActionOnStart (TransactionType, ObjectName, SignificantFields, ReferenceFields, SpComment);
 
     -- Attempt create ..
-    call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseId, vNew_ExerciseWeek, vNew_ExerciseDay, vNew_ExerciseOrdinality, ObjectId, ReturnCode);
+    call spGetIdForTrainingPlanDefinition (vPlanId, vNew_ExerciseWeek, vNew_ExerciseDay, vNew_ExerciseOrdinality, ObjectId, ReturnCode);
     if (ObjectId is NULL) then    
         insert into 
                 TRAINING_PLAN_DEFINITION
                 (
-                 PLANId,
-                 EXERCISEid,
                  EXERCISE_WEEK,
                  EXERCISE_DAY,
-                 EXERCISE_ORDINALITY
+                 EXERCISE_ORDINALITY,
+                 PLANId,
+                 exerciseId
                 )
                 values
                 (
-                 vPlanId,
-                 vExerciseId,
                  vNew_ExerciseWeek,
                  vNew_ExerciseDay,
-                 vNew_ExerciseOrdinality
+                 vNew_ExerciseOrdinality,
+                 vPlanId,
+                 vExerciseId
                 );
         -- success ..
         set tStatus = 0;
-        call spGetIdForTrainingPlanDefinition (vPlanId, vExerciseId, vNew_ExerciseWeek, vNew_ExerciseDay, vNew_ExerciseOrdinality, ObjectId, ReturnCode);
+        call spGetIdForTrainingPlanDefinition (vPlanId, vNew_ExerciseWeek, vNew_ExerciseDay, vNew_ExerciseOrdinality, ObjectId, ReturnCode);
     else
         -- already exists ..
         set tStatus = 1;

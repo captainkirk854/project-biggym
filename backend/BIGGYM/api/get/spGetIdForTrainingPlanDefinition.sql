@@ -14,7 +14,6 @@ use BIGGYM;
 drop procedure if exists spGetIdForTrainingPlanDefinition;
 delimiter $$
 create procedure spGetIdForTrainingPlanDefinition(in vPlanId mediumint unsigned,
-                                                  in vExerciseId mediumint unsigned,
                                                   in vExerciseWeek tinyint unsigned,
                                                   in vExerciseDay tinyint unsigned,
                                                   in vExerciseOrdinality mediumint unsigned,
@@ -27,7 +26,6 @@ begin
     
     -- Prepare ..
     set @getIdWhereClause = concat(     ' PLANId = ', vPlanId,
-                                    ' and EXERCISEid = ', vExerciseId,
                                     ' and (EXERCISE_WEEK = ', ifNull(vExerciseWeek, 'NULL or EXERCISE_WEEK is NULL'), ')',
                                     ' and (EXERCISE_DAY = ', ifNull(vExerciseDay, 'NULL or EXERCISE_DAY is NULL'), ')',
                                     ' and (EXERCISE_ORDINALITY = ', ifNull(vExerciseOrdinality, 'NULL or EXERCISE_ORDINALITY is NULL'), ')'
