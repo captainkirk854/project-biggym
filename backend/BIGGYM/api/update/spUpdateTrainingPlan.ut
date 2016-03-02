@@ -48,8 +48,8 @@ select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 set @TEST_COMMENT='Update existing training plan with new value';
 set @PlanName='Maximum Power IS DEFINITELY required';
-set @PlanObjective='Gain Muscle';
-set @Private='N';
+set @PlanObjective='Toning';
+set @Private='Y';
 call spUpdateTrainingPlan (@PlanName, @PlanObjective, @Private, @profileId, @PlanId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@PlanId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));

@@ -46,7 +46,7 @@ set @FirstName='Leonard';
 set @LastName='McCoy';
 set @DOB='1943-08-20';
 set @Gender='M';
-set @Height=1.75;
+set @Height=1.72;
 call spUpdatePerson (@FirstName, @LastName, @DOB, @Gender, @Height, @PersonId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@PersonId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));

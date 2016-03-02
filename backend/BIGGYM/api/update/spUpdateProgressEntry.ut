@@ -71,7 +71,7 @@ set @SetOrdinality=2;
 set @SetReps=100;
 set @SetWeight=15.5;
 set @SetDatestamp='2000-12-14';
-set @SetComment='Breakfast of champions made me strong';
+set @SetComment='Breakfast of champions made me quite strong';
 set @Bodyweight=98;
 call spUpdateProgressEntry (@SetOrdinality, @SetReps, @SetWeight, @SetDatestamp, @SetComment, @BodyWeight, @planDefinitionId, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode >= 0 and @errorCode = 0);
