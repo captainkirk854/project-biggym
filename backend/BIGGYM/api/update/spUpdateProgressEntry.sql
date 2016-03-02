@@ -18,10 +18,10 @@ drop procedure if exists spUpdateProgressEntry;
 delimiter $$
 create procedure spUpdateProgressEntry(in vUpdatable_SetOrdinality tinyint unsigned,
                                        in vUpdatable_SetReps tinyint unsigned,
-                                       in vUpdatable_SetWeight float,
+                                       in vUpdatable_SetWeight double,
                                        in vUpdatable_SetDatestamp datetime,
                                        in vUpdatable_SetComment varchar(256),
-                                       in vUpdatable_BodyWeight float,
+                                       in vUpdatable_BodyWeight double,
                                        in vPlanDefinitionId mediumint unsigned,
                                     inout ObjectId mediumint unsigned,
                                       out ReturnCode int,

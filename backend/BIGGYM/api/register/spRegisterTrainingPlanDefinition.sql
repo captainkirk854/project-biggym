@@ -35,7 +35,7 @@ create procedure spRegisterTrainingPlanDefinition(in vExercise_Name varchar(128)
                                                   in vPerson_LastName varchar(32),
                                                   in vPerson_BirthDate date,
                                                   in vPerson_Gender char(1),
-                                                  in vPerson_BodyHeight float,
+                                                  in vPerson_BodyHeight double,
                                                inout ObjectId mediumint unsigned,
                                                  out ReturnCode int,
                                                  out ErrorCode int,

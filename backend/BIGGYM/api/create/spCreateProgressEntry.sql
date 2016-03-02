@@ -17,10 +17,10 @@ drop procedure if exists spCreateProgressEntry;
 delimiter $$
 create procedure spCreateProgressEntry(in vNew_SetOrdinality tinyint unsigned,
                                        in vNew_SetReps tinyint unsigned,
-                                       in vNew_SetWeight float,
+                                       in vNew_SetWeight double,
                                        in vNew_SetDatestamp datetime,
                                        in vNew_SetComment varchar(256),
-                                       in vNew_BodyWeight float,
+                                       in vNew_BodyWeight double,
                                        in vPlanDefinitionId mediumint unsigned,
                                       out ObjectId mediumint unsigned,
                                       out ReturnCode int,
@@ -88,11 +88,12 @@ begin
             -- success ..
             set tStatus = 0;
             call spGetIdForProgressEntry (vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_SetDatestamp, vPlanDefinitionId, ObjectId, ReturnCode);
-select vNew_SetOrdinality, vNew_SetReps, vNew_SetWeight, vNew_SetDatestamp, vPlanDefinitionId, ObjectId, ReturnCode;
+
         else
             -- already exists ..
             set tStatus = 1;
         end if;
+
     else
         -- invalid date format used ..
         set tStatus = -6;  

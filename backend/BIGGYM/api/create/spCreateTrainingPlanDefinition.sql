@@ -13,6 +13,7 @@ Dependency :
                 - spActionOnStart
                 - spActionOnEnd
                 - spGetIdForTrainingPlanDefinition
+                - spGetIdForExerciseFromTrainingPlanDefinitionId
 */
 
 use BIGGYM;
