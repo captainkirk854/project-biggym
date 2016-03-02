@@ -77,7 +77,7 @@ begin
                     -- Update significant fields as no duplicate already present ..
                     update PERSON
                        set
-                           DATE_REGISTERED = current_timestamp(3),
+                           C_LASTMOD = current_timestamp(3),
                            FIRST_NAME = vUpdatable_FirstName,
                            LAST_NAME = vUpdatable_LastName,
                            BIRTH_DATE = vUpdatable_BirthDate
@@ -114,6 +114,7 @@ begin
     if (tStatus >= 0) then
         update PERSON
            set
+               C_LASTMOD = current_timestamp(3),
                gender = ifNull(vUpdatable_Gender, '-'),
                body_height = ifNull(vUpdatable_BodyHeight, 0)
          where

@@ -69,7 +69,7 @@ begin
                 -- Update significant fields as no duplicate already present ..
                 update PROFILE
                    set 
-                       DATE_REGISTERED = current_timestamp(3),
+                       C_LASTMOD = current_timestamp(3),
                        NAME = vUpdatable_ProfileName
                  where
                        ID = ObjectId

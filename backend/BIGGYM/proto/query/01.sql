@@ -20,7 +20,7 @@ select
       concat(per.FIRST_NAME, ' ', per.LAST_NAME, ' (aka ', prf.NAME, ')') PERSON,
       round((datediff(curdate(), per.BIRTH_DATE) / 365),0) AGE,
       plan.NAME PLAN_NAME,
-      plan.DATE_REGISTERED DATE_PLAN_WAS_REGISTERED,
+      plan.C_CREATE DATE_PLAN_WAS_REGISTERED,
       plan.ID PLANid
   from 
       PERSON per, 
@@ -40,7 +40,7 @@ select
       round((datediff(curdate(), per.BIRTH_DATE) / 365),0) AGE,
       plan.NAME PLAN_NAME,
       plan.ID PLAN_ID,
-      plan.DATE_REGISTERED DATE_PLAN_WAS_REGISTERED,
+      plan.C_CREATE DATE_PLAN_WAS_REGISTERED,
       def.ID DEFINITION_ID,
       exc.BODY_PART,
       exc.NAME
@@ -68,7 +68,7 @@ select
       concat(per.FIRST_NAME, ' ', per.LAST_NAME, ' (aka ', prf.NAME, ')') PERSON,
       round((datediff(curdate(), per.BIRTH_DATE) / 365),0) AGE,
       plan.NAME PLAN_NAME,
-      prg.DATE_REGISTERED TRAINING_DATE,
+      prg.C_CREATE TRAINING_DATE,
       exc.BODY_PART,
       exc.NAME,
       concat(prg.SET_01_WEIGHT, 'kg', ' x', prg.SET_01_REPS) SET01,
@@ -114,5 +114,5 @@ select
  order by
       PERSON asc,
       exc.BODY_PART asc,
-      prg.DATE_REGISTERED asc
+      prg.C_CREATE asc
  ;

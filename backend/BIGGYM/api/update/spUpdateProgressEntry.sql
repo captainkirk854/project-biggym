@@ -76,6 +76,7 @@ begin
                 -- Update significant fields as no duplicate already present ..
                 update PROGRESS
                    set 
+                       C_LASTMOD = current_timestamp(3),
                        SET_ORDINALITY = vUpdatable_SetOrdinality, 
                        SET_REPS = vUpdatable_SetReps, 
                        SET_WEIGHT = vUpdatable_SetWeight, 

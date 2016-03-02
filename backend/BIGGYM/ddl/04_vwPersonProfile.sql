@@ -17,8 +17,8 @@ select
       per.body_height,
       round((datediff(curdate(), per.BIRTH_DATE) / 365), 1) AGE,
       prf.NAME PROFILE_NAME,
-      prf.DATE_REGISTERED PROFILE_REGISTRATION,
-      round(datediff(curdate(), prf.DATE_REGISTERED), 1) PROFILE_AGE
+      prf.C_CREATE PROFILE_REGISTRATION,
+      round(datediff(curdate(), prf.C_LASTMOD), 1) PROFILE_AGE
   from 
       PERSON per, 
       PROFILE prf 

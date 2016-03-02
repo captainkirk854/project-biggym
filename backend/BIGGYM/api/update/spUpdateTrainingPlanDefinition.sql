@@ -73,7 +73,7 @@ begin
             -- Update significant fields as no duplicate already present ..
             update TRAINING_PLAN_DEFINITION
                set 
-                   DATE_REGISTERED = current_timestamp(3),
+                   C_LASTMOD = current_timestamp(3),
                    EXERCISEid = vUpdatable_ExerciseId,
                    EXERCISE_WEEK = vUpdatable_ExerciseWeek,
                    EXERCISE_DAY = vUpdatable_ExerciseDay,

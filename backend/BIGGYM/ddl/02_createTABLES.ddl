@@ -6,7 +6,8 @@ create table if not exists EXERCISE
   ID mediumint unsigned not null auto_increment,
   NAME varchar(128) not null,
   BODY_PART varchar(128) not null,
-  DATE_REGISTERED datetime(3) default current_timestamp(3) not null,
+  C_CREATE datetime(3) default current_timestamp(3) not null,
+  C_LASTMOD datetime(3) default current_timestamp(3) not null,
   primary key (ID)
  );
 
@@ -19,7 +20,8 @@ create table if not exists PERSON
   BIRTH_DATE date not null,
   gender enum('M','F','-') null,
   body_height float null,
-  DATE_REGISTERED datetime(3) default current_timestamp(3) not null,
+  C_CREATE datetime(3) default current_timestamp(3) not null,
+  C_LASTMOD datetime(3) default current_timestamp(3) not null,
   primary key (ID)
  );
 
@@ -29,7 +31,8 @@ create table if not exists PROFILE
   ID mediumint unsigned not null auto_increment,
   NAME varchar(32) not null default 'UNDEFINED CHAMPION',
   PERSONid mediumint unsigned not null,
-  DATE_REGISTERED datetime(3) default current_timestamp(3) not null,
+  C_CREATE datetime(3) default current_timestamp(3) not null,
+  C_LASTMOD datetime(3) default current_timestamp(3) not null,
   primary key (ID)
  );
 
@@ -41,7 +44,8 @@ create table if not exists TRAINING_PLAN
   objective enum('Gain Muscle', 'Lose Weight', 'General Fitness', 'Toning', 'Other') not null default 'Other',
   private enum('Y','N') not null default 'N',
   PROFILEid mediumint unsigned not null,
-  DATE_REGISTERED datetime(3) default current_timestamp(3) not null,
+  C_CREATE datetime(3) default current_timestamp(3) not null,
+  C_LASTMOD datetime(3) default current_timestamp(3) not null,
   primary key (ID)
  );
 
@@ -54,7 +58,8 @@ create table if not exists TRAINING_PLAN_DEFINITION
   EXERCISE_ORDINALITY tinyint unsigned null,
   EXERCISEid mediumint unsigned not null,
   PLANid mediumint unsigned not null,
-  DATE_REGISTERED datetime(3) default current_timestamp(3) not null,
+  C_CREATE datetime(3) default current_timestamp(3) not null,
+  C_LASTMOD datetime(3) default current_timestamp(3) not null,
   primary key (ID)
  );
 
@@ -69,6 +74,7 @@ create table if not exists PROGRESS
   set_comment varchar(256) default '-' null,
   body_weight float null,
   DEFINITIONid mediumint unsigned not null,
-  DATE_REGISTERED datetime(3) default current_timestamp(3) not null,
+  C_CREATE datetime(3) default current_timestamp(3) not null,
+  C_LASTMOD datetime(3) default current_timestamp(3) not null,
   primary key (ID)
  );

@@ -73,7 +73,7 @@ begin
                 -- Update significant fields as no duplicate already present ..
                 update TRAINING_PLAN
                    set 
-                       DATE_REGISTERED = current_timestamp(3),
+                       C_LASTMOD = current_timestamp(3),
                        NAME = vUpdatable_TrainingPlanName
                  where
                        ID = ObjectId
@@ -105,7 +105,8 @@ begin
     -- Ensure non-significant fields are always updated in non problematic (tStatus >= 0) scenarios ..
     if (tStatus >= 0) then
         update TRAINING_PLAN
-           set                     
+           set
+               C_LASTMOD = current_timestamp(3),
                objective = ifNull(vUpdatable_Objective, 'Other'),
                private = ifNull(vUpdatable_Private, 'N')
          where

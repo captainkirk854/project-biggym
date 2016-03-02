@@ -68,7 +68,7 @@ begin
                 -- Can update as no duplicate exists ..
                 update EXERCISE
                    set 
-                       DATE_REGISTERED = current_timestamp(3),
+                       C_LASTMOD = current_timestamp(3),
                        NAME = vUpdatable_ExerciseName,
                        BODY_PART = vUpdatable_BodyPartName
                  where

@@ -11,7 +11,7 @@ select
      vwPS.*,
      prg.ID PROGRESSId,
      vwPD.*,
-     prg.DATE_REGISTERED,
+     prg.C_CREATE,
      prg.SET_DATE,
      round(datediff(curdate(), prg.SET_DATE), 1) SET_AGE,
      prg.SET_REPS,

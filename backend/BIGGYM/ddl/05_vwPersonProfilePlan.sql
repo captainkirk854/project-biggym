@@ -12,8 +12,8 @@ select
     vwPP.*,
     plan.NAME PLAN_NAME,
     plan.private,
-    plan.DATE_REGISTERED PLAN_REGISTRATION,
-    round(datediff(curdate(), plan.DATE_REGISTERED), 1) PLAN_AGE
+    plan.C_CREATE PLAN_REGISTRATION,
+    round(datediff(curdate(), plan.C_LASTMOD), 1) PLAN_AGE
   from 
     vwPersonProfile vwPP,
     TRAINING_PLAN plan
