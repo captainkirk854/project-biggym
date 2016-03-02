@@ -8,7 +8,7 @@ begin;
 -- ----------------------------------------------------------
 -- Initialise ..
 -- ----------------------------------------------------------
-set @NUM_TESTS=4;
+set @NUM_TESTS=5;
 set @SPROC_NAME='spRegisterTrainingPlanDefinition';
 
 -- ----------------------------------------------------------
@@ -76,6 +76,18 @@ call spRegisterTrainingPlanDefinition  (@ExerciseName, @BodypartName, @PlanName,
 set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode = 0 and @errorCode = 0);
 select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
+set @TEST_COMMENT='Attempt to update PERSON minor field (body_height) (unaffected)';
+set @Height='12345600000.85'; -- something different from the @Height set above ..
+set @ExerciseName='A brand new exercise';
+set @BodypartName='brand new body part';
+set @ExerciseWeek=2;
+set @ExerciseDay=2;
+set @ExerciseOrder=6;
+call spRegisterTrainingPlanDefinition  (@ExerciseName, @BodypartName, @PlanName, @PlanObjective, @Private, @ExerciseWeek, @ExerciseDay, @ExerciseOrder, @ProfileName, @Firstname, @Lastname, @DOB, @Gender, @Height, @ObjectId, @returnCode, @errorCode, @stateCode, @errorMsg);
+select ID into @SigPersonId from PERSON where FIRST_NAME = @Firstname and LAST_NAME = @LastName and BIRTH_DATE = @DOB;
+select ID into @AllPersonId from PERSON where FIRST_NAME = @Firstname and LAST_NAME = @LastName and BIRTH_DATE = @DOB and gender = @Gender and body_height = @Height;
+set @CONDITION_PASS=(@ObjectId is NOT NULL and @returnCode = 2 and @errorCode = 0 and @SigPersonId is NOT NULL and @AllPersonId is NULL);
+select tap.ok(@CONDITION_PASS, concat(@TEST_COMMENT_PREFIX, @TEST_COMMENT));
 
 -- ----------------------------------------------------------
 -- Finish tests and clean up.
