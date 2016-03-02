@@ -59,7 +59,7 @@ begin
     -- Only "good" string input is allowed ..
     if(strisgood(vUpdatable_FirstName) and strisgood(vUpdatable_LastName) and strisgood(vUpdatable_BirthDate)) then
 
-        -- Only proceed for not null objectId ..
+        -- Only proceed with update when objectId not null ..
         if (ObjectId is NOT NULL) then
         
             -- Check if date uses valid format (YY-mm-dd) ..
@@ -69,20 +69,18 @@ begin
                 call spGetIdForPerson (vUpdatable_FirstName, vUpdatable_LastName, vUpdatable_BirthDate, localObjectId, ReturnCode);
                 
                 if (ObjectId = localObjectId) then
-                    -- no update required ..
+                    -- No update of significant fields required ..
                     set tStatus = 2;
-                    
+        
                 elseif (localObjectId is NULL) then
                     
-                    -- Can update as no duplicate exists ..
+                    -- Update significant fields as no duplicate already present ..
                     update PERSON
-                       set 
+                       set
                            DATE_REGISTERED = current_timestamp(3),
                            FIRST_NAME = vUpdatable_FirstName,
                            LAST_NAME = vUpdatable_LastName,
-                           BIRTH_DATE = vUpdatable_BirthDate,
-                           gender = vUpdatable_Gender,
-                           body_height = vUpdatable_BodyHeight
+                           BIRTH_DATE = vUpdatable_BirthDate
                      where
                            ID = ObjectId;
                 
@@ -106,10 +104,20 @@ begin
          else
             -- unexpected NULL value for Object and/or reference Id ..
             set tStatus = -7;
-        end if;       
+        end if;
     else
         -- illegal or null characters found ..
         set tStatus = -1;
+    end if;
+    
+    -- Ensure non-significant fields are always updated in non problematic (tStatus >= 0) scenarios ..
+    if (tStatus >= 0) then
+        update PERSON
+           set
+               gender = ifNull(vUpdatable_Gender, '-'),
+               body_height = ifNull(vUpdatable_BodyHeight, 0)
+         where
+               ID = ObjectId;
     end if;
     
     -- Log ..

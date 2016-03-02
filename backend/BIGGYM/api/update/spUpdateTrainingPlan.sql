@@ -65,18 +65,16 @@ begin
             -- Attempt update ..
             call spGetIdForTrainingPlan (vUpdatable_TrainingPlanName, vProfileId, localObjectId, ReturnCode);
             if (ObjectId = localObjectId) then
-                -- no update required ..
+                -- No update of significant fields required ..
                 set tStatus = 2;
                 
             elseif (localObjectId is NULL) then
             
-                -- Can update as no duplicate exists ..
+                -- Update significant fields as no duplicate already present ..
                 update TRAINING_PLAN
                    set 
                        DATE_REGISTERED = current_timestamp(3),
-                       NAME = vUpdatable_TrainingPlanName,
-                       objective = vUpdatable_Objective,
-                       private = vUpdatable_Private
+                       NAME = vUpdatable_TrainingPlanName
                  where
                        ID = ObjectId
                    and
@@ -103,6 +101,18 @@ begin
         -- illegal or null characters found ..
         set tStatus = -1;
     end if;
+    
+    -- Ensure non-significant fields are always updated in non problematic (tStatus >= 0) scenarios ..
+    if (tStatus >= 0) then
+        update TRAINING_PLAN
+           set                     
+               objective = ifNull(vUpdatable_Objective, 'Other'),
+               private = ifNull(vUpdatable_Private, 'N')
+         where
+               ID = ObjectId
+           and
+               PROFILEid = vProfileId;
+    end if;    
  
     -- Log ..
     set ReturnCode = tStatus;

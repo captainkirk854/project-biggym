@@ -65,12 +65,12 @@ begin
         -- Attempt update ..
         call spGetIdForTrainingPlanDefinition (vPlanId, vUpdatable_ExerciseId, vUpdatable_ExerciseWeek, vUpdatable_ExerciseDay, vUpdatable_ExerciseOrdinality, localObjectId, ReturnCode);
         if (ObjectId = localObjectId) then
-            -- no update required ..
+            -- No update of significant fields required ..
             set tStatus = 2;
             
         elseif (localObjectId is NULL) then
             
-            -- Can update as no duplicate exists ..
+            -- Update significant fields as no duplicate already present ..
             update TRAINING_PLAN_DEFINITION
                set 
                    DATE_REGISTERED = current_timestamp(3),
@@ -108,81 +108,3 @@ begin
 
 end$$
 delimiter ;
-
-
-/*
-Sample Usage:
-
-set @planDefinitionId = 3;
-set @planId=5;
-set @exerciseWeek=NULL;
-set @exerciseDay=NULL;
-set @ExerciseOrder=NULL;
-set @ExerciseId=4;
-call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @planDefinitionId, @returnCode;
-
-set @planDefinitionId = 3;
-set @planId=5;
-set @exerciseWeek=NULL;
-set @exerciseDay=1;
-set @ExerciseOrder=NULL;
-set @ExerciseId=4;
-call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @planDefinitionId, @returnCode;
-
-set @planDefinitionId = 3;
-set @planId=5;
-set @exerciseWeek=NULL;
-set @exerciseDay=1;
-set @ExerciseOrder=1;
-set @ExerciseId=4;
-call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @planDefinitionId, @returnCode;
-
-set @planDefinitionId = 3;
-set @planId=5;
-set @exerciseWeek=NULL;
-set @exerciseDay=1;
-set @ExerciseOrder=1;
-set @ExerciseId=5;
-call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @planDefinitionId, @returnCode;
-
-
-set @planDefinitionId = 2;
-set @planId=2;
-set @exerciseWeek=NULL;
-set @exerciseDay=1;
-set @ExerciseOrder=1;
-set @ExerciseId=1;
-call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @planDefinitionId, @returnCode;
-
-set @planDefinitionId = 2;
-set @planId=2;
-set @exerciseWeek=NULL;
-set @exerciseDay=1;
-set @ExerciseOrder=1;
-set @ExerciseId=3;
-call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @planDefinitionId, @returnCode;
-
-set @planDefinitionId = 1;
-set @planId=2;
-set @exerciseWeek=NULL;
-set @exerciseDay=1;
-set @ExerciseOrder=1;
-set @ExerciseId=3;
-call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @planDefinitionId, @returnCode;
-
-set @planDefinitionId = 1;
-set @planId=2;
-set @exerciseWeek=2;
-set @exerciseDay=1;
-set @ExerciseOrder=2;
-set @ExerciseId=5;
-call spUpdateTrainingPlanDefinition (@exerciseWeek, @exerciseDay, @ExerciseOrder, @ExerciseId, @planId, @planDefinitionId, @returnCode, @errorCode, @stateCode, @errorMsg);
-select @planDefinitionId, @returnCode;
-*/

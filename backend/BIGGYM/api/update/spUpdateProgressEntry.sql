@@ -72,15 +72,14 @@ begin
                 set tStatus = 2;
             
             elseif (localObjectId is NULL) then
-                -- Can update as no duplicate exists ..
+            
+                -- Update significant fields as no duplicate already present ..
                 update PROGRESS
                    set 
                        SET_ORDINALITY = vUpdatable_SetOrdinality, 
                        SET_REPS = vUpdatable_SetReps, 
                        SET_WEIGHT = vUpdatable_SetWeight, 
-                       SET_DATE = vUpdatable_SetDatestamp,
-                       set_comment = vUpdatable_SetComment,
-                       body_weight = vUpdatable_BodyWeight
+                       SET_DATE = vUpdatable_SetDatestamp
                 where   
                        ID = ObjectId
                   and
@@ -107,7 +106,19 @@ begin
     else
         -- unexpected NULL value for Object and/or reference Id ..
         set tStatus = -7;
-    end if; 
+    end if;
+    
+    -- Ensure non-significant fields are always updated in non problematic (tStatus >= 0) scenarios ..
+    if (tStatus >= 0) then
+        update PROGRESS
+           set                     
+               set_comment = strcln(vUpdatable_SetComment, 'show'),
+               body_weight = vUpdatable_BodyWeight
+         where
+               ID = ObjectId
+           and
+               DEFINITIONid = vPlanDefinitionId;
+    end if;    
     
     -- Log ..
     set ReturnCode = tStatus;

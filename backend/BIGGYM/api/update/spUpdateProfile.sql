@@ -61,12 +61,12 @@ begin
             -- Attempt update ..
             call spGetIdForProfile (vUpdatable_ProfileName, vPersonId, localObjectId, ReturnCode);
             if (ObjectId = localObjectId) then
-                -- no update required ..
+                --  No update of significant fields required ..
                 set tStatus = 2;
                 
             elseif (localObjectId is NULL) then
             
-                -- Can update as no duplicate exists ..
+                -- Update significant fields as no duplicate already present ..
                 update PROFILE
                    set 
                        DATE_REGISTERED = current_timestamp(3),

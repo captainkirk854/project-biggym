@@ -18,7 +18,7 @@ select
     vwPersonProfile vwPP,
     TRAINING_PLAN plan
  where 
-    vwPP.PROFILEid = plan.PROFILEid
+    vwPP.PERSONPROFILEid = plan.PROFILEid
  ;
  
   select * from vwPersonProfilePlan limit 10;
