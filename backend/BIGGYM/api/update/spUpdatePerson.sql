@@ -115,8 +115,8 @@ begin
         update PERSON
            set
                C_LASTMOD = current_timestamp(3),
-               gender = ifNull(vUpdatable_Gender, '-'),
-               body_height = ifNull(vUpdatable_BodyHeight, 0)
+               gender = vUpdatable_Gender,
+               body_height = vUpdatable_BodyHeight
          where
                ID = ObjectId;
     end if;

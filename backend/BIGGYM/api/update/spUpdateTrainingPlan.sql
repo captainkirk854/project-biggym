@@ -107,8 +107,8 @@ begin
         update TRAINING_PLAN
            set
                C_LASTMOD = current_timestamp(3),
-               objective = ifNull(vUpdatable_Objective, 'Other'),
-               private = ifNull(vUpdatable_Private, 'N')
+               objective = vUpdatable_Objective,
+               private = vUpdatable_Private
          where
                ID = ObjectId
            and

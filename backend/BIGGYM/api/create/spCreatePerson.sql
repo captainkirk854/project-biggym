@@ -78,8 +78,8 @@ begin
                          vNew_FirstName,
                          vNew_LastName,
                          vNew_BirthDate,
-                         ifNull(vNew_Gender, '-'),
-                         ifNull(vNew_BodyHeight, 0)
+                         vNew_Gender,
+                         vNew_BodyHeight
                         );
                 -- success ..
                 set tStatus = 0;

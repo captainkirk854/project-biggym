@@ -71,8 +71,8 @@ begin
                     values
                     (
                      vNew_TrainingPlanName,
-                     ifNull(vNew_Objective, 'Other'),
-                     ifNull(vNew_Private, 'N'),
+                     vNew_Objective,
+                     vNew_Private,
                      vProfileId
                     );
             -- success ..
